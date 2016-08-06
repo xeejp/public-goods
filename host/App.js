@@ -1,6 +1,11 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import { fetchContents } from './actions'
+
+import Users from './Users'
+import MatchingButton from './MatchingButton'
+
 const mapStateToProps = ({}) => ({
 })
 
@@ -11,10 +16,14 @@ class App extends Component {
   }
 
   componentDidMount() {
+    const { dispatch } = this.props
+    dispatch(fetchContents())
   }
 
   render() {
     return <div>
+      <MatchingButton />
+      <Users />
     </div>
   }
 }
