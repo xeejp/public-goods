@@ -25,9 +25,7 @@ defmodule PublicGoods do
   def wrap_result(result), do: Main.wrap(result)
 
   def join(data, id) do
-    result = wrap_result(Main.join(data, id))
-    IO.inspect(result)
-    result
+    wrap_result(Main.join(data, id))
   end
 
   # Host router

@@ -6,7 +6,8 @@ import { fetchContents } from './actions'
 import Users from './Users'
 import MatchingButton from './MatchingButton'
 
-const mapStateToProps = ({}) => ({
+const mapStateToProps = ({loading}) => ({
+  loading
 })
 
 class App extends Component {
@@ -21,11 +22,18 @@ class App extends Component {
   }
 
   render() {
-    return <div>
-      <MatchingButton />
-      <Users />
-    </div>
+    const { loading } = this.props
+    if (loading) {
+      return <p>ロード中です。</p>
+    } else {
+      return (
+        <div>
+          <MatchingButton />
+          <Users />
+        </div>
+      )
+    }
   }
 }
 
-export default connect()(App)
+export default connect(mapStateToProps)(App)

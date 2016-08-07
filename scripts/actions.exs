@@ -13,9 +13,12 @@ defmodule PublicGoods.Actions do
   end
 
   def matched(%{participants: participants, groups: groups} = data) do
+    IO.inspect(participants)
+    IO.inspect(groups)
     host = get_action("matched", %{participants: participants, groups: groups})
     participant = Enum.map(participants, fn {id, p} ->
-      {id, %{action: get_action("matched", %{participant: p, group: Participant.format_group(Map.get(groups, p.group))})}}
+      payload = Map.merge(Participant.format_participant(p), Participant.format_group(Map.get(groups, p.group)))
+      {id, %{action: get_action("matched", payload)}}
     end) |> Enum.into(%{})
     format(data, host, participant)
   end
@@ -26,7 +29,7 @@ defmodule PublicGoods.Actions do
   end
 
   def update_participant_contents(data, id) do
-    participant = dispatch_to(id, get_action("update contents", Participant.format_contents(data)))
+    participant = dispatch_to(id, get_action("update contents", Participant.format_contents(data, id)))
     format(data, nil, participant)
   end
 

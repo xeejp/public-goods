@@ -1,7 +1,12 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-const mapStateToProps = ({}) => ({
+import { fetchContents } from './actions'
+
+import Pages from './Pages'
+
+const mapStateToProps = ({ loading }) => ({
+  loading
 })
 
 class App extends Component {
@@ -11,12 +16,22 @@ class App extends Component {
   }
 
   componentDidMount() {
+    const { dispatch } = this.props
+    dispatch(fetchContents())
   }
 
   render() {
-    return <div>
-    </div>
+    const { loading } = this.props
+    if (loading) {
+      return <p>ロード中です。</p>
+    } else {
+      return (
+        <div>
+          <Pages />
+        </div>
+      )
+    }
   }
 }
 
-export default connect()(App)
+export default connect(mapStateToProps)(App)

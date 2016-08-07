@@ -2,7 +2,7 @@ defmodule PublicGoods.Main do
   alias PublicGoods.Actions
 
   @pages ["waiting", "description", "experiment", "result"]
-  @states ["investing", "result", "punishment", "punishment_result"]
+  @states ["investment", "investment_result", "punishment", "punishment_result"]
 
   def pages, do: @pages
   def states, do: @states
@@ -35,7 +35,7 @@ defmodule PublicGoods.Main do
     %{
       members: members,
       counter: 0,
-      state: "investing",
+      state: "investment",
     }
   end
 
