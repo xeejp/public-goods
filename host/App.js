@@ -5,6 +5,7 @@ import { fetchContents } from './actions'
 
 import Users from './Users'
 import MatchingButton from './MatchingButton'
+import PageButtons from './PageButtons'
 
 const mapStateToProps = ({loading}) => ({
   loading
@@ -28,6 +29,7 @@ class App extends Component {
     } else {
       return (
         <div>
+          <PageButtons />
           <MatchingButton />
           <Users />
         </div>

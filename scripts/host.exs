@@ -11,9 +11,10 @@ defmodule PublicGoods.Host do
   def change_page(data, page) do
     if page in Main.pages do
       %{data | page: page}
-      |> Actions.change_page
+      |> Actions.change_page(page)
+    else
+      data
     end
-    data
   end
 
   def match(data) do

@@ -13,8 +13,6 @@ defmodule PublicGoods.Actions do
   end
 
   def matched(%{participants: participants, groups: groups} = data) do
-    IO.inspect(participants)
-    IO.inspect(groups)
     host = get_action("matched", %{participants: participants, groups: groups})
     participant = Enum.map(participants, fn {id, p} ->
       payload = Map.merge(Participant.format_participant(p), Participant.format_group(Map.get(groups, p.group)))
@@ -31,6 +29,22 @@ defmodule PublicGoods.Actions do
   def update_participant_contents(data, id) do
     participant = dispatch_to(id, get_action("update contents", Participant.format_contents(data, id)))
     format(data, nil, participant)
+  end
+
+  def invest(data, id) do
+    investment = get_in(data, [:participants, id, :investment])
+    host = get_action("invest", %{id: id, investment: investment})
+    participant = dispatch_to(id, get_action("invest", investment))
+    format(data, host, participant)
+  end
+
+  def investment_result(data, group_id, participant_id, investment, profit) do
+    group = get_in(data, [:groups, group_id])
+    host = get_action("investment_result", %{
+      participantId: participant_id, investment: investment,
+      groupId: group_id, profit: profit
+    })
+    format(data, host) # TODO Actions for participants
   end
 
   # Utilities

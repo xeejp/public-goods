@@ -35,6 +35,7 @@ defmodule PublicGoods.Main do
     %{
       members: members,
       counter: 0,
+      profit: 0,
       state: "investment",
     }
   end

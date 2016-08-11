@@ -1,5 +1,6 @@
 defmodule PublicGoods do
   use Xee.ThemeScript
+  require Logger
 
   require_file "scripts/main.exs"
   require_file "scripts/host.exs"
@@ -30,6 +31,7 @@ defmodule PublicGoods do
 
   # Host router
   def handle_received(data, %{"action" => action, "params" => params}) do
+    Logger.debug("[Public Goods] #{action} #{params}")
     result = case {action, params} do
       {"fetch contents", _} -> Host.fetch_contents(data)
       {"change page", page} -> Host.change_page(data, page)
@@ -41,8 +43,10 @@ defmodule PublicGoods do
 
   # Participant router
   def handle_received(data, %{"action" => action, "params" => params}, id) do
+    Logger.debug("[Public Goods] #{action} #{params}")
     result = case {action, params} do
       {"fetch contents", _} -> Participant.fetch_contents(data, id)
+      {"invest", investment} -> Participant.invest(data, id, investment)
       _ -> {:ok, %{"data" => data}}
     end
     wrap_result(result)

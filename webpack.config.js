@@ -1,4 +1,5 @@
 module.exports = {
+  devtool: 'eval',
   entry: {
     host: ["babel-polyfill", "./host/index.js"],
     participant: ["babel-polyfill", "./participant/index.js"],
@@ -19,7 +20,7 @@ module.exports = {
       "", ".js"
     ],
     modulesDirectories: [
-      "node_modules",
+      "node_modules", "./"
     ]
   }
 };
