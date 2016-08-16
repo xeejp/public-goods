@@ -40,11 +40,20 @@ defmodule PublicGoods.Actions do
 
   def investment_result(data, group_id, participant_id, investment, profit) do
     group = get_in(data, [:groups, group_id])
-    host = get_action("investment_result", %{
-      participantId: participant_id, investment: investment,
-      groupId: group_id, profit: profit
+    host = get_action("investment result", %{
+      participantID: participant_id, investment: investment,
+      groupID: group_id, profit: profit
     })
-    format(data, host) # TODO Actions for participants
+    participants = data.participants
+    investments = Enum.map(group.members, fn id ->
+      get_in(participants, [id, :investment])
+    end)
+    participant = Enum.map(group.members, fn id -> {id, %{action:
+      get_action("investment result", %{
+        investment: investment, investments: investments, profit: profit
+      })
+    }} end) |> Enum.into(%{})
+    format(data, host, participant)
   end
 
   # Utilities

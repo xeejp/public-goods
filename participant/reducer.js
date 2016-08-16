@@ -25,7 +25,24 @@ const reducer = concatenateReducers([
     'matched': (_, { payload }) => payload,
     'invest': (_, { payload: investment }) => {
       return { investment, invested: true }
-    }
+    },
+    'investment result': ({ invested }, { payload: {
+      investment, investments, profit
+    }}) => {
+      if (invested) {
+        return {
+          profit,
+          state: "investment_result"
+        }
+      } else {
+        return {
+          profit,
+          invested: true,
+          investment: investment,
+          state: "investment_result"
+        }
+      }
+    },
   }, {}),
   forKey('investForm', investment),
   handleAction('update contents', () => ({ loading: false }), { loading: true }),

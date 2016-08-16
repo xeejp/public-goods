@@ -21,7 +21,7 @@ defmodule PublicGoods.Participant do
       data
       |> put_in([:groups, group_id, :state], "investment_result")
       |> put_in([:groups, group_id, :profit], profit)
-      |> Actions.investment_result(data, group_id, id, investment, profit)
+      |> Actions.investment_result(group_id, id, investment, profit)
     else
       Actions.invest(data, id)
     end
