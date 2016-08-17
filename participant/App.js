@@ -1,12 +1,19 @@
 import React, { Component } from 'react'
+import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import { fetchContents } from './actions'
-
+import Snackbar from 'material-ui/Snackbar'
 import Pages from './Pages'
 
-const mapStateToProps = ({ loading }) => ({
-  loading
+import { fetchContents, closeInfo } from './actions'
+
+const mapStateToProps = ({ loading, info, infoOpened }) => ({
+  loading, info, infoOpened
+})
+
+const mapDispatchToProps = (dispatch) => ({
+  closeInfo: bindActionCreators(closeInfo, dispatch),
+  fetchContents: bindActionCreators(fetchContents, dispatch)
 })
 
 class App extends Component {
@@ -16,22 +23,28 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props
-    dispatch(fetchContents())
+    const { fetchContents } = this.props
+    fetchContents()
   }
 
   render() {
-    const { loading } = this.props
+    const { loading, closeInfo, info, infoOpened } = this.props
     if (loading) {
       return <p>ロード中です。</p>
     } else {
       return (
         <div>
           <Pages />
+          <Snackbar
+            open={infoOpened}
+            message={info}
+            autoHideDuration={3000}
+            onRequestClose={closeInfo}
+          />
         </div>
       )
     }
   }
 }
 
-export default connect(mapStateToProps)(App)
+export default connect(mapStateToProps, mapDispatchToProps)(App)

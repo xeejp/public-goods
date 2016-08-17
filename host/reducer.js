@@ -11,7 +11,7 @@ const reducer = concatenateReducers([
       newGroups[groupID].state = state
       newGroups[groupID].round = round
       const newParticipants = Object.assign({}, participants)
-      groups[groupID].members.forEach(id, index => {
+      groups[groupID].members.forEach((id, index) => {
         newParticipants[id] = members[index]
       })
       return {

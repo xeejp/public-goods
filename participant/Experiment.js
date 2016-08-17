@@ -5,6 +5,7 @@ import Investment from './Investment'
 import InvestmentResult from './InvestmentResult'
 import Punishment from './Punishment'
 import PunishmentResult from './PunishmentResult'
+import Finished from './Finished'
 
 const mapStateToProps = ({ state }) => ({
   state
@@ -20,6 +21,8 @@ const Experiment = ({ state }) => (() => {
       return <Punishment />
     case "punishment_result":
       return <PunishmentResult />
+    case "finished":
+      return <Finished />
     default:
       return <span></span>
   }
