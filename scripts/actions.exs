@@ -15,7 +15,7 @@ defmodule PublicGoods.Actions do
   def matched(%{participants: participants, groups: groups} = data) do
     host = get_action("matched", %{participants: participants, groups: groups})
     participant = Enum.map(participants, fn {id, p} ->
-      payload = Map.merge(Participant.format_participant(p), Participant.format_group(Map.get(groups, p.group)))
+      payload = Map.merge(Participant.format_participant(p), Participant.format_group(data, Map.get(groups, p.group), id))
       {id, %{action: get_action("matched", payload)}}
     end) |> Enum.into(%{})
     format(data, host, participant)
@@ -38,11 +38,11 @@ defmodule PublicGoods.Actions do
     format(data, host, participant)
   end
 
-  def investment_result(data, group_id, participant_id, investment, profit) do
+  def investment_result(data, group_id, participant_id, investment) do
     group = get_in(data, [:groups, group_id])
     host = get_action("investment result", %{
       participantID: participant_id, investment: investment,
-      groupID: group_id, profit: profit
+      groupID: group_id
     })
     participants = data.participants
     investments = Enum.map(group.members, fn id ->
@@ -50,9 +50,39 @@ defmodule PublicGoods.Actions do
     end)
     participant = Enum.map(group.members, fn id -> {id, %{action:
       get_action("investment result", %{
-        investment: investment, investments: investments, profit: profit
+        investment: investment, investments: investments, newProfit: hd(get_in(participants, [id, :profits]))
       })
     }} end) |> Enum.into(%{})
+    format(data, host, participant)
+  end
+
+  def vote_next(data, group_id) do
+    group = get_in(data, [:groups, group_id])
+    participant = Enum.reduce(group.members, %{}, fn (id, acc) ->
+      action = get_action("vote next", %{
+        notVoted: group.not_voted
+      })
+      dispatch_to(acc, id, action)
+    end)
+    format(data, nil, participant)
+  end
+
+  def change_state(data, group_id) do
+    group = get_in(data, [:groups, group_id])
+    host = get_action("change state", %{
+      groupID: group_id,
+      state: group.state,
+      round: group.round,
+      members: Enum.map(group.members, fn id -> Map.get(data.participants, id) end)
+    })
+    participant = Enum.reduce(group.members, %{}, fn (id, acc) ->
+      p = Map.get(data.participants, id)
+      payload = Map.merge(Participant.format_participant(p), %{
+        state: group.state
+      })
+      action = get_action("change state", payload)
+      dispatch_to(acc, id, action)
+    end)
     format(data, host, participant)
   end
 

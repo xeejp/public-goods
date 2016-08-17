@@ -31,7 +31,7 @@ defmodule PublicGoods.Host do
       %{ participant |
         group: group,
         money: money,
-        profit: 0,
+        profits: [],
         invested: false,
         investment: 0,
         punished: false,

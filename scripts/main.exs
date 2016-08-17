@@ -2,7 +2,7 @@ defmodule PublicGoods.Main do
   alias PublicGoods.Actions
 
   @pages ["waiting", "description", "experiment", "result"]
-  @states ["investment", "investment_result", "punishment", "punishment_result"]
+  @states ["investment", "investment_result", "punishment", "punishment_result", "finished"]
 
   def pages, do: @pages
   def states, do: @states
@@ -15,6 +15,7 @@ defmodule PublicGoods.Main do
       punishment: false,
       money: 1000,
       roi: 2, # Return on Investment
+      rounds: 2,
       group_size: 4 # Number of members
     }
   end
@@ -23,20 +24,21 @@ defmodule PublicGoods.Main do
     %{
       group: nil,
       money: 0,
-      profit: 0,
+      profits: [],
       invested: false,
       investment: 0,
       punished: false,
-      punishment: 0
+      punishment: 0,
+      voted: false
     }
   end
 
   def new_group(members) do
     %{
       members: members,
-      counter: 0,
-      profit: 0,
+      round: 0,
       state: "investment",
+      not_voted: length(members)
     }
   end
 

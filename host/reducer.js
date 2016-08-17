@@ -6,6 +6,19 @@ import { changePage } from './actions'
 const reducer = concatenateReducers([
   handleActions({
     'update contents': (_, { payload }) => payload,
+    'change state': ({ participants, groups }, { payload: { groupID, state, round, members }}) => {
+      const newGroups = Object.assign({}, groups)
+      newGroups[groupID].state = state
+      newGroups[groupID].round = round
+      const newParticipants = Object.assign({}, participants)
+      groups[groupID].members.forEach(id, index => {
+        newParticipants[id] = members[index]
+      })
+      return {
+        groups: newGroups,
+        participants: newParticipants
+      }
+    },
     [changePage]: (_, { payload }) => ({ page: payload }),
     'join': ({ participants }, { payload: { id, participant } }) => ({
       participants: Object.assign({}, participants, {[id]: participant})

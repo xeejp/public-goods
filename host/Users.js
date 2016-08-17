@@ -9,7 +9,7 @@ const User = ({ id, profit, invested }) => (
 
 const UsersList = ({participants}) => (
   <table>
-    <thead><tr><th>id</th><th>profit</th><th>invested</th><th></th></tr></thead>
+    <thead><tr><th>id</th><th>profit</th><th>invested</th></tr></thead>
     <tbody>
       {
         Object.keys(participants).map(id => (
@@ -25,24 +25,27 @@ const UsersList = ({participants}) => (
   </table>
 )
 
-const Group = ({ group, participants }) => (
-  <UsersList
-    participants={group.members.reduce((res, id) => Object.assign(res, {[id]: participants[id]}), {})}
-  />
+const Group = ({ id, round, state, members }) => (
+  <tr><td>{id}</td><td>{round}</td><td>{state}</td><td>{members}</td></tr>
 )
 
 const Groups = ({ groups, participants }) => (
-  <div>
-    {
-      Object.keys(groups).map(id => (
-        <Group
-          key={id}
-          group={groups[id]}
-          participants={participants}
-        />
-      ))
-    }
-  </div>
+  <table>
+    <thead><tr><th>id</th><th>round</th><th>state</th><th>members</th></tr></thead>
+    <tbody>
+      {
+        Object.keys(groups).map(id => (
+          <Group
+            key={id}
+            id={id}
+            round={groups[id].round}
+            state={groups[id].state}
+            members={groups[id].members.length}
+          />
+        ))
+      }
+    </tbody>
+  </table>
 )
 
 const mapStateToProps = ({ groups, participants }) => ({ groups, participants })

@@ -1,9 +1,10 @@
 import { combineReducers } from 'redux'
-
 import concatenateReducers from 'redux-concatenate-reducers'
 import { handleAction, handleActions } from 'redux-actions'
 
-import { changeInvestment } from './actions'
+import {
+  changeInvestment, submitNext
+} from './actions'
 
 const investment = concatenateReducers([
   handleActions({
@@ -22,28 +23,38 @@ const reducer = concatenateReducers([
   handleActions({
     'update contents': (_, { payload }) => payload,
     'change page': (_, { payload }) => ({ page: payload }),
+    'change state': (_, { payload }) => Object.assign(payload, {votesNext: 0}),
     'matched': (_, { payload }) => payload,
     'invest': (_, { payload: investment }) => {
       return { investment, invested: true }
     },
-    'investment result': ({ invested }, { payload: {
-      investment, investments, profit
+    'investment result': ({ invested, profits }, { payload: {
+      investment, investments, profit, newProfit
     }}) => {
+      profits.splice(0, 0, newProfit)
       if (invested) {
         return {
           profit,
-          state: "investment_result"
+          state: "investment_result",
+          investments,
+          profits
         }
       } else {
         return {
           profit,
           invested: true,
           investment: investment,
-          state: "investment_result"
+          state: "investment_result",
+          investments,
+          profits
         }
       }
     },
-  }, {}),
+    [submitNext]: () => ({voted: true}),
+    'vote next': ({ investments }, { payload: { state, notVoted } }) => ({
+      votesNext: investments.length - notVoted,
+    })
+  }, {investments: [], votesNext: 0}),
   forKey('investForm', investment),
   handleAction('update contents', () => ({ loading: false }), { loading: true }),
 ])

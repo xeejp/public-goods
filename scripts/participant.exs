@@ -15,25 +15,94 @@ defmodule PublicGoods.Participant do
     members = get_in(data, [:groups, group_id, :members])
 
     if Enum.all?(members, fn id -> get_in(data, [:participants, id, :invested]) end) do
-      profit = Enum.reduce(members, 0, fn id, acc ->
+      investments_sum = Enum.reduce(members, 0, fn id, acc ->
         acc + get_in(data, [:participants, id, :investment])
       end)
       data
       |> put_in([:groups, group_id, :state], "investment_result")
-      |> put_in([:groups, group_id, :profit], profit)
-      |> Actions.investment_result(group_id, id, investment, profit)
+      |> Map.update!(:participants, fn participants ->
+        Enum.map(participants, fn {id, participant} ->
+          participant = Map.update!(participant, :profits, fn profits ->
+            new_profit = investments_sum * data.roi - participant.investment
+            [new_profit | profits]
+          end)
+          {id, participant}
+        end) |> Enum.into(%{})
+      end)
+      |> Actions.investment_result(group_id, id, investment)
     else
       Actions.invest(data, id)
     end
   end
 
+  def vote_next(data, id) do
+    participant = get_in(data, [:participants, id])
+    false = participant.voted # Ensure that the participant has not been voted.
+    data = put_in(data, [:participants, id, :voted], true)
+    group_id = participant.group
+    group = get_in(data, [:groups, group_id])
+
+    if group.not_voted == 1 do
+      group = Map.update!(group, :not_voted, fn x ->
+        length(group.members)
+      end)
+
+      group = case group.state do
+        "investment_result" ->
+          if data.punishment do
+            Map.put(group, :state, "punishment")
+          else
+            if data.rounds == group.round + 1 do
+              Map.put(group, :state, "finished")
+            else
+              group
+              |> Map.put(:state, "investment")
+              |> Map.update!(:round, fn round -> round + 1 end)
+            end
+          end
+        "punishment_result" ->
+          if data.rounds == group.round + 1 do
+            Map.put(group, :state, "finished")
+          else
+            group
+            |> Map.put(:state, "investment")
+            |> Map.update!(:round, fn round -> round + 1 end)
+          end
+      end
+      participants = Enum.reduce(group.members, data.participants, fn (id, acc) ->
+        Map.update!(acc, id, fn participant ->
+          %{ participant |
+            voted: false,
+            invested: false,
+            investment: 0,
+            punished: false,
+            punishment: 0,
+          }
+        end)
+      end)
+      data
+      |> put_in([:groups, group_id], group)
+      |> Map.put(:participants, participants)
+      |> Actions.change_state(group_id)
+    else
+      group = Map.update!(group, :not_voted, fn x -> x - 1 end)
+      data
+      |> put_in([:groups, group_id], group)
+      |> Actions.vote_next(group_id)
+    end
+  end
+
   # Utilities
-  def format_group(group) do
+  def format_group(data, group, id) do
+    %{participants: participants} = data
     %{
       members: length(group.members),
-      counter: group.counter,
+      memberID: Enum.find_index(group.members, fn x -> x == id end),
+      investments: investments = Enum.map(group.members, fn id ->
+        get_in(participants, [id, :investment])
+      end),
+      round: group.round,
       state: group.state,
-      profit: group.profit
     }
   end
 
@@ -53,10 +122,11 @@ defmodule PublicGoods.Participant do
     participant = Map.get(participants, id)
     if not is_nil(participant.group) do
       format_participant(participant)
-      |> Map.merge(format_group(Map.get(groups, participant.group)))
+      |> Map.merge(format_group(data, Map.get(groups, participant.group), id))
       |> Map.merge(format_data(data))
     else
       format_participant(participant)
+      |> Map.merge(format_data(data))
     end
   end
 end

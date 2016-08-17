@@ -10,7 +10,7 @@ const mapStateToProps = ({ page }) => ({
   page
 })
 
-const Pages = ({ page }) => (() => {
+const Pages = ({ page }) => {
   switch (page) {
     case "waiting":
       return <Waiting />
@@ -23,6 +23,6 @@ const Pages = ({ page }) => (() => {
     default:
       return <span></span>
   }
-})()
+}
 
 export default connect(mapStateToProps)(Pages)
