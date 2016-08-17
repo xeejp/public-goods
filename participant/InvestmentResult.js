@@ -35,7 +35,6 @@ const InvestmentResult = ({
           <TableHeaderColumn>No</TableHeaderColumn>
           <TableHeaderColumn>投資額</TableHeaderColumn>
           <TableHeaderColumn>利益</TableHeaderColumn>
-          <TableHeaderColumn>利益合計</TableHeaderColumn>
         </TableRow>
       </TableHeader>
       <TableBody>

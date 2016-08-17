@@ -9,9 +9,10 @@ import Chip from 'material-ui/Chip'
 
 import { changeInvestment, submitInvestment } from './actions'
 
-const mapStateToProps = ({ investForm, money }) => (
+const mapStateToProps = ({ investForm, money, profits }) => (
   Object.assign({}, investForm, {
     money,
+    profits,
     validateValue: (value) => value >= 0 && value <= money
   })
 )
@@ -73,30 +74,30 @@ const MoneyEditor = ({ money, amp, value, changeInvestment, validateValue }) => 
   }
 }
 
-const Investment = ({ money, value, isValid, changeInvestment, submitInvestment, validateValue }) => (
- 	<div>
-		<div style={styles.wrapper}>
-			<Chip
-			 style={styles.chip}
-			>
-			1,392ポイント
-			</Chip>
-		</div>
-		<h2>公共財実験</h2>
-		<p>20ポイントのうち、私的財に投資するポイントを入力して下さい。</p>
-		<MoneyEditor
-		 amp={Math.floor(money / 10)}
-		 value={value}
-		 changeInvestment={changeInvestment}
-		 validateValue={validateValue}
-		 money={money}
-		/>
-		<RaisedButton
-		 label="投資"
-		 disabled={!isValid}
-		 primary={true}
-		 onClick={() => submitInvestment(+value)}
-		/>
+const Investment = ({ money, value, isValid, changeInvestment, submitInvestment, validateValue, profits }) => (
+  <div>
+    <div style={styles.wrapper}>
+      <Chip
+        style={styles.chip}
+      >
+        {profits.reduce((acc, p) => acc + p, 0) + "ポイント"}
+      </Chip>
+    </div>
+    <h2>公共財実験</h2>
+    <p>20ポイントのうち、私的財に投資するポイントを入力して下さい。</p>
+    <MoneyEditor
+      amp={Math.floor(money / 10)}
+      value={value}
+      changeInvestment={changeInvestment}
+      validateValue={validateValue}
+      money={money}
+    />
+    <RaisedButton
+      label="投資"
+      disabled={!isValid}
+      primary={true}
+      onClick={() => submitInvestment(+value)}
+    />
   </div>
 )
 
