@@ -2,7 +2,6 @@ import React, { Component } from 'react'
 import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import {Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn} from 'material-ui/Table'
 import RaisedButton from 'material-ui/RaisedButton'
 
 import { submitNext } from './actions'
@@ -27,28 +26,26 @@ const InvestmentResult = ({
 }) => (
   <div>
     <p>投資結果画面</p>
-    <p>利益: {profits[0]}</p>
-    <p>利益合計: {profits.reduce((acc, profit) => acc + profit, 0)}</p>
-    <Table>
-      <TableHeader>
-        <TableRow>
-          <TableHeaderColumn>No</TableHeaderColumn>
-          <TableHeaderColumn>投資額</TableHeaderColumn>
-          <TableHeaderColumn>利益</TableHeaderColumn>
-        </TableRow>
-      </TableHeader>
-      <TableBody>
+    <p>利得: {profits[0]}</p>
+    <p>利得合計: {profits.reduce((acc, profit) => acc + profit, 0)}</p>
+    <table>
+      <thead>
+        <tr>
+          <th>投資額</th>
+          <th>利得</th>
+        </tr>
+      </thead>
+      <tbody>
         {
           investments.map((investment, id) => (
-            <TableRow key={id}>
-              <TableRowColumn>{id}</TableRowColumn>
-              <TableRowColumn>{investment}</TableRowColumn>
-              <TableRowColumn>{roi * investmentsSum - investment}</TableRowColumn>
-            </TableRow>
+            <tr key={id}>
+              <td>{investment}</td>
+              <td>{roi * investmentsSum - investment}</td>
+            </tr>
           ))
         }
-      </TableBody>
-    </Table>
+      </tbody>
+    </table>
     <RaisedButton
       primary={true}
       label={"次に進む (" + votesNext + "/" + investments.length + ")"}
