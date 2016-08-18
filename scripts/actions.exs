@@ -39,10 +39,11 @@ defmodule PublicGoods.Actions do
   end
 
   def investment_result(data, group_id, participant_id, investment) do
+    %{investment_log: investment_log} = data
     group = get_in(data, [:groups, group_id])
     host = get_action("investment result", %{
       participantID: participant_id, investment: investment,
-      groupID: group_id
+      groupID: group_id, newLog: hd(investment_log)
     })
     participants = data.participants
     investments = Enum.map(group.members, fn id ->

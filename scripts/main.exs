@@ -13,6 +13,7 @@ defmodule PublicGoods.Main do
       participants: %{},
       groups: %{},
       punishment: false,
+      investment_log: [],
       money: 100,
       roi: 0.4, # Return on Investment
       rounds: 2,

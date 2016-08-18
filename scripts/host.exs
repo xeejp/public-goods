@@ -48,12 +48,14 @@ defmodule PublicGoods.Host do
     acc = {participants, %{}}
     {participants, groups} = Enum.reduce(groups, acc, reducer)
 
-    %{data | participants: participants, groups: groups}
+    %{data | participants: participants, groups: groups, investment_log: []}
     |> Actions.matched()
   end
 
   # Utilities
   def format_contents(data) do
     data
+    |> Map.pop(:investment_log)
+    |> (fn {log, data} -> Map.put(data, "investmentLog", log) end).()
   end
 end

@@ -23,11 +23,20 @@ defmodule PublicGoods.Participant do
       |> Map.update!(:participants, fn participants ->
         Enum.map(participants, fn {id, participant} ->
           participant = Map.update!(participant, :profits, fn profits ->
-            new_profit = investments_sum * data.roi - participant.investment
+            new_profit = Float.floor(investments_sum * data.roi) - participant.investment
             [new_profit | profits]
           end)
           {id, participant}
         end) |> Enum.into(%{})
+      end)
+      |> Map.update!(:investment_log, fn log ->
+        [%{
+          group_id: group_id,
+          round: get_in(data, [:groups, group_id, :round]),
+          investments: Enum.map(members, fn id ->
+            get_in(data, [:participants, id, :investment])
+          end)
+        } | log]
       end)
       |> Actions.investment_result(group_id, id, investment)
     else

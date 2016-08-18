@@ -40,7 +40,7 @@ const InvestmentResult = ({
           investments.map((investment, id) => (
             <tr key={id}>
               <td>{investment}</td>
-              <td>{roi * investmentsSum - investment}</td>
+              <td>{Math.floor(roi * investmentsSum) - investment}</td>
             </tr>
           ))
         }
