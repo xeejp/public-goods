@@ -1,13 +1,20 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import { bindActionCreators } from 'redux'
 
 import { Card, CardHeader, CardText } from 'material-ui/Card'
 
-const User = ({ id, profit, invested }) => (
-  <tr><td>{id}</td><td>{profit}</td><td>{invested}</td></tr>
+import { openParticipantPage } from './actions'
+
+const User = ({ id, profit, invested, openParticipantPage }) => (
+  <tr>
+    <td><a onClick={openParticipantPage(id)}>{id}</a></td>
+    <td>{profit}</td>
+    <td>{invested}</td>
+  </tr>
 )
 
-const UsersList = ({participants}) => (
+const UsersList = ({participants, openParticipantPage}) => (
   <table>
     <thead><tr><th>id</th><th>profit</th><th>invested</th></tr></thead>
     <tbody>
@@ -18,6 +25,7 @@ const UsersList = ({participants}) => (
             id={id}
             profit={participants[id].profit}
             invested={participants[id].invested ? "投資済" : "未投資"}
+            openParticipantPage={openParticipantPage}
           />
         ))
       }
@@ -50,7 +58,14 @@ const Groups = ({ groups, participants }) => (
 
 const mapStateToProps = ({ groups, participants }) => ({ groups, participants })
 
-const Users = ({ groups, participants }) => (
+const mapDispatchToProps = (dispatch) => {
+  const open = bindActionCreators(openParticipantPage, dispatch)
+  return {
+    openParticipantPage: (id) => () => open(id)
+  }
+}
+
+const Users = ({ groups, participants, openParticipantPage }) => (
   <div>
     <Card>
       <CardHeader
@@ -61,6 +76,7 @@ const Users = ({ groups, participants }) => (
       <CardText expandable={true}>
         <UsersList
           participants={participants}
+          openParticipantPage={openParticipantPage}
         />
       </CardText>
     </Card>
@@ -80,4 +96,4 @@ const Users = ({ groups, participants }) => (
   </div>
 )
 
-export default connect(mapStateToProps)(Users)
+export default connect(mapStateToProps, mapDispatchToProps)(Users)
