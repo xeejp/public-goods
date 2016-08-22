@@ -7,7 +7,7 @@ HighchartsMore(ReactHighcharts.Highcharts)
 function computeQuartile(array, length, n, d) {
   const pos = (length - 1.0) * n / d
 
-  const divisible = length % d == 0
+  const divisible = (length - 1) % d == 0
   if (divisible) {
     return array[Math.trunc(pos)]
   } else {
