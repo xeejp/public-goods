@@ -101,6 +101,11 @@ defmodule PublicGoods.Participant do
     end
   end
 
+  def fetch_ranking(data, id) do
+    data
+    |> Actions.update_ranking(id)
+  end
+
   # Utilities
   def format_group(data, group, id) do
     %{participants: participants} = data

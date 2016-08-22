@@ -1,9 +1,26 @@
 import { put, take, select, call, fork } from 'redux-saga/effects'
+import { takeEvery } from 'redux-saga'
 
 import {
   fetchContents, submitInvestment, submitNext, openInfo,
   changeInvestment, pressNumeric, pressBackspace
 } from './actions'
+
+function* fetchRankingSaga() {
+  const page = yield select(({ page }) => page)
+  if (page == 'result') {
+    yield call(sendData, 'fetch ranking')
+  }
+}
+
+function* fetchRankingWatcher() {
+  yield fork(function *() {
+    yield* takeEvery('change page', fetchRankingSaga)
+  })
+  yield fork(function *() {
+    yield* takeEvery('update contents', fetchRankingSaga)
+  })
+}
 
 function* fetchContentsSaga() {
   while (true) {
@@ -61,6 +78,7 @@ function* saga() {
   yield fork(submitNextSaga)
   yield fork(pressNumericSaga)
   yield fork(pressBackspaceSaga)
+  yield fork(fetchRankingWatcher)
 }
 
 export default saga

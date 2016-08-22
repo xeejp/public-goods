@@ -10,6 +10,12 @@ defmodule PublicGoods.Host do
 
   def change_page(data, page) do
     if page in Main.pages do
+      if page == "result" do
+        ranking = Enum.map(data.participants, fn {id, p} ->
+          {id, Enum.sum(p.profits)}
+        end) |> Enum.into(%{})
+        data = %{data | ranking: ranking}
+      end
       %{data | page: page}
       |> Actions.change_page(page)
     else

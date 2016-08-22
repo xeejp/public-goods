@@ -9,6 +9,7 @@ defmodule PublicGoods.Main do
 
   def init do
     %{
+      ranking: [],
       page: "waiting",
       participants: %{},
       groups: %{},

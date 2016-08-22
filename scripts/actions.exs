@@ -31,6 +31,15 @@ defmodule PublicGoods.Actions do
     format(data, nil, participant)
   end
 
+  def update_ranking(data, id) do
+    ranking = Enum.map(data.ranking, fn {key, profit} ->
+      %{profit: profit, own: key == id}
+    end)
+    action = get_action("update ranking", ranking)
+    participant = dispatch_to(id, action)
+    format(data, nil, participant)
+  end
+
   def invest(data, id) do
     investment = get_in(data, [:participants, id, :investment])
     host = get_action("invest", %{id: id, investment: investment})

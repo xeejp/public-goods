@@ -24,6 +24,7 @@ function forKey(key, reducer) {
 const reducer = concatenateReducers([
   handleActions({
     'update contents': (_, { payload }) => payload,
+    'update ranking': (_, { payload }) => ({ ranking: payload }),
     'change page': (_, { payload }) => ({ page: payload }),
     'change state': (_, { payload }) => Object.assign(payload, {votesNext: 0}),
     'matched': (_, { payload }) => payload,
@@ -58,7 +59,7 @@ const reducer = concatenateReducers([
     }),
     [openInfo]: (_, { payload }) => ({ infoOpened: true, info: payload}),
     [closeInfo]: () => ({ infoOpened: false })
-  }, {investments: [], votesNext: 0, info: '', infoOpened: false}),
+  }, {investments: [], votesNext: 0, info: '', infoOpened: false, ranking: []}),
   forKey('investForm', investment),
   handleAction('update contents', () => ({ loading: false }), { loading: true }),
 ])

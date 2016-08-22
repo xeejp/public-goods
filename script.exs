@@ -48,6 +48,7 @@ defmodule PublicGoods do
       {"fetch contents", _} -> Participant.fetch_contents(data, id)
       {"invest", investment} -> Participant.invest(data, id, investment)
       {"next", _} -> Participant.vote_next(data, id)
+      {"fetch ranking", _} -> Participant.fetch_ranking(data, id)
       _ -> {:ok, %{"data" => data}}
     end
     wrap_result(result)
