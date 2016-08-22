@@ -3,7 +3,8 @@ import concatenateReducers from 'redux-concatenate-reducers'
 import { handleAction, handleActions } from 'redux-actions'
 
 import {
-  changeInvestment, submitInvestment, submitNext
+  changeInvestment, submitInvestment, submitNext,
+  openInfo, closeInfo,
 } from './actions'
 
 const investment = concatenateReducers([
@@ -12,8 +13,8 @@ const investment = concatenateReducers([
       value,
       isValid: /^\d+$/.test(value) && valid
     }),
-    [submitInvestment]: () => ({ value: '', isValid: false })
-  }, {value: '', isValid: false})
+    [submitInvestment]: () => ({ value: '', isValid: false }),
+  }, {value: '', isValid: false}),
 ])
 
 function forKey(key, reducer) {
@@ -55,8 +56,8 @@ const reducer = concatenateReducers([
     'vote next': ({ investments }, { payload: { state, notVoted } }) => ({
       votesNext: investments.length - notVoted,
     }),
-    'open info': (_, { payload }) => ({ infoOpened: true, info: payload}),
-    'close info': () => ({ infoOpened: false })
+    [openInfo]: (_, { payload }) => ({ infoOpened: true, info: payload}),
+    [closeInfo]: () => ({ infoOpened: false })
   }, {investments: [], votesNext: 0, info: '', infoOpened: false}),
   forKey('investForm', investment),
   handleAction('update contents', () => ({ loading: false }), { loading: true }),

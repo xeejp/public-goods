@@ -7,6 +7,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import Chip from 'material-ui/Chip'
 
+import NumericKeypad from './NumericKeypad'
 import { changeInvestment, submitInvestment } from './actions'
 
 const mapStateToProps = ({ investForm, money, profits, invested }) => (
@@ -97,6 +98,7 @@ const Investment = ({ money, value, invested, isValid, changeInvestment, submitI
         validateValue={validateValue}
         money={money}
       />
+      <NumericKeypad />
       <RaisedButton
         type="submit"
         label={
