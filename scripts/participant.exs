@@ -106,6 +106,11 @@ defmodule PublicGoods.Participant do
     |> Actions.update_ranking(id)
   end
 
+  def change_color(data, id, index, value) do
+    data
+    |> Actions.change_color(id, index, value)
+  end
+
   # Utilities
   def format_group(data, group, id) do
     %{participants: participants} = data

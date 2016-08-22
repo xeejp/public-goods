@@ -40,6 +40,16 @@ defmodule PublicGoods.Actions do
     format(data, nil, participant)
   end
 
+  def change_color(data, id, index, value) do
+    action = get_action("change color", %{index: index, value: value})
+    group_id = get_in(data, [:participants, id, :group])
+    members = get_in(data, [:groups, group_id, :members])
+    participant = Enum.reduce(members, %{}, fn member, map ->
+      dispatch_to(map, member, action)
+    end)
+    format(data, nil, participant)
+  end
+
   def invest(data, id) do
     investment = get_in(data, [:participants, id, :investment])
     host = get_action("invest", %{id: id, investment: investment})

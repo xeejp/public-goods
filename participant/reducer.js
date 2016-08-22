@@ -23,6 +23,11 @@ function forKey(key, reducer) {
 
 const reducer = concatenateReducers([
   handleActions({
+    'change color': ({ colors }, { payload: { index, value } }) => {
+      const newColors = colors.concat()
+      newColors[index] = value
+      return { colors: newColors }
+    },
     'update contents': (_, { payload }) => payload,
     'update ranking': (_, { payload }) => ({ ranking: payload }),
     'change page': (_, { payload }) => ({ page: payload }),
@@ -59,7 +64,7 @@ const reducer = concatenateReducers([
     }),
     [openInfo]: (_, { payload }) => ({ infoOpened: true, info: payload}),
     [closeInfo]: () => ({ infoOpened: false })
-  }, {investments: [], votesNext: 0, info: '', infoOpened: false, ranking: []}),
+  }, {investments: [], votesNext: 0, info: '', infoOpened: false, ranking: [], colors: [0, 0, 0, 0, 0, 0, 0, 0, 0]}),
   forKey('investForm', investment),
   handleAction('update contents', () => ({ loading: false }), { loading: true }),
 ])

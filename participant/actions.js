@@ -10,3 +10,5 @@ export const closeInfo = createAction('close info')
 
 export const pressNumeric = createAction('press numeric', value => value)
 export const pressBackspace = createAction('press backspace')
+
+export const submitColor = createAction('submit color', index => index)

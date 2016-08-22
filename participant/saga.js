@@ -3,7 +3,8 @@ import { takeEvery } from 'redux-saga'
 
 import {
   fetchContents, submitInvestment, submitNext, openInfo,
-  changeInvestment, pressNumeric, pressBackspace
+  changeInvestment, pressNumeric, pressBackspace,
+  submitColor
 } from './actions'
 
 function* fetchRankingSaga() {
@@ -72,6 +73,14 @@ function* pressBackspaceSaga() {
   }
 }
 
+function* submitColorSaga() {
+  while (true) {
+    const { payload } = yield take(`${submitColor}`)
+    const value = yield select(({ colors }) => colors[payload])
+    yield call(sendData, 'change color', {index: payload, value: (value + 1) % 12})
+  }
+}
+
 function* saga() {
   yield fork(fetchContentsSaga)
   yield fork(submitInvestmentSaga)
@@ -79,6 +88,7 @@ function* saga() {
   yield fork(pressNumericSaga)
   yield fork(pressBackspaceSaga)
   yield fork(fetchRankingWatcher)
+  yield fork(submitColorSaga)
 }
 
 export default saga
