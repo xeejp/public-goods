@@ -35,6 +35,7 @@ defmodule PublicGoods.Host do
 
     updater = fn participant, group ->
       %{ participant |
+        voted: false,
         group: group,
         money: money,
         profits: [],
