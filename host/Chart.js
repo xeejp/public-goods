@@ -33,6 +33,7 @@ const mapStateToProps = ({investmentLog, rounds}) => {
     const high = investments[length - 1]
     return [low, q1, median, q2, high]
   })
+  const lineData = finalData.map(list => list[2])
   const config = {
     chart: {
       type: 'boxplot'
@@ -60,6 +61,9 @@ const mapStateToProps = ({investmentLog, rounds}) => {
       tooltip: {
         headerFormat: '<em>{point.key}回目</em><br/>'
       }
+    }, {
+      type: "line",
+      data: lineData
     }]
   }
   console.log(config)
