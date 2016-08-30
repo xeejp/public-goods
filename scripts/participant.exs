@@ -44,6 +44,53 @@ defmodule PublicGoods.Participant do
     end
   end
 
+  def punish(data, id, punishments) when is_list(punishments) do
+    data = data
+            |> put_in([:participants, id, :punished], true)
+            |> put_in([:participants, id, :punishment], punishments)
+
+    group_id = get_in(data, [:participants, id, :group])
+    members = get_in(data, [:groups, group_id, :members])
+
+    if Enum.all?(members, fn id -> get_in(data, [:participants, id, :punished]) end) do
+      {punishments_sum, _} = Enum.map_reduce(members, 0, fn id, num ->
+        sum = Enum.reduce(members, 0, fn id, sum ->
+          punishments = get_in(data, [:participants, id, :punishment])
+          punishment = case Enum.at(punishments, num, 0) do
+            nil -> 0
+            x -> x
+          end
+          sum + punishment * data.punishment_ratio
+        end)
+        {{id, sum}, num + 1}
+      end)
+      punishments_sum = punishments_sum |> Enum.into(%{})
+
+      data
+      |> put_in([:groups, group_id, :state], "punishment_result")
+      |> Map.update!(:participants, fn participants ->
+        Enum.reduce(members, participants, fn id, participants ->
+          penalty = Enum.map(participants[id].punishment, fn x -> case x do
+            nil -> 0
+            x -> x
+          end end)
+          |> Enum.sum()
+
+          participants
+          |> update_in([id, :profits], fn [profit | profits] ->
+            [profit - penalty - punishments_sum[id] | profits]
+          end)
+          |> update_in([id, :punishments], fn punishments ->
+            [punishments_sum[id] | punishments]
+          end)
+        end) |> Enum.into(%{})
+      end)
+      |> Actions.punishment_result(group_id, id, punishments)
+    else
+      Actions.punish(data, id)
+    end
+  end
+
   def vote_next(data, id) do
     participant = get_in(data, [:participants, id])
     false = participant.voted # Ensure that the participant has not been voted.
@@ -58,17 +105,7 @@ defmodule PublicGoods.Participant do
 
       group = case group.state do
         "investment_result" ->
-          if data.punishment do
-            Map.put(group, :state, "punishment")
-          else
-            if data.rounds == group.round + 1 do
-              Map.put(group, :state, "finished")
-            else
-              group
-              |> Map.put(:state, "investment")
-              |> Map.update!(:round, fn round -> round + 1 end)
-            end
-          end
+          Map.put(group, :state, "punishment")
         "punishment_result" ->
           if data.rounds == group.round + 1 do
             Map.put(group, :state, "finished")
@@ -85,7 +122,7 @@ defmodule PublicGoods.Participant do
             invested: false,
             investment: 0,
             punished: false,
-            punishment: 0,
+            punishment: [],
           }
         end)
       end)
@@ -124,8 +161,8 @@ defmodule PublicGoods.Participant do
 
   def format_data(data) do
     %{
+      "punishmentRatio" => data.punishment_ratio,
       page: data.page,
-      punishment: data.punishment,
       money: data.money,
       roi: data.roi
     }

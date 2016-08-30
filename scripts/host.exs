@@ -42,7 +42,8 @@ defmodule PublicGoods.Host do
         invested: false,
         investment: 0,
         punished: false,
-        punishment: 0
+        punishment: [],
+        punishments: []
       }
     end
     reducer = fn {group, ids}, {participants, groups} ->

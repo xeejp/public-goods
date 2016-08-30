@@ -66,6 +66,30 @@ defmodule PublicGoods.Actions do
     format(data, host, participant)
   end
 
+  def punish(data, id) do
+    punishment = get_in(data, [:participants, id, :punishment])
+    host = get_action("punish", %{id: id, punishment: punishment})
+    participant = dispatch_to(id, get_action("punish", punishment))
+    format(data, host, participant)
+  end
+
+  def punishment_result(data, group_id, id, punishments) do
+    group = get_in(data, [:groups, group_id])
+    host = get_action("punishment result", %{
+      participantID: id, punishments: punishments,
+      groupID: group_id
+    })
+    participants = data.participants
+    participant = Enum.map(group.members, fn id -> 
+      punishments = get_in(participants, [id, :punishments])
+      action = get_action("punishment result", %{
+        newPunishment: hd(punishments), newProfit: hd(get_in(participants, [id, :profits]))
+      })
+      {id, %{action: action}}
+    end) |> Enum.into(%{})
+    format(data, host, participant)
+  end
+
   def vote_next(data, group_id) do
     group = get_in(data, [:groups, group_id])
     participant = Enum.reduce(group.members, %{}, fn (id, acc) ->

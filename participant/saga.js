@@ -3,7 +3,8 @@ import { takeEvery } from 'redux-saga'
 
 import {
   fetchContents, submitInvestment, submitNext, openInfo,
-  changeInvestment, pressNumeric, pressBackspace
+  changeInvestment, pressNumeric, pressBackspace,
+  submitPunishment
 } from './actions'
 
 function* fetchRankingSaga() {
@@ -34,6 +35,14 @@ function* submitInvestmentSaga() {
     const { payload: { value } } = yield take(`${submitInvestment}`)
     yield put(openInfo(value))
     yield call(sendData, 'invest', value)
+  }
+}
+
+function* submitPunishmentSaga() {
+  while (true) {
+    yield take(`${submitPunishment}`)
+    const punishments = yield select(({ punishment }) => punishment)
+    yield call(sendData, 'punish', punishments)
   }
 }
 
@@ -75,6 +84,7 @@ function* pressBackspaceSaga() {
 function* saga() {
   yield fork(fetchContentsSaga)
   yield fork(submitInvestmentSaga)
+  yield fork(submitPunishmentSaga)
   yield fork(submitNextSaga)
   yield fork(pressNumericSaga)
   yield fork(pressBackspaceSaga)

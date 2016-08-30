@@ -32,6 +32,12 @@ const reducer = concatenateReducers([
       result[id].investment = investment
       return { participants: result }
     },
+    'punish': ({ participants }, { payload: { id, punishment } }) => {
+      const result = Object.assign({}, participants)
+      result[id].punished = true
+      result[id].punishment = punishment
+      return { participants: result }
+    },
     'investment result': ({ participants, groups, investmentLog }, { payload: {
       participantID, investment, groupID, profit, newLog
     }}) => {

@@ -13,7 +13,8 @@ defmodule PublicGoods.Main do
       page: "waiting",
       participants: %{},
       groups: %{},
-      punishment: false,
+      punishment: true,
+      punishment_ratio: 3,
       investment_log: [],
       money: 100,
       roi: 0.4, # Return on Investment
@@ -30,7 +31,8 @@ defmodule PublicGoods.Main do
       invested: false,
       investment: 0,
       punished: false,
-      punishment: 0,
+      punishment: [], # To everyone
+      punishments: [], # From everyone
       voted: false
     }
   end
