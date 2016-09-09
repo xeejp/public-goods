@@ -1,6 +1,13 @@
 defmodule PublicGoods.Participant do
   alias PublicGoods.Actions
 
+  @after_compile __MODULE__
+
+  def __after_compile__(env, _bytecode) do
+    IO.inspect "PublicGoods compiled"
+    IO.puts("a")
+  end
+
   # Actions
   def fetch_contents(data, id) do
     Actions.update_participant_contents(data, id)
