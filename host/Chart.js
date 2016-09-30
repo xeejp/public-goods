@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
+import throttle from 'react-throttle-render'
 import ReactHighcharts from 'react-highcharts'
 import HighchartsMore from 'highcharts-more'
 HighchartsMore(ReactHighcharts.Highcharts)
@@ -79,4 +80,4 @@ const Chart = ({ config, display }) => (
     : null
 )
 
-export default connect(mapStateToProps)(Chart)
+export default connect(mapStateToProps)(throttle(Chart, 200))
