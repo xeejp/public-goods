@@ -70,7 +70,7 @@ const Users = ({ groups, participants, openParticipantPage }) => (
   <div>
     <Card>
       <CardHeader
-        title={"Users (" + Object.keys(participants).length + "人)"}
+        title={"登録者 " + Object.keys(participants).length + "人"}
         actAsExpander={true}
         showExpandableButton={true}
       />
@@ -80,10 +80,10 @@ const Users = ({ groups, participants, openParticipantPage }) => (
           openParticipantPage={openParticipantPage}
         />
       </CardText>
-    </Card>
+    </Card><br />
     <Card>
       <CardHeader
-        title={"グループ数 (" + Object.keys(groups).length + ")"}
+        title={"グループ " + Object.keys(groups).length + "グループ"}
         actAsExpander={true}
         showExpandableButton={true}
       />

@@ -13,6 +13,22 @@ function* changePageSaga() {
   }
 }
 
+function* backPageSaga() {
+  const pages = ["description", "experiment", "result", "waiting"]
+  while (true) {
+    yield take(`${backPage}`)
+    const page = yield select(({ page }) => page)
+    let next = pages[pages.length - 1]
+    for (let i = pages.length - 1; i >= 0; i --) {
+      if (page == pages[i]) {
+        next = pages[(pages.length - 1 + i) % pages.length]
+        break
+      }
+    }
+    yield put(submitPage(next))
+  }
+}
+
 function* nextPageSaga() {
   const pages = ["description", "experiment", "result", "waiting"]
   while (true) {
