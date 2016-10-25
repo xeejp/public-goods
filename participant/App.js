@@ -3,6 +3,8 @@ import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
 import Snackbar from 'material-ui/Snackbar'
+import {Card, CardText, CardTitle } from 'material-ui/Card'
+import CircularProgress from 'material-ui/CircularProgress'
 import Pages from './Pages'
 
 import { fetchContents, closeInfo } from './actions'
@@ -30,7 +32,17 @@ class App extends Component {
   render() {
     const { loading, closeInfo, info, infoOpened } = this.props
     if (loading) {
-      return <p>ロード中です。</p>
+      return (
+	<Card style={{padding: '20px'}}>
+		<CardTitle title="接続中" style={{padding: '0px', marginTop: '7px', marginBottom: '14px'}}/>
+		<CardText style={{padding: '0px', margin: '0px'}}>
+			<div style={{textAlign: 'center'}}>
+				<CircularProgress style={{margin: '0px', padding: '0px' }} />
+			</div>
+    　　　		<p style={{margin: '0px', padding: '0px'}}>サーバーに接続しています。<br/>このまましばらくお待ちください。</p>
+		</CardText>
+	</Card>
+      )
     } else {
       return (
         <div>
