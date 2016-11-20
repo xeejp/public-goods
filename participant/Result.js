@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { fetchContents } from './actions'
 
 const mapStateToProps = ({ ranking }) => {
-  ranking.sort(({profit: p1}, {profit: p2}) => p1 - p2)
+  ranking.sort(({profit: p1}, {profit: p2}) => p2 - p1) // Desc
   return { ranking }
 }
 

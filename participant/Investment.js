@@ -86,7 +86,7 @@ const Investment = ({ money, value, invested, isValid, changeInvestment, submitI
       </Chip>
     </div>
     <h2>公共財実験</h2>
-    <p>20ポイントのうち、私的財に投資するポイントを入力して下さい。</p>
+    <p>100ポイントのうち、私的財に投資するポイントを入力して下さい。</p>
     <form onSubmit={(event) => {
       event.preventDefault()
       submitInvestment(+value)
