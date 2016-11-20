@@ -1,6 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import {Card, CardText, CardTitle } from 'material-ui/Card'
+import CircularProgress from 'material-ui/CircularProgress'
+import Divider from 'material-ui/Divider'
+
 import { fetchContents } from './actions'
 
 import Users from './Users'
@@ -26,14 +30,30 @@ class App extends Component {
   render() {
     const { loading } = this.props
     if (loading) {
-      return <p>ロード中です。</p>
+      return (
+	<Card style={{padding: '20px'}}>
+		<CardTitle title="接続中" style={{padding: '0px', marginTop: '7px', marginBottom: '14px'}}/>
+		<CardText style={{padding: '0px', margin: '0px'}}>
+			<div style={{textAlign: 'center'}}>
+				<CircularProgress style={{margin: '0px', padding: '0px' }} />
+			</div>
+    　　　		<p style={{margin: '0px', padding: '0px'}}>サーバーに接続しています。<br/>このまましばらくお待ちください。</p>
+		</CardText>
+	</Card>
+      )
     } else {
       return (
         <div>
           <PageButtons />
+          <Divider
+            style={{
+              marginTop: "5%",
+              marginBottom: "5%"
+            }}
+          />
+          <Users /><br />
+          <Chart /><br />
           <MatchingButton />
-          <Users />
-          <Chart />
         </div>
       )
     }

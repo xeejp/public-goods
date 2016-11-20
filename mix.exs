@@ -2,7 +2,7 @@ defmodule PublicGoods.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :xeepublicgoods,
+    [app: :xee_public_goods,
      version: "0.1.0",
      build_path: "../../_build",
      config_path: "../../config/config.exs",

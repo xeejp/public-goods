@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
+import throttle from 'react-throttle-render'
 
 import { Card, CardHeader, CardText } from 'material-ui/Card'
 
@@ -69,7 +70,7 @@ const Users = ({ groups, participants, openParticipantPage }) => (
   <div>
     <Card>
       <CardHeader
-        title={"Users (" + Object.keys(participants).length + "人)"}
+        title={"登録者 " + Object.keys(participants).length + "人"}
         actAsExpander={true}
         showExpandableButton={true}
       />
@@ -79,10 +80,10 @@ const Users = ({ groups, participants, openParticipantPage }) => (
           openParticipantPage={openParticipantPage}
         />
       </CardText>
-    </Card>
+    </Card><br />
     <Card>
       <CardHeader
-        title={"グループ数 (" + Object.keys(groups).length + ")"}
+        title={"グループ " + Object.keys(groups).length + "グループ"}
         actAsExpander={true}
         showExpandableButton={true}
       />
@@ -96,4 +97,4 @@ const Users = ({ groups, participants, openParticipantPage }) => (
   </div>
 )
 
-export default connect(mapStateToProps, mapDispatchToProps)(Users)
+export default connect(mapStateToProps, mapDispatchToProps)(throttle(Users, 200))
