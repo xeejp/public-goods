@@ -12,8 +12,8 @@ const DownloadButton = ({fileName, list, style, disabled }) => (
     disabled={disabled}
     onClick={() => {
       var content = list.map(line => line.join(',')).join("\n")
-      
-      var blob = new Blob([content], {type: 'text/csv'});
+      var bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
+      var blob = new Blob([bom,content], {type: 'text/csv'});
       var url = window.URL || window.webkitURL;
       var blobURL = url.createObjectURL(blob);
 
