@@ -8,12 +8,14 @@ import Divider from 'material-ui/Divider'
 import { fetchContents } from './actions'
 
 import Users from './Users'
-import MatchingButton from './MatchingButton'
 import PageButtons from './PageButtons'
 import Chart from './Chart'
+import Config from './Config'
+import EditQuestion from 'EditQuestion'
+import DownloadButton from 'DownloadButton'
 
-const mapStateToProps = ({loading}) => ({
-  loading
+const mapStateToProps = ({loading, page, participants}) => ({
+  loading, page, participants
 })
 
 class App extends Component {
@@ -28,7 +30,7 @@ class App extends Component {
   }
 
   render() {
-    const { loading } = this.props
+    const { loading, page, participants } = this.props
     if (loading) {
       return (
 	<Card style={{padding: '20px'}}>
@@ -53,7 +55,18 @@ class App extends Component {
           />
           <Users /><br />
           <Chart /><br />
-          <MatchingButton />
+          <Config />
+          <EditQuestion style={{marginLeft: "2%"}} disabled={page != "waiting"} />
+          <DownloadButton 
+            fileName={"public_goods.csv"}
+            list={[
+              ["公共財供給メカニズム"],
+              ["実験日", new Date()],
+              ["登録者数", Object.keys(participants).length],
+            ]}
+            style={{marginLeft: "2%"}}
+            disabled={page != "result"}
+          />
         </div>
       )
     }

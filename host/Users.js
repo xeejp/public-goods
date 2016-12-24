@@ -7,25 +7,31 @@ import { Card, CardHeader, CardText } from 'material-ui/Card'
 
 import { openParticipantPage } from './actions'
 
-const User = ({ id, profit, invested, openParticipantPage }) => (
+const User = ({ id, profit, invested, group, openParticipantPage }) => (
   <tr>
     <td><a onClick={openParticipantPage(id)}>{id}</a></td>
     <td>{profit}</td>
     <td>{invested}</td>
+    <td>{group}</td>
   </tr>
 )
 
 const UsersList = ({participants, openParticipantPage}) => (
   <table>
-    <thead><tr><th>id</th><th>profit</th><th>invested</th></tr></thead>
+    <thead><tr><th>id</th><th>profit</th><th>invested</th><th>group</th></tr></thead>
     <tbody>
       {
-        Object.keys(participants).map(id => (
+        Object.keys(participants).sort((id1, id2) => {
+          if(participants[id1].group > participants[id2].group) return  1
+          if(participants[id1].group < participants[id2].group) return -1
+          return 0
+        }).map(id => (
           <User
             key={id}
             id={id}
             profit={participants[id].profit}
             invested={participants[id].invested ? "投資済" : "未投資"}
+            group={participants[id].group}
             openParticipantPage={openParticipantPage}
           />
         ))
@@ -78,19 +84,6 @@ const Users = ({ groups, participants, openParticipantPage }) => (
         <UsersList
           participants={participants}
           openParticipantPage={openParticipantPage}
-        />
-      </CardText>
-    </Card><br />
-    <Card>
-      <CardHeader
-        title={"グループ " + Object.keys(groups).length + "グループ"}
-        actAsExpander={true}
-        showExpandableButton={true}
-      />
-      <CardText expandable={true}>
-        <Groups
-          groups={groups}
-          participants={participants}
         />
       </CardText>
     </Card>
