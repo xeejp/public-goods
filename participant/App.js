@@ -33,15 +33,15 @@ class App extends Component {
     const { loading, closeInfo, info, infoOpened } = this.props
     if (loading) {
       return (
-	<Card style={{padding: '20px'}}>
-		<CardTitle title="接続中" style={{padding: '0px', marginTop: '7px', marginBottom: '14px'}}/>
-		<CardText style={{padding: '0px', margin: '0px'}}>
-			<div style={{textAlign: 'center'}}>
-				<CircularProgress style={{margin: '0px', padding: '0px' }} />
-			</div>
-    　　　		<p style={{margin: '0px', padding: '0px'}}>サーバーに接続しています。<br/>このまましばらくお待ちください。</p>
-		</CardText>
-	</Card>
+        <Card style={{padding: '20px'}}>
+          <CardTitle title="接続中" style={{padding: '0px', marginTop: '7px', marginBottom: '14px'}}/>
+          <CardText style={{padding: '0px', margin: '0px'}}>
+            <div style={{textAlign: 'center'}}>
+              <CircularProgress style={{margin: '0px', padding: '0px' }} />
+            </div>
+            　　　		<p style={{margin: '0px', padding: '0px'}}>サーバーに接続しています。<br/>このまましばらくお待ちください。</p>
+          </CardText>
+        </Card>
       )
     } else {
       return (
