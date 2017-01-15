@@ -63,7 +63,11 @@ class App extends Component {
               ["公共財供給メカニズム"],
               ["実験日", new Date()],
               ["登録者数", Object.keys(participants).length],
-            ]}
+              ["ID", "1回目の利益", "2回目の利益", "グループID"],
+            ].concat(
+              (participants ? Object.keys(participants).map(id => {
+                return [id, participants[id].profits[1], participants[id].profits[0], participants[id].group]}) : [])
+            )}
             style={{marginLeft: "2%"}}
             disabled={page != "result"}
           />
