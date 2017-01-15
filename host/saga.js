@@ -1,6 +1,6 @@
 import { put, take, call, select, fork } from 'redux-saga/effects'
 
-import { fetchContents, match, nextPage, submitPage, changePage } from './actions'
+import { fetchContents, match, nextPage, backPage, submitPage, changePage } from './actions'
 
 function* changePageSaga() {
   while (true) {
@@ -62,6 +62,7 @@ function* matchSaga() {
 function* saga() {
   yield fork(changePageSaga)
   yield fork(nextPageSaga)
+  yield fork(backPageSaga)
   yield fork(fetchContentsSaga)
   yield fork(matchSaga)
 }

@@ -24,11 +24,11 @@ const DownloadButton = ({fileName, list, style, disabled }) => (
         var a = document.createElement('a');
          a.download = fileName;
          a.href = blobURL;
-         a.click();  
+         a.click();
        }
      }
     }
     ><FileFileDownload /></FloatingActionButton>
 )
 
-export default connect(mapStateToProps)(DownloadButton) 
+export default connect(mapStateToProps)(DownloadButton)

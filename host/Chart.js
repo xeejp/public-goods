@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import throttle from 'react-throttle-render'
 import ReactHighcharts from 'react-highcharts'
 import HighchartsMore from 'highcharts-more'
+import { Card, CardHeader, CardText } from 'material-ui/Card'
 HighchartsMore(ReactHighcharts.Highcharts)
 
 function computeQuartile(array, length, n, d) {
@@ -67,7 +68,6 @@ const mapStateToProps = ({investmentLog, rounds}) => {
       data: lineData
     }]
   }
-  console.log(config)
   return {
     display: investmentLog.length > 0,
     config
@@ -75,9 +75,20 @@ const mapStateToProps = ({investmentLog, rounds}) => {
 }
 
 const Chart = ({ config, display }) => (
-  display
-    ? <ReactHighcharts config={config} />
-    : null
+  <div>
+    <Card>
+      <CardHeader
+        title="グラフ"
+        actAsExpander={true}
+        showExpandableButton={true}
+      />
+      <CardText expandable={true}>
+        {display
+          ? <ReactHighcharts config={config} />
+          : <p>データがないためグラフは表示できません。</p>}
+      </CardText>
+    </Card>
+  </div>
 )
 
 export default connect(mapStateToProps)(throttle(Chart, 200))

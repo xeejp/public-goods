@@ -33,15 +33,15 @@ class App extends Component {
     const { loading, page, participants } = this.props
     if (loading) {
       return (
-	<Card style={{padding: '20px'}}>
-		<CardTitle title="接続中" style={{padding: '0px', marginTop: '7px', marginBottom: '14px'}}/>
-		<CardText style={{padding: '0px', margin: '0px'}}>
-			<div style={{textAlign: 'center'}}>
-				<CircularProgress style={{margin: '0px', padding: '0px' }} />
-			</div>
-    　　　		<p style={{margin: '0px', padding: '0px'}}>サーバーに接続しています。<br/>このまましばらくお待ちください。</p>
-		</CardText>
-	</Card>
+        <Card style={{padding: '20px'}}>
+          <CardTitle title="接続中" style={{padding: '0px', marginTop: '7px', marginBottom: '14px'}}/>
+          <CardText style={{padding: '0px', margin: '0px'}}>
+            <div style={{textAlign: 'center'}}>
+              <CircularProgress style={{margin: '0px', padding: '0px' }} />
+            </div>
+            　　　		<p style={{margin: '0px', padding: '0px'}}>サーバーに接続しています。<br/>このまましばらくお待ちください。</p>
+          </CardText>
+        </Card>
       )
     } else {
       return (
@@ -56,8 +56,8 @@ class App extends Component {
           <Users /><br />
           <Chart /><br />
           <Config />
-          <EditQuestion style={{marginLeft: "2%"}} disabled={page != "waiting"} />
-          <DownloadButton 
+          <EditQuestion style={{marginLeft: "2%"}}/>
+          <DownloadButton
             fileName={"public_goods.csv"}
             list={[
               ["公共財供給メカニズム"],

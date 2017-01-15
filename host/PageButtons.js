@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton'
 import FlatButton from 'material-ui/FlatButton'
 import { Step, Stepper, StepButton } from 'material-ui/Stepper'
 
-import { submitPage, nextPage } from './actions'
+import { submitPage, nextPage, backPage } from './actions'
 
 import { getPage } from 'util/index'
 

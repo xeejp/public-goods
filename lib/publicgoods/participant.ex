@@ -63,6 +63,7 @@ defmodule PublicGoods.Participant do
         length(group.members)
       end)
 
+      now_group_round = group.round
       group = case group.state do
         "investment_result" ->
           if data.punishment do
@@ -89,7 +90,7 @@ defmodule PublicGoods.Participant do
         Map.update!(acc, id, fn participant ->
           %{ participant |
             voted: false,
-            invested: false,
+            invested: data.rounds == now_group_round + 1,
             investment: 0,
             punished: false,
             punishment: 0,

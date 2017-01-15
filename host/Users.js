@@ -29,7 +29,9 @@ const UsersList = ({participants, openParticipantPage}) => (
           <User
             key={id}
             id={id}
-            profit={participants[id].profit}
+            profit={participants[id].profits != null && participants[id].profits.length != 0
+                   ? participants[id].profits.reduce((prev, current, i, arr) => prev+current)
+                   : 0}
             invested={participants[id].invested ? "投資済" : "未投資"}
             group={participants[id].group}
             openParticipantPage={openParticipantPage}
