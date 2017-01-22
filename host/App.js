@@ -11,8 +11,8 @@ import Users from './Users'
 import PageButtons from './PageButtons'
 import Chart from './Chart'
 import Config from './Config'
-import EditQuestion from 'EditQuestion'
-import DownloadButton from 'DownloadButton'
+import EditQuestion from './EditQuestion'
+import DownloadButton from './DownloadButton'
 
 const mapStateToProps = ({loading, page, participants}) => ({
   loading, page, participants
