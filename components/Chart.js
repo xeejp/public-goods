@@ -41,7 +41,7 @@ const mapStateToProps = ({investmentLog, rounds}) => {
       type: 'boxplot'
     },
     title: {
-      text: 'タイトル'
+      text: '公共財投資額の推移'
     },
     legend: {
       enabled: false
@@ -49,7 +49,7 @@ const mapStateToProps = ({investmentLog, rounds}) => {
     xAxis: {
       categories: Array.from(Array(rounds).keys()).map(x => (x + 1).toString()),
         title: {
-          text: 'Round'
+          text: 'ラウンド数'
         }
     },
     yAxis: {

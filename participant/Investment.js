@@ -55,24 +55,12 @@ const MoneyEditor = ({ money, amp, value, changeInvestment, validateValue }) => 
     const valueInt = parseInt(value, 10)
 
     return (
-      <span>
-        <FlatButton
-          label={"-" + amp}
-          disabled={!validateValue(valueInt - amp)}
-          onClick={() => changeInvestment(valueInt - amp, validateValue(valueInt - amp))}
-        />
-        <MoneyEditor
-          amp={nextAmp}
-          value={value}
-          changeInvestment={changeInvestment}
-          validateValue={validateValue}
-        />
-        <FlatButton
-          label={"+" + amp}
-          disabled={!validateValue(valueInt + amp)}
-          onClick={() => changeInvestment(valueInt + amp, validateValue(valueInt + amp))}
-        />
-      </span>
+      <MoneyEditor
+        amp={nextAmp}
+        value={value}
+        changeInvestment={changeInvestment}
+        validateValue={validateValue}
+      />
     )
   }
 }
@@ -98,7 +86,6 @@ const Investment = ({ money, value, invested, isValid, changeInvestment, submitI
             validateValue={validateValue}
             money={money}
           />
-          <NumericKeypad />
       </CardText>
       <CardActions>
           <RaisedButton

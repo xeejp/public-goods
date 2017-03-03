@@ -9,7 +9,7 @@ import { fetchContents } from './actions'
 
 import Users from './Users'
 import PageButtons from './PageButtons'
-import Chart from './Chart'
+import Chart from 'components/Chart'
 import Config from './Config'
 import EditQuestion from './EditQuestion'
 import DownloadButton from './DownloadButton'
