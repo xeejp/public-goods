@@ -13,7 +13,7 @@ class Waiting extends Component {
         return (
             <div>
                 <Card>
-                    <CardTitle title="ダブルオークション実験" subtitle="待機中"/>
+                    <CardTitle title="公共財実験" subtitle="待機中"/>
                     <CardText>
                         <p>参加者の登録を待っています。</p>
                         <p>この画面のまましばらくお待ち下さい。</p>
