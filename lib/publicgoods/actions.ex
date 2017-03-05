@@ -10,6 +10,8 @@ defmodule PublicGoods.Actions do
   def join(data, id, participant) do
     action = get_action("join", %{id: id, participant: participant})
     format(data, action)
+    action = get_action("update contents", Participant.format_contents(data, id))
+    format(data, nil, dispatch_to_all(data, action))
   end
 
   def matched(%{participants: participants, groups: groups} = data) do

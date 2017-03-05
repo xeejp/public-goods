@@ -5,7 +5,6 @@ defmodule PublicGoods.Participant do
 
   def __after_compile__(env, _bytecode) do
     IO.inspect "PublicGoods compiled"
-    IO.puts("a")
   end
 
   # Actions
@@ -135,7 +134,8 @@ defmodule PublicGoods.Participant do
       page: data.page,
       punishment: data.punishment,
       money: data.money,
-      roi: data.roi
+      roi: data.roi,
+      joined: Map.size(data.participants),
     }
   end
 

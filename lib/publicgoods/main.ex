@@ -18,7 +18,8 @@ defmodule PublicGoods.Main do
       money: 100,
       roi: 0.4, # Return on Investment
       rounds: 2,
-      group_size: 4 # Number of members
+      group_size: 4, # Number of members
+      joined: 0
     }
   end
 
