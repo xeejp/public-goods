@@ -52,10 +52,11 @@ const InvestmentResult = ({
     <CardActions>
       <RaisedButton
         primary={true}
-        label={"次に進む (" + votesNext + "/" + investments.length + ")"}
+        label={"次に進む "}
         disabled={voted}
         onClick={submitNext}
       />
+      <p>(確認：{votesNext}人/{investments.length}人中)</p>
     </CardActions>
   </Card>
 )
