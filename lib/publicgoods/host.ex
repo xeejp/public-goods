@@ -38,6 +38,7 @@ defmodule PublicGoods.Host do
         voted: false,
         group: group,
         money: money,
+        invs: [],
         profits: [],
         invested: false,
         investment: 0,

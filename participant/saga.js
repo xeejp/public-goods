@@ -32,8 +32,13 @@ function* fetchContentsSaga() {
 function* submitInvestmentSaga() {
   while (true) {
     const { payload: { value } } = yield take(`${submitInvestment}`)
-    yield put(openInfo(value))
-    yield call(sendData, 'invest', value)
+    const { money } = yield select(({ money }) => ({
+      money
+    }))
+    if(value >= 0 && value <= money){
+      yield put(openInfo(value))
+      yield call(sendData, 'invest', value)
+    }
   }
 }
 

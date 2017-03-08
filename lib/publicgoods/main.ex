@@ -17,7 +17,7 @@ defmodule PublicGoods.Main do
       investment_log: [],
       money: 100,
       roi: 0.4, # Return on Investment
-      rounds: 2,
+      rounds: 4,
       group_size: 4, # Number of members
       joined: 0
     }
@@ -27,6 +27,7 @@ defmodule PublicGoods.Main do
     %{
       group: nil,
       money: 0,
+      invs: [],
       profits: [],
       invested: false,
       investment: 0,

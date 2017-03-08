@@ -4,6 +4,12 @@ import { connect } from 'react-redux'
 
 import RaisedButton from 'material-ui/RaisedButton'
 import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card'
+import Divider from 'material-ui/Divider'
+
+import { pink400, blue400, orange400 } from 'material-ui/styles/colors';
+import Avatar from 'material-ui/Avatar'
+import List from 'material-ui/List/List'
+import ListItem from 'material-ui/List/ListItem'
 
 import { submitNext } from './actions'
 
@@ -28,36 +34,92 @@ const InvestmentResult = ({
   <Card>
     <CardHeader title="公共財実験" subtitle="投資結果画面" />
     <CardText>
-      <p>利得: {profits[0]}</p>
-      <p>利得合計: {profits.reduce((acc, profit) => acc + profit, 0)}</p>
-      <table>
-        <thead>
-          <tr>
-            <th>投資額</th>
-            <th>利得</th>
-          </tr>
-        </thead>
-        <tbody>
-          {
-            investments.map((investment, id) => (
-              <tr key={id}>
-                <td>{investment}</td>
-                <td>{Math.floor(roi * investmentsSum) - investment}</td>
-              </tr>
-            ))
-          }
-        </tbody>
-      </table>
+      <List>
+        <ListItem>
+          <p>私的財からの利得</p>
+          <Avatar
+            backgroundColor={blue400}
+            size={50}
+            style={{margin: 5}}
+          >
+            {profits[0]-(investmentsSum*roi)}
+          </Avatar>
+        </ListItem>
+        <ListItem>
+          <p>公共財からの利得</p>
+          <Avatar
+            backgroundColor={orange400}
+            size={50}
+            style={{margin: 5}}
+          >
+            {investmentsSum}
+          </Avatar>
+          ×{roi}倍＝
+          <Avatar
+            backgroundColor={blue400}
+            size={50}
+            style={{margin: 5}}
+          >
+            {investmentsSum*roi}
+          </Avatar>
+        </ListItem>
+        <Divider />
+        <ListItem>
+          <p>利得合計</p>
+          <Avatar
+            backgroundColor={blue400}
+            size={50}
+            style={{margin: 5}}
+          >
+            {profits[0]-(investmentsSum*roi)}
+          </Avatar>
+          ＋
+          <Avatar
+            backgroundColor={blue400}
+            size={50}
+            style={{margin: 5}}
+          >
+            {investmentsSum*roi}
+          </Avatar>
+          ＝
+          <Avatar
+            backgroundColor={blue400}
+            size={50}
+            style={{margin: 5}}
+          >
+            {profits[0]}
+          </Avatar>
+        </ListItem>
+      </List>
+      <Divider />
+      <List>
+        <ListItem>
+        <p>メンバーの公共財投資</p>
+        {
+          investments.map((investment, id) => (
+            <Avatar
+              key={id}
+              backgroundColor={pink400}
+              size={50}
+              style={{margin: 5}}
+            >
+              {investment}
+            </Avatar>
+          ))
+        }
+        </ListItem>
+      </List>
+      <Divider />
+      <CardActions>
+        <RaisedButton
+          primary={true}
+          label={"次に進む "}
+          disabled={voted}
+          onClick={submitNext}
+        />
+        <p>(確認：{votesNext}人/{investments.length}人中)</p>
+      </CardActions>
     </CardText>
-    <CardActions>
-      <RaisedButton
-        primary={true}
-        label={"次に進む "}
-        disabled={voted}
-        onClick={submitNext}
-      />
-      <p>(確認：{votesNext}人/{investments.length}人中)</p>
-    </CardActions>
   </Card>
 )
 

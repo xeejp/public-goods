@@ -78,7 +78,7 @@ const Investment = ({ money, value, invested, isValid, changeInvestment, submitI
             {profits.reduce((acc, p) => acc + p, 0) + "ポイント"}
           </Chip>
         </div>
-        <p>100ポイントのうち、私的財に投資するポイントを入力して下さい。</p>
+        <p>{money}ポイントのうち、私的財に投資するポイントを入力して下さい。</p>
           <MoneyEditor
             amp={Math.floor(money / 10)}
             value={value}
