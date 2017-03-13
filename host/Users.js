@@ -34,26 +34,27 @@ const UsersList = ({groups, participants, openParticipantPage}) => (
           return 0
         }).map(id => {
           const group = groups[participants[id].group]
+          const p = participants[id]
           return (
             <User
               key={id}
               id={id}
-  　　　　　　investment_private={participants[id].invs != null && participants[id].invs.length != 0
-                                 ? (participants[id].money * participants[id].invs.length) - participants[id].invs.reduce((prev, current, i, arr) => prev+current)
+  　　　　　　investment_private={p.invs != null && p.invs.length != 0
+                                 ? (p.money * p.invs.length) - p.invs.reduce((prev, current) => prev+current)
                                  : "未確定"}
-  　　　　　　investment_public={participants[id].invs != null && participants[id].invs.length != 0
-                                ? participants[id].invs.reduce((prev, current, i, arr) => prev+current)
+  　　　　　　investment_public={p.invs != null && p.invs.length != 0
+                                ? p.invs.reduce((prev, current, i, arr) => prev+current)
                                 : "未確定"}
-              profit_private={participants[id].profits != null && participants[id].profits.length != 0 && participants[id].invs != null && participants[id].invs.length != 0
-                             ? (participants[id].money * participants[id].invs.length) - participants[id].invs.reduce((prev, current, i, arr) => prev+current)
+              profit_private={p.profits != null && p.profits.length != 0 && p.invs != null && p.invs.length != 0
+                             ? (p.money * p.invs.length) - p.invs.reduce((prev, current, i, arr) => prev+current)
                              : "未確定"}
-              profit_public={participants[id].profits != null && participants[id].profits.length != 0 && participants[id].invs != null && participants[id].invs.length != 0
-                             ? participants[id].profits.reduce((prev, current, i, arr) => prev+current) - ((participants[id].money * participants[id].invs.length) - participants[id].invs.reduce((prev, current, i, arr) => prev+current))
+              profit_public={p.profits != null && p.profits.length != 0 && p.invs != null && p.invs.length != 0
+                             ? p.profits.reduce((prev, current, i, arr) => prev+current) - ((p.money * p.invs.length) - p.invs.reduce((prev, current, i, arr) => prev+current))
                              : "未確定"}
-              profit={participants[id].profits != null && participants[id].profits.length != 0
-                     ? participants[id].profits.reduce((prev, current, i, arr) => prev+current)
+              profit={p.profits != null && p.profits.length != 0
+                     ? p.profits.reduce((prev, current, i, arr) => prev+current)
                      : "未確定"}
-              group={participants[id].group}
+              group={p.group}
   　　　　　　round={group.round + 1}
               state={group.state}
               openParticipantPage={openParticipantPage}

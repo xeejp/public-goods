@@ -39,11 +39,14 @@ defmodule PublicGoods.Participant do
   end
 
   def invest(data, id, investment) do
+    # assert that a participant have not invested
+    false = get_in(data, [:participants, id, :invested])
     data = data
            |> put_in([:participants, id, :invested], true)
            |> put_in([:participants, id, :investment], investment)
 
     group_id = get_in(data, [:participants, id, :group])
+    # assert that the state of a group is not finished
     true = get_in(data, [:groups, group_id, :state]) != "finished"
     members = get_in(data, [:groups, group_id, :members])
 
