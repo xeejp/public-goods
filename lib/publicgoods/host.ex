@@ -71,7 +71,8 @@ defmodule PublicGoods.Host do
     rounds = Map.get(params, "rounds", data.rounds)
     roi = Map.get(params, "roi", data.roi)
     money = Map.get(params, "money", data.money)
-    %{data | rounds: rounds, roi: roi, money: money}
+    group_size = Map.get(params, "group_size", data.group_size)
+    %{data | rounds: rounds, roi: roi, money: money, group_size: group_size}
   end
 
   # Utilities

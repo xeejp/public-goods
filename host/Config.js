@@ -9,9 +9,9 @@ import TextField from 'material-ui/TextField'
 
 import ReactTooltip from 'react-tooltip'
 
-const mapStateToProps = ({ rounds, roi, money }) => {
+const mapStateToProps = ({ rounds, roi, money, groupSize }) => {
   return {
-    rounds, roi, money
+    rounds, roi, money, groupSize
   }
 }
 
@@ -24,13 +24,16 @@ class Config extends Component {
     this.changeRounds = this.changeRounds.bind(this)
     this.changeROI = this.changeROI.bind(this)
     this.changeMoney = this.changeMoney.bind(this)
+    this.changeGroupSize = this.changeGroupSize.bind(this)
     this.state = {
       roundsText: '4',
       roiText: '0.4',
       moneyText: '100',
+      groupSizeText: '4',
       rounds: 4,
       roi: 0.4,
       money: 100,
+      groupSize: 4,
       open: true
     }
   }
@@ -71,10 +74,24 @@ class Config extends Component {
     })
   }
 
+  changeGroupSize(event) {
+    const text = event.target.value
+    this.setState({
+      groupSizeText: text,
+      groupSize: parseInt(text, 10)
+    })
+  }
+
+  validate() {
+    const { rounds, roi, money, groupSize } = this.state
+    return rounds !== NaN && roi !== NaN && money !== NaN && groupSize !== NaN
+      && groupSize >= 2 && money >= 1 && rounds >= 1
+  }
+
   submit() {
-    const { rounds, roi, money } = this.state
-    if (rounds !== NaN && roi !== NaN && money !== NaN) {
-      sendData('update config', { rounds, roi, money })
+    const { rounds, roi, money, groupSize } = this.state
+    if (this.validate()) {
+      sendData('update config', { rounds, roi, money, group_size: groupSize })
       this.close()
     }
   }
@@ -92,13 +109,13 @@ class Config extends Component {
   }
 
   render() {
-    const { rounds, roi, money, roundsText, roiText, moneyText } = this.state
+    const { roundsText, roiText, moneyText, groupSizeText } = this.state
     const actions = [
       <FlatButton
         onTouchTap={this.submit}
         label="Update"
         primary={true}
-        disabled={rounds === NaN || roi === NaN || money === NaN}
+        disabled={!this.validate()}
       />,
       <FlatButton
         onTouchTap={this.close}
@@ -131,6 +148,12 @@ class Config extends Component {
             id="money"
             value={moneyText}
             onChange={this.changeMoney}
+          />
+          <p>グループ人数</p>
+          <TextField
+            id="size"
+            value={groupSizeText}
+            onChange={this.changeGroupSize}
           />
         </Dialog>
         <FloatingActionButton onClick={this.toggle}>
