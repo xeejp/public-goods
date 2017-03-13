@@ -67,6 +67,12 @@ defmodule PublicGoods.Host do
     %{data | participants: participants, groups: groups, investment_log: []}
   end
 
+  def update_config(data, params) do
+    rounds = Map.get(params, "rounds", data.rounds)
+    roi = Map.get(params, "roi", data.roi)
+    %{data | rounds: rounds, roi: roi}
+  end
+
   # Utilities
   def format_contents(data) do
     data

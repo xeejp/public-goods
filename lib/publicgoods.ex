@@ -23,11 +23,12 @@ defmodule PublicGoods do
 
   # Host router
   def handle_received(data, %{"action" => action, "params" => params}) do
-    Logger.debug("[Public Goods] #{action} #{params}")
+    Logger.debug("[Public Goods] #{action} #{inspect params}")
     result = case {action, params} do
       {"fetch contents", _} -> Host.fetch_contents(data)
       {"change page", page} -> Host.change_page(data, page)
       {"match", _} -> Host.match(data)
+      {"update config", params} -> Host.update_config(data, params)
       _ -> {:ok, %{data: data}}
     end
     wrap_result(data, result)
