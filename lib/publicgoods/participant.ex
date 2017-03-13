@@ -3,6 +3,32 @@ defmodule PublicGoods.Participant do
 
   @after_compile __MODULE__
 
+  def filter_data(data, id) do
+    rule = %{
+      rounds: true,
+      page: true,
+      punishment: true,
+      money: true,
+      roi: true,
+      participants: %{id => true},
+      _spread: [[:participants, id]]
+    }
+    %{participants: participants, groups: groups} = data
+    participant = Map.get(participants, id)
+    group = if not is_nil(participant.group) do
+      format_group(data, Map.get(groups, participant.group), id)
+    else
+      %{}
+    end
+    data
+    |> Transmap.transform(rule)
+    |> Map.put(:joined, Map.size(data.participants))
+    |> Map.put(:ranking, Enum.map(data.ranking, fn {key, profit} ->
+      %{profit: profit, own: key == id}
+    end))
+    |> Map.merge(group)
+  end
+
   def __after_compile__(env, _bytecode) do
     IO.inspect "PublicGoods compiled"
   end
@@ -55,9 +81,8 @@ defmodule PublicGoods.Participant do
           end)
         } | log]
       end)
-      |> Actions.investment_result(group_id, id, investment)
     else
-      Actions.invest(data, id)
+      data
     end
   end
 
@@ -110,18 +135,11 @@ defmodule PublicGoods.Participant do
       data
       |> put_in([:groups, group_id], group)
       |> Map.put(:participants, participants)
-      |> Actions.change_state(group_id)
     else
       group = Map.update!(group, :not_voted, fn x -> x - 1 end)
       data
       |> put_in([:groups, group_id], group)
-      |> Actions.vote_next(group_id)
     end
-  end
-
-  def fetch_ranking(data, id) do
-    data
-    |> Actions.update_ranking(id)
   end
 
   # Utilities
@@ -131,35 +149,15 @@ defmodule PublicGoods.Participant do
       members: length(group.members),
       memberID: Enum.find_index(group.members, fn x -> x == id end),
       investments: investments = Enum.map(group.members, fn id ->
-        get_in(participants, [id, :investment])
+        %{id: id, investment: get_in(participants, [id, :investment])}
       end),
       round: group.round,
       state: group.state,
-    }
-  end
-
-  def format_participant(participant), do: participant
-
-  def format_data(data) do
-    %{
-      page: data.page,
-      punishment: data.punishment,
-      money: data.money,
-      roi: data.roi,
-      joined: Map.size(data.participants),
+      votesNext: length(group.members) - group.not_voted
     }
   end
 
   def format_contents(data, id) do
-    %{participants: participants, groups: groups} = data
-    participant = Map.get(participants, id)
-    if not is_nil(participant.group) do
-      format_participant(participant)
-      |> Map.merge(format_group(data, Map.get(groups, participant.group), id))
-      |> Map.merge(format_data(data))
-    else
-      format_participant(participant)
-      |> Map.merge(format_data(data))
-    end
+    filter_data(data, id)
   end
 end

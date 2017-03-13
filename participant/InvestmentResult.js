@@ -16,7 +16,7 @@ import { submitNext } from './actions'
 const mapStateToProps = ({
   memberID, investments, roi, profits, voted, votesNext
 }) => {
-  const investmentsSum = investments.reduce((acc, investment) => acc + investment, 0)
+  const investmentsSum = investments.reduce((acc, { investment }) => acc + investment, 0)
   return {
     memberID, investments, roi, investmentsSum, profits,
     voted, votesNext
@@ -96,7 +96,7 @@ const InvestmentResult = ({
         <ListItem>
         <p>メンバーの公共財投資</p>
         {
-          investments.map((investment, id) => (
+          investments.map(({ id, investment }) => (
             <Avatar
               key={id}
               backgroundColor={pink400}

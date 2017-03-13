@@ -11,8 +11,9 @@ import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card'
 import NumericKeypad from './NumericKeypad'
 import { changeInvestment, submitInvestment } from './actions'
 
-const mapStateToProps = ({ investForm, money, profits, invested }) => (
+const mapStateToProps = ({ investForm, money, profits, invested, round, rounds }) => (
   Object.assign({}, investForm, {
+    round, rounds,
     money,
     profits,
     invested,
@@ -65,7 +66,7 @@ const MoneyEditor = ({ money, amp, value, changeInvestment, validateValue }) => 
   }
 }
 
-const Investment = ({ money, value, invested, isValid, changeInvestment, submitInvestment, validateValue, profits }) => (
+const Investment = ({ round, rounds, money, value, invested, isValid, changeInvestment, submitInvestment, validateValue, profits }) => (
   <form onSubmit={(event) => {
     event.preventDefault()
     submitInvestment(+value)
@@ -74,6 +75,9 @@ const Investment = ({ money, value, invested, isValid, changeInvestment, submitI
       <CardHeader title="公共財実験" subtitle="投資" />
       <CardText>
         <div style={styles.wrapper}>
+          <Chip style={styles.chip}>
+            {`${round + 1}/${rounds}ラウンド`}
+          </Chip>
           <Chip style={styles.chip}>
             {profits.reduce((acc, p) => acc + p, 0) + "ポイント"}
           </Chip>

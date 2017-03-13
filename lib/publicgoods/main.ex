@@ -17,7 +17,7 @@ defmodule PublicGoods.Main do
       investment_log: [],
       money: 100,
       roi: 0.4, # Return on Investment
-      rounds: 4,
+      rounds: 2,
       group_size: 4, # Number of members
       joined: 0
     }
@@ -50,7 +50,6 @@ defmodule PublicGoods.Main do
     unless Map.has_key?(data.participants, id) do
       new = new_participant()
       put_in(data, [:participants, id], new)
-      |> Actions.join(id, new)
     else
       data
     end

@@ -2,6 +2,15 @@ defmodule PublicGoods.Host do
   alias PublicGoods.Main
   alias PublicGoods.Actions
 
+  def filter_data(data) do
+    rule = %{
+      _default: true,
+      investment_log: "investmentLog",
+    }
+    data
+    |> Transmap.transform(rule)
+  end
+
   # Actions
   def fetch_contents(data) do
     data
@@ -17,7 +26,6 @@ defmodule PublicGoods.Host do
         data = %{data | ranking: ranking}
       end
       %{data | page: page}
-      |> Actions.change_page(page)
     else
       data
     end
@@ -57,7 +65,6 @@ defmodule PublicGoods.Host do
     {participants, groups} = Enum.reduce(groups, acc, reducer)
 
     %{data | participants: participants, groups: groups, investment_log: []}
-    |> Actions.matched()
   end
 
   # Utilities
