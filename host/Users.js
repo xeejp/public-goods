@@ -51,7 +51,7 @@ const UsersList = ({groups, participants, openParticipantPage}) => (
                    ? participants[id].profits.reduce((prev, current, i, arr) => prev+current)
                    : "未確定"}
             group={participants[id].group}
-　　　　　　round={participants[id].invs.length}
+　　　　　　round={groups[participants[id].group].round + 1}
             openParticipantPage={openParticipantPage}
           />
         ))
@@ -61,7 +61,7 @@ const UsersList = ({groups, participants, openParticipantPage}) => (
 )
 
 const Group = ({ id, round, state, members }) => (
-  <tr><td>{id}</td><td>{round}</td><td>{state}</td><td>{members}</td></tr>
+  <tr><td>{id}</td><td>{round + 1}</td><td>{state}</td><td>{members}</td></tr>
 )
 
 const Groups = ({ groups, participants }) => (

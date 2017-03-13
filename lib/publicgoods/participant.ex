@@ -40,10 +40,11 @@ defmodule PublicGoods.Participant do
 
   def invest(data, id, investment) do
     data = data
-            |> put_in([:participants, id, :invested], true)
-            |> put_in([:participants, id, :investment], investment)
+           |> put_in([:participants, id, :invested], true)
+           |> put_in([:participants, id, :investment], investment)
 
     group_id = get_in(data, [:participants, id, :group])
+    true = get_in(data, [:groups, group_id, :state]) != "finished"
     members = get_in(data, [:groups, group_id, :members])
 
     if Enum.all?(members, fn id -> get_in(data, [:participants, id, :invested]) end) do
