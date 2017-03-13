@@ -7,7 +7,7 @@ import { Card, CardHeader, CardText } from 'material-ui/Card'
 
 import { openParticipantPage } from './actions'
 
-const User = ({ id,investment_private, investment_public, profit_private, profit_public, profit, group, openParticipantPage, round }) => (
+const User = ({ id,investment_private, investment_public, profit_private, profit_public, profit, group, openParticipantPage, round, state }) => (
   <tr>
     <td><a onClick={openParticipantPage(id)}>{id}</a></td>
     <td>{investment_private}</td>
@@ -17,13 +17,14 @@ const User = ({ id,investment_private, investment_public, profit_private, profit
     <td>{profit}</td>
     <td>{group}</td>
     <td>{round}</td>
+    <td>{state}</td>
   </tr>
 )
 
 const UsersList = ({groups, participants, openParticipantPage}) => (
   <table>
     <thead>
-      <tr><th>被験者ID</th><th>私的財投資</th><th>公共財投資</th><th>私的財利得</th><th>公共財利得</th><th>利得合計</th><th>グループ</th><th>ラウンド</th></tr>
+      <tr><th>被験者ID</th><th>私的財投資</th><th>公共財投資</th><th>私的財利得</th><th>公共財利得</th><th>利得合計</th><th>グループ</th><th>ラウンド</th><th>状態</th></tr>
     </thead>
     <tbody>
       {
@@ -31,30 +32,34 @@ const UsersList = ({groups, participants, openParticipantPage}) => (
           if(participants[id1].group > participants[id2].group) return  1
           if(participants[id1].group < participants[id2].group) return -1
           return 0
-        }).map(id => (
-          <User
-            key={id}
-            id={id}
-　　　　　　investment_private={participants[id].invs != null && participants[id].invs.length != 0
-                               ? (participants[id].money * participants[id].invs.length) - participants[id].invs.reduce((prev, current, i, arr) => prev+current)
-                               : "未確定"}
-　　　　　　investment_public={participants[id].invs != null && participants[id].invs.length != 0
-                              ? participants[id].invs.reduce((prev, current, i, arr) => prev+current)
-                              : "未確定"}
-            profit_private={participants[id].profits != null && participants[id].profits.length != 0 && participants[id].invs != null && participants[id].invs.length != 0
-                           ? (participants[id].money * participants[id].invs.length) - participants[id].invs.reduce((prev, current, i, arr) => prev+current)
-                           : "未確定"}
-            profit_public={participants[id].profits != null && participants[id].profits.length != 0 && participants[id].invs != null && participants[id].invs.length != 0
-                           ? participants[id].profits.reduce((prev, current, i, arr) => prev+current) - ((participants[id].money * participants[id].invs.length) - participants[id].invs.reduce((prev, current, i, arr) => prev+current))
-                           : "未確定"}
-            profit={participants[id].profits != null && participants[id].profits.length != 0
-                   ? participants[id].profits.reduce((prev, current, i, arr) => prev+current)
-                   : "未確定"}
-            group={participants[id].group}
-　　　　　　round={groups[participants[id].group].round + 1}
-            openParticipantPage={openParticipantPage}
-          />
-        ))
+        }).map(id => {
+          const group = groups[participants[id].group]
+          return (
+            <User
+              key={id}
+              id={id}
+  　　　　　　investment_private={participants[id].invs != null && participants[id].invs.length != 0
+                                 ? (participants[id].money * participants[id].invs.length) - participants[id].invs.reduce((prev, current, i, arr) => prev+current)
+                                 : "未確定"}
+  　　　　　　investment_public={participants[id].invs != null && participants[id].invs.length != 0
+                                ? participants[id].invs.reduce((prev, current, i, arr) => prev+current)
+                                : "未確定"}
+              profit_private={participants[id].profits != null && participants[id].profits.length != 0 && participants[id].invs != null && participants[id].invs.length != 0
+                             ? (participants[id].money * participants[id].invs.length) - participants[id].invs.reduce((prev, current, i, arr) => prev+current)
+                             : "未確定"}
+              profit_public={participants[id].profits != null && participants[id].profits.length != 0 && participants[id].invs != null && participants[id].invs.length != 0
+                             ? participants[id].profits.reduce((prev, current, i, arr) => prev+current) - ((participants[id].money * participants[id].invs.length) - participants[id].invs.reduce((prev, current, i, arr) => prev+current))
+                             : "未確定"}
+              profit={participants[id].profits != null && participants[id].profits.length != 0
+                     ? participants[id].profits.reduce((prev, current, i, arr) => prev+current)
+                     : "未確定"}
+              group={participants[id].group}
+  　　　　　　round={group.round + 1}
+              state={group.state}
+              openParticipantPage={openParticipantPage}
+            />
+          )
+        })
       }
     </tbody>
   </table>
