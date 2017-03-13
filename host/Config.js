@@ -28,7 +28,7 @@ class Config extends Component {
       roiText: '0.4',
       rounds: 4,
       roi: 0.4,
-      open: false
+      open: true
     }
   }
 
