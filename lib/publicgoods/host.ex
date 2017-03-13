@@ -70,7 +70,8 @@ defmodule PublicGoods.Host do
   def update_config(data, params) do
     rounds = Map.get(params, "rounds", data.rounds)
     roi = Map.get(params, "roi", data.roi)
-    %{data | rounds: rounds, roi: roi}
+    money = Map.get(params, "money", data.money)
+    %{data | rounds: rounds, roi: roi, money: money}
   end
 
   # Utilities
