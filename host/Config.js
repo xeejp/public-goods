@@ -9,9 +9,9 @@ import TextField from 'material-ui/TextField'
 
 import ReactTooltip from 'react-tooltip'
 
-const mapStateToProps = ({ rounds, roi }) => {
+const mapStateToProps = ({ rounds, roi, money, groupSize }) => {
   return {
-    rounds, roi
+    rounds, roi, money, groupSize
   }
 }
 
@@ -23,12 +23,18 @@ class Config extends Component {
     this.submit = this.submit.bind(this)
     this.changeRounds = this.changeRounds.bind(this)
     this.changeROI = this.changeROI.bind(this)
+    this.changeMoney = this.changeMoney.bind(this)
+    this.changeGroupSize = this.changeGroupSize.bind(this)
     this.state = {
       roundsText: '4',
       roiText: '0.4',
+      moneyText: '100',
+      groupSizeText: '4',
       rounds: 4,
       roi: 0.4,
-      open: false
+      money: 100,
+      groupSize: 4,
+      open: true
     }
   }
 
@@ -60,31 +66,56 @@ class Config extends Component {
     })
   }
 
+  changeMoney(event) {
+    const text = event.target.value
+    this.setState({
+      moneyText: text,
+      money: parseInt(text, 10)
+    })
+  }
+
+  changeGroupSize(event) {
+    const text = event.target.value
+    this.setState({
+      groupSizeText: text,
+      groupSize: parseInt(text, 10)
+    })
+  }
+
+  validate() {
+    const { rounds, roi, money, groupSize } = this.state
+    return rounds !== NaN && roi !== NaN && money !== NaN && groupSize !== NaN
+      && groupSize >= 2 && money >= 1 && rounds >= 1
+  }
+
   submit() {
-    const { rounds, roi } = this.state
-    if (rounds !== NaN && roi !== NaN) {
-      sendData('update config', { rounds, roi })
+    const { rounds, roi, money, groupSize } = this.state
+    if (this.validate()) {
+      sendData('update config', { rounds, roi, money, group_size: groupSize })
+      this.close()
     }
   }
 
   componentWillMount() {
-    const { rounds, roi } = this.props
+    const { rounds, roi, money } = this.props
     this.setState({
       rounds,
       roi,
+      money,
       roundsText: rounds.toString(),
-      roiText: roi.toString()
+      roiText: roi.toString(),
+      moneyText: money.toString()
     })
   }
 
   render() {
-    const { rounds, roi, roundsText, roiText } = this.state
+    const { roundsText, roiText, moneyText, groupSizeText } = this.state
     const actions = [
       <FlatButton
         onTouchTap={this.submit}
         label="Update"
         primary={true}
-        disabled={rounds === NaN || roi === NaN}
+        disabled={!this.validate()}
       />,
       <FlatButton
         onTouchTap={this.close}
@@ -111,6 +142,18 @@ class Config extends Component {
             id="roi"
             value={roiText}
             onChange={this.changeROI}
+          />
+          <p>初期値</p>
+          <TextField
+            id="money"
+            value={moneyText}
+            onChange={this.changeMoney}
+          />
+          <p>グループ人数</p>
+          <TextField
+            id="size"
+            value={groupSizeText}
+            onChange={this.changeGroupSize}
           />
         </Dialog>
         <FloatingActionButton onClick={this.toggle}>
