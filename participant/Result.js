@@ -5,7 +5,10 @@ import { fetchContents } from './actions'
 
 const mapStateToProps = ({ ranking }) => {
   ranking.sort(({profit: p1}, {profit: p2}) => p2 - p1) // Desc
-  return { ranking }
+  const filtered = ranking.filter(({ own }, index) => {
+    return own || index < 10
+  })
+  return { ranking: filtered }
 }
 
 const Result = ({ranking}) => (
