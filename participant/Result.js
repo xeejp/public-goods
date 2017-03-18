@@ -5,9 +5,13 @@ import { fetchContents } from './actions'
 
 const mapStateToProps = ({ ranking }) => {
   ranking.sort(({profit: p1}, {profit: p2}) => p2 - p1) // Desc
-  const filtered = ranking.filter(({ own }, index) => {
-    return own || index < 10
-  })
+  const filtered = ranking
+    .map((obj, index) => {
+      return Object.assign({rank: index + 1}, obj)
+    })
+    .filter(({ own }, index) => {
+      return own || index < 10
+    })
   return { ranking: filtered }
 }
 
@@ -19,7 +23,7 @@ const Result = ({ranking}) => (
       </thead>
       <tbody>
         {
-          ranking.map(({ profit, own }, i) => (
+          ranking.map(({ profit, own, rank }, i) => (
             <tr
               key={i}
               style={own
@@ -29,7 +33,7 @@ const Result = ({ranking}) => (
                 : {}
               }
             >
-              <td>{i+1}</td><td>{profit}</td>
+              <td>{rank}</td><td>{profit}</td>
             </tr>
           ))
         }
