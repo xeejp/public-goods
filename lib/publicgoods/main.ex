@@ -14,7 +14,10 @@ defmodule PublicGoods.Main do
       participants: %{},
       groups: %{},
       punishment: false,
+      punishment_rate: 3,
+      max_punishment: 3,
       investment_log: [],
+      punishment_log: [],
       money: 100,
       roi: 0.4, # Return on Investment
       rounds: 2,
@@ -29,6 +32,8 @@ defmodule PublicGoods.Main do
       money: 0,
       invs: [],
       profits: [],
+      punishments: [],
+      used: [],
       invested: false,
       investment: 0,
       punished: false,
@@ -41,6 +46,7 @@ defmodule PublicGoods.Main do
     %{
       members: members,
       round: 0,
+      investments: [],
       state: "investment",
       not_voted: length(members)
     }

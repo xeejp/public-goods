@@ -10,30 +10,22 @@ import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card'
 
 import NumericKeypad from './NumericKeypad'
 import { changeInvestment, submitInvestment } from './actions'
+import { profitsSelector } from './selectors.js'
+import styles from './styles.js'
 
-const mapStateToProps = ({ investForm, money, profits, invested, round, rounds }) => (
-  Object.assign({}, investForm, {
+const mapStateToProps = (state) => {
+  const { investForm, money, profits, invested, round, rounds } = state
+  return Object.assign({}, investForm, {
     round, rounds,
     money,
-    profits,
+    profits: profitsSelector(state),
     invested,
     validateValue: (value) => value >= 0 && value <= money
   })
-)
+}
 const mapDispatchToProps = (dispatch) => ({
   changeInvestment: bindActionCreators(changeInvestment, dispatch),
   submitInvestment: bindActionCreators(submitInvestment, dispatch)
-})
-
-const styles = ({
-  chip: {
-    marginTop: 4,
-  },
-  wrapper: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    float: 'right',
-  },
 })
 
 const MoneyEditor = ({ money, amp, value, changeInvestment, validateValue }) => {
@@ -79,7 +71,7 @@ const Investment = ({ round, rounds, money, value, invested, isValid, changeInve
             {`${round + 1}/${rounds}ラウンド`}
           </Chip>
           <Chip style={styles.chip}>
-            {profits.reduce((acc, p) => acc + p, 0) + "ポイント"}
+            {profits + "ポイント"}
           </Chip>
         </div>
         <p>{money}ポイントのうち、私的財に投資するポイントを入力して下さい。</p>

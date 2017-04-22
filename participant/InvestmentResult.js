@@ -11,14 +11,17 @@ import Avatar from 'material-ui/Avatar'
 import List from 'material-ui/List/List'
 import ListItem from 'material-ui/List/ListItem'
 
+import { profitsSelector } from './selectors.js'
 import { submitNext } from './actions'
 
-const mapStateToProps = ({
-  memberID, investments, roi, profits, voted, votesNext
-}) => {
+const mapStateToProps = (state) => {
+  const {
+    memberID, investments, roi, profits, voted, votesNext
+  } = state
   const investmentsSum = investments.reduce((acc, { investment }) => acc + investment, 0)
   return {
-    memberID, investments, roi, investmentsSum, profits,
+    memberID, investments, roi, investmentsSum,
+    profits,
     voted, votesNext
   }
 }

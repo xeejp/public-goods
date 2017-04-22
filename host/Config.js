@@ -6,12 +6,13 @@ import ActionSettings from 'material-ui/svg-icons/action/settings'
 import Dialog from 'material-ui/Dialog'
 import FlatButton from 'material-ui/FlatButton'
 import TextField from 'material-ui/TextField'
+import Toggle from 'material-ui/Toggle'
 
 import ReactTooltip from 'react-tooltip'
 
-const mapStateToProps = ({ rounds, roi, money, groupSize }) => {
+const mapStateToProps = ({ rounds, roi, money, groupSize, punishment }) => {
   return {
-    rounds, roi, money, groupSize
+    rounds, roi, money, groupSize, punishment
   }
 }
 
@@ -21,6 +22,7 @@ class Config extends Component {
     this.toggle = this.toggle.bind(this)
     this.close = this.close.bind(this)
     this.submit = this.submit.bind(this)
+    this.togglePunishment = this.togglePunishment.bind(this)
     this.changeRounds = this.changeRounds.bind(this)
     this.changeROI = this.changeROI.bind(this)
     this.changeMoney = this.changeMoney.bind(this)
@@ -34,6 +36,7 @@ class Config extends Component {
       roi: 0.4,
       money: 100,
       groupSize: 4,
+      punishment: false,
       open: true
     }
   }
@@ -47,6 +50,12 @@ class Config extends Component {
   close() {
     this.setState({
       open: false
+    })
+  }
+
+  togglePunishment(event) {
+    this.setState({
+      punishment: !this.state.punishment
     })
   }
 
@@ -89,27 +98,28 @@ class Config extends Component {
   }
 
   submit() {
-    const { rounds, roi, money, groupSize } = this.state
+    const { rounds, roi, money, groupSize, punishment } = this.state
     if (this.validate()) {
-      sendData('update config', { rounds, roi, money, group_size: groupSize })
+      sendData('update config', { rounds, roi, money, group_size: groupSize, punishment })
       this.close()
     }
   }
 
   componentWillMount() {
-    const { rounds, roi, money } = this.props
+    const { rounds, roi, money, punishment } = this.props
     this.setState({
+      punishment,
       rounds,
       roi,
       money,
       roundsText: rounds.toString(),
       roiText: roi.toString(),
-      moneyText: money.toString()
+      moneyText: money.toString(),
     })
   }
 
   render() {
-    const { roundsText, roiText, moneyText, groupSizeText } = this.state
+    const { roundsText, roiText, moneyText, groupSizeText, punishment } = this.state
     const actions = [
       <FlatButton
         onTouchTap={this.submit}
@@ -131,6 +141,11 @@ class Config extends Component {
           open={this.state.open}
           onRequestClose={this.close}
         >
+          <p>罰則</p>
+          <Toggle
+            value={punishment}
+            onToggle={this.togglePunishment}
+          />
           <p>ラウンド数</p>
           <TextField
             id="rounds"

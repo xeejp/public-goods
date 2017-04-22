@@ -36,10 +36,11 @@ defmodule PublicGoods do
 
   # Participant router
   def handle_received(data, %{"action" => action, "params" => params}, id) do
-    Logger.debug("[Public Goods] #{action} #{params}")
+    Logger.debug("[Public Goods] #{action} #{inspect params}")
     result = case {action, params} do
       {"fetch contents", _} -> Participant.fetch_contents(data, id)
       {"invest", investment} -> Participant.invest(data, id, investment)
+      {"punish", punishment} -> Participant.punish(data, id, punishment)
       {"next", _} -> Participant.vote_next(data, id)
       {"fetch ranking", _} -> Participant.fetch_ranking(data, id)
       _ -> {:ok, %{data: data}}

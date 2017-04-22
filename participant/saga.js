@@ -2,7 +2,7 @@ import { put, take, select, call, fork } from 'redux-saga/effects'
 import { takeEvery } from 'redux-saga'
 
 import {
-  fetchContents, submitInvestment, submitNext, openInfo,
+  fetchContents, submitInvestment, submitPunishment, submitNext, openInfo,
   changeInvestment, pressNumeric, pressBackspace
 } from './actions'
 
@@ -23,6 +23,13 @@ function* submitInvestmentSaga() {
       yield put(openInfo(value))
       yield call(sendData, 'invest', value)
     }
+  }
+}
+
+function* submitPunishmentSaga() {
+  while (true) {
+    const { payload: map } = yield take(`${submitPunishment}`)
+    yield call(sendData, 'punish', map)
   }
 }
 
@@ -64,6 +71,7 @@ function* pressBackspaceSaga() {
 function* saga() {
   yield fork(fetchContentsSaga)
   yield fork(submitInvestmentSaga)
+  yield fork(submitPunishmentSaga)
   yield fork(submitNextSaga)
   yield fork(pressNumericSaga)
   yield fork(pressBackspaceSaga)

@@ -6,6 +6,8 @@ defmodule PublicGoods.Host do
     rule = %{
       _default: true,
       investment_log: "investmentLog",
+      punishment_rate: "punishmentRate",
+      max_punishment: "maxPunishment",
     }
     data
     |> Transmap.transform(rule)
@@ -21,7 +23,7 @@ defmodule PublicGoods.Host do
     if page in Main.pages do
       if page == "result" do
         ranking = Enum.map(data.participants, fn {id, p} ->
-          {id, Enum.sum(p.profits)}
+          {id, Enum.sum(p.profits) - Enum.sum(p.used) - Enum.sum(p.punishments) * data.punishment_rate}
         end) |> Enum.into(%{})
         data = %{data | ranking: ranking}
       end
@@ -48,6 +50,8 @@ defmodule PublicGoods.Host do
         money: money,
         invs: [],
         profits: [],
+        used: [],
+        punishments: [],
         invested: false,
         investment: 0,
         punished: false,
@@ -72,7 +76,8 @@ defmodule PublicGoods.Host do
     roi = Map.get(params, "roi", data.roi)
     money = Map.get(params, "money", data.money)
     group_size = Map.get(params, "group_size", data.group_size)
-    %{data | rounds: rounds, roi: roi, money: money, group_size: group_size}
+    punishment = Map.get(params, "punishment", data.punishment)
+    %{data | rounds: rounds, roi: roi, money: money, group_size: group_size, punishment: punishment}
   end
 
   # Utilities
