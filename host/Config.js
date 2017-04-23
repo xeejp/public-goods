@@ -10,9 +10,44 @@ import Toggle from 'material-ui/Toggle'
 
 import ReactTooltip from 'react-tooltip'
 
-const mapStateToProps = ({ rounds, roi, money, groupSize, punishment }) => {
+class IntegerForm extends Component {
+  constructor(props) {
+    super(props)
+    this.handleChange = this.handleChange.bind(this)
+    this.state = {
+      value: this.props.value
+    }
+  }
+
+  componentWillReceiveProps(props) {
+    this.setState({
+      value: props.value
+    })
+  }
+
+  handleChange(event) {
+    const value = event.target.value
+    const parsed = parseInt(value, 10)
+    this.setState({value})
+    this.props.onChange(parsed || this.props.default || 0)
+  }
+
+  render() {
+    const { id, value } = this.props
+    return (
+      <TextField
+        id={id}
+        value={this.state.value}
+        onChange={this.handleChange}
+        style={{width: "100px"}}
+      />
+    )
+  }
+}
+
+const mapStateToProps = ({ rounds, roi, money, groupSize, punishment, maxPunishment, punishmentRate }) => {
   return {
-    rounds, roi, money, groupSize, punishment
+    rounds, roi, money, groupSize, punishment, maxPunishment, punishmentRate
   }
 }
 
@@ -27,7 +62,11 @@ class Config extends Component {
     this.changeROI = this.changeROI.bind(this)
     this.changeMoney = this.changeMoney.bind(this)
     this.changeGroupSize = this.changeGroupSize.bind(this)
+    this.changeMaxPunishment = this.changeMaxPunishment.bind(this)
+    this.changePunishmentRate = this.changePunishmentRate.bind(this)
     this.state = {
+      maxPunishment: 3,
+      punishmentRate: 3,
       roundsText: '4',
       roiText: '0.4',
       moneyText: '100',
@@ -91,23 +130,36 @@ class Config extends Component {
     })
   }
 
+  changeMaxPunishment(value) {
+    this.setState({
+      maxPunishment: value
+    })
+  }
+
+  changePunishmentRate(value) {
+    this.setState({
+      punishmentRate: value
+    })
+  }
+
   validate() {
-    const { rounds, roi, money, groupSize } = this.state
+    const { rounds, roi, money, groupSize, maxPunishment, punishmentRate } = this.state
     return rounds !== NaN && roi !== NaN && money !== NaN && groupSize !== NaN
       && groupSize >= 2 && money >= 1 && rounds >= 1
   }
 
   submit() {
-    const { rounds, roi, money, groupSize, punishment } = this.state
+    const { rounds, roi, money, groupSize, punishment, maxPunishment, punishmentRate } = this.state
     if (this.validate()) {
-      sendData('update config', { rounds, roi, money, group_size: groupSize, punishment })
+      sendData('update config', { rounds, roi, money, group_size: groupSize, punishment, maxPunishment, punishmentRate })
       this.close()
     }
   }
 
   componentWillMount() {
-    const { rounds, roi, money, punishment } = this.props
+    const { rounds, roi, money, punishment, maxPunishment, punishmentRate } = this.props
     this.setState({
+      maxPunishment, punishmentRate,
       punishment,
       rounds,
       roi,
@@ -119,7 +171,7 @@ class Config extends Component {
   }
 
   render() {
-    const { roundsText, roiText, moneyText, groupSizeText, punishment } = this.state
+    const { roundsText, roiText, moneyText, groupSizeText, punishment, maxPunishment, punishmentRate } = this.state
     const actions = [
       <FlatButton
         onTouchTap={this.submit}
@@ -143,9 +195,27 @@ class Config extends Component {
         >
           <p>罰則</p>
           <Toggle
-            value={punishment}
+            toggled={punishment}
             onToggle={this.togglePunishment}
           />
+          {punishment ? (
+            <div>
+              <p>罰則に使えるポイントの最大値</p>
+              <IntegerForm
+                id="maxPunishment"
+                value={maxPunishment}
+                default={maxPunishment}
+                onChange={this.changeMaxPunishment}
+              />
+              <p>罰則の倍率</p>
+              <IntegerForm
+                id="punishmentRate"
+                value={punishmentRate}
+                default={punishmentRate}
+                onChange={this.changePunishmentRate}
+              />
+            </div>
+          ) : null}
           <p>ラウンド数</p>
           <TextField
             id="rounds"

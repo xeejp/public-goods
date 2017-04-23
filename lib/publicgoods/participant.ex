@@ -10,6 +10,7 @@ defmodule PublicGoods.Participant do
       punishment: true,
       punishment_rate: "punishmentRate",
       max_punishment: "maxPunishment",
+      investment_log: "investmentLog",
       money: true,
       roi: true,
       participants: %{id => true},
@@ -65,7 +66,7 @@ defmodule PublicGoods.Participant do
         Enum.reduce(members, participants, fn id, participants ->
           participant = participants[id]
           private = participant.money - participant.investment
-          public = Float.floor(investments_sum * data.roi)
+          public = investments_sum * data.roi
           update_in(participants, [id, :profits], fn profits ->
             new_profit = private + public
             [new_profit | profits]

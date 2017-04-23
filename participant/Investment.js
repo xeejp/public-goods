@@ -74,7 +74,7 @@ const Investment = ({ round, rounds, money, value, invested, isValid, changeInve
             {profits + "ポイント"}
           </Chip>
         </div>
-        <p>{money}ポイントのうち、私的財に投資するポイントを入力して下さい。</p>
+        <p>{money}ポイントのうち、公共財に投資するポイントを入力して下さい。</p>
           <MoneyEditor
             amp={Math.floor(money / 10)}
             value={value}

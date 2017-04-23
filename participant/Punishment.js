@@ -28,7 +28,7 @@ class PunishmentForm extends Component {
   }
 
   render() {
-    const { id, value, onChange } = this.props
+    const { id, value } = this.props
     return (
       <TextField
         id={id}
@@ -105,6 +105,7 @@ class Punishment extends Component {
   render() {
     const {punished, punishmentRate, maxPunishment, memberID, investments, profits, round, rounds} = this.props
     const punishmentSum = this.punishmentSum()
+    const valid = this.isValid()
     return (
       <Card>
         <CardHeader title="公共財実験" subtitle="罰" />
@@ -149,7 +150,11 @@ class Punishment extends Component {
               }
             </tbody>
           </table>
-          <p>罰に{punishmentSum}ポイント使うので、あなたのポイントは{profits - punishmentSum}ポイントになります。</p>
+          {valid ? (
+            <p>罰に{punishmentSum}ポイント使うので、あなたのポイントは{profits - punishmentSum}ポイントになります。</p>
+          ) : (
+            <p>罰則ポイントが超過しています。罰則ポイントの合計が{Math.min(maxPunishment, profits)}ポイント以下になるように入力して下さい。</p>
+          )}
         </CardText>
         <CardActions>
           <RaisedButton
@@ -159,7 +164,7 @@ class Punishment extends Component {
                 : "決定"
             }
             onClick={this.submit}
-            disabled={punished || !this.isValid()}
+            disabled={punished || !valid}
             primary={true}
           />
         </CardActions>

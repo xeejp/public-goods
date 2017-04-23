@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import Chart from '../components/Chart.js'
+
 import { fetchContents } from './actions'
 
 const mapStateToProps = ({ ranking }) => {
@@ -39,6 +41,7 @@ const Result = ({ranking}) => (
         }
       </tbody>
     </table>
+    <Chart />
   </div>
 )
 

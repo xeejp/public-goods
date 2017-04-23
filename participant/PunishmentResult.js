@@ -16,11 +16,11 @@ import { submitNext } from './actions'
 
 const mapStateToProps = (state) => {
   const {
-    profits, punishments, used, voted, votesNext
+    profits, punishments, used, voted, votesNext, members
   } = state
   return {
     profits, punishments, used,
-    voted, votesNext
+    voted, votesNext, members
   }
 }
 
@@ -30,7 +30,7 @@ const mapDispatchToProps = (dispatch) => ({
 
 const PunishmentResult = ({
   profits, punishments, used,
-  voted, votesNext, submitNext
+  voted, votesNext, submitNext, members
 }) => (
   <Card>
     <CardHeader title="公共財実験" subtitle="罰結果画面" />
@@ -110,7 +110,7 @@ const PunishmentResult = ({
           disabled={voted}
           onClick={submitNext}
         />
-        <p>(確認：{votesNext}人/{punishments.length}人中)</p>
+        <p>(確認：{votesNext}人/{members}人中)</p>
       </CardActions>
     </CardText>
   </Card>

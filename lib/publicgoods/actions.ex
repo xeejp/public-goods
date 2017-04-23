@@ -3,7 +3,7 @@ defmodule PublicGoods.Actions do
   alias PublicGoods.Host
 
   def update_host_contents(data) do
-    host = get_action("update contents", Host.format_contents(data))
+    host = get_action("update contents", Host.filter_data(data))
     format(data, host)
   end
 

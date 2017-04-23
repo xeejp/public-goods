@@ -16,10 +16,11 @@ import { submitNext } from './actions'
 
 const mapStateToProps = (state) => {
   const {
-    memberID, investments, roi, profits, voted, votesNext
+    money, memberID, investments, roi, profits, voted, votesNext
   } = state
   const investmentsSum = investments.reduce((acc, { investment }) => acc + investment, 0)
   return {
+    money,
     memberID, investments, roi, investmentsSum,
     profits,
     voted, votesNext
@@ -30,8 +31,13 @@ const mapDispatchToProps = (dispatch) => ({
   submitNext: bindActionCreators(submitNext, dispatch)
 })
 
+const Point = ({ children }) => {
+  const point = children.toFixed(1).replace(/\.0$/, '')
+  return <span>{point}</span>
+}
+
 const InvestmentResult = ({
-  memberID, investment, investments, roi, investmentsSum, profits,
+  money, memberID, investment, investments, roi, investmentsSum, profits,
   votesNext, voted, submitNext
 }) => (
   <Card>
@@ -45,7 +51,9 @@ const InvestmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {profits[0]-(investmentsSum*roi)}
+            <Point>
+              {money - investments[memberID].investment}
+            </Point>
           </Avatar>
         </ListItem>
         <ListItem>
@@ -55,7 +63,9 @@ const InvestmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {investmentsSum}
+            <Point>
+              {investmentsSum}
+            </Point>
           </Avatar>
           ×{roi}倍＝
           <Avatar
@@ -63,7 +73,9 @@ const InvestmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {investmentsSum*roi}
+            <Point>
+              {investmentsSum*roi}
+            </Point>
           </Avatar>
         </ListItem>
         <Divider />
@@ -74,7 +86,9 @@ const InvestmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {profits[0]-(investmentsSum*roi)}
+            <Point>
+              {money - investments[memberID].investment}
+            </Point>
           </Avatar>
           ＋
           <Avatar
@@ -82,7 +96,9 @@ const InvestmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {investmentsSum*roi}
+            <Point>
+              {investmentsSum*roi}
+            </Point>
           </Avatar>
           ＝
           <Avatar
@@ -90,7 +106,9 @@ const InvestmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {profits[0]}
+            <Point>
+              {profits[0]}
+            </Point>
           </Avatar>
         </ListItem>
       </List>

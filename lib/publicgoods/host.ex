@@ -77,13 +77,9 @@ defmodule PublicGoods.Host do
     money = Map.get(params, "money", data.money)
     group_size = Map.get(params, "group_size", data.group_size)
     punishment = Map.get(params, "punishment", data.punishment)
-    %{data | rounds: rounds, roi: roi, money: money, group_size: group_size, punishment: punishment}
-  end
-
-  # Utilities
-  def format_contents(data) do
-    data
-    |> Map.pop(:investment_log)
-    |> (fn {log, data} -> Map.put(data, "investmentLog", log) end).()
+    max_punishment = Map.get(params, "maxPunishment", data.max_punishment)
+    punishment_rate = Map.get(params, "punishmentRate", data.punishment_rate)
+    %{data | rounds: rounds, roi: roi, money: money, group_size: group_size,
+      punishment: punishment, max_punishment: max_punishment, punishment_rate: punishment_rate}
   end
 end
