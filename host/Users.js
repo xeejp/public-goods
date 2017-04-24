@@ -5,7 +5,9 @@ import throttle from 'react-throttle-render'
 
 import { Card, CardHeader, CardText } from 'material-ui/Card'
 
+import Point from '../components/Point.js'
 import { openParticipantPage } from './actions'
+import { profitsSelector } from '../participant/selectors'
 
 const User = ({ id,investment_private, investment_public, profit_private, profit_public, profit, group, openParticipantPage, round, state }) => (
   <tr>
@@ -13,15 +15,15 @@ const User = ({ id,investment_private, investment_public, profit_private, profit
     <td>{investment_private}</td>
     <td>{investment_public}</td>
     <td>{profit_private}</td>
-    <td>{profit_public}</td>
-    <td>{profit}</td>
+    <td><Point>{profit_public}</Point></td>
+    <td><Point>{profit}</Point></td>
     <td>{group}</td>
     <td>{round}</td>
     <td>{state}</td>
   </tr>
 )
 
-const UsersList = ({groups, participants, openParticipantPage}) => (
+const UsersList = ({groups, participants, profitSum, openParticipantPage}) => (
   <table>
     <thead>
       <tr><th>被験者ID</th><th>私的財投資</th><th>公共財投資</th><th>私的財利得</th><th>公共財利得</th><th>利得合計</th><th>グループ</th><th>ラウンド</th><th>状態</th></tr>
@@ -35,6 +37,7 @@ const UsersList = ({groups, participants, openParticipantPage}) => (
         }).map(id => {
           const group = groups[participants[id].group]
           const p = participants[id]
+          const profitSum = profitsSelector(p)
           return (
             <User
               key={id}
@@ -49,10 +52,10 @@ const UsersList = ({groups, participants, openParticipantPage}) => (
                              ? (p.money * p.invs.length) - p.invs.reduce((prev, current, i, arr) => prev+current)
                              : "未確定"}
               profit_public={p.profits != null && p.profits.length != 0 && p.invs != null && p.invs.length != 0
-                             ? p.profits.reduce((prev, current, i, arr) => prev+current) - ((p.money * p.invs.length) - p.invs.reduce((prev, current, i, arr) => prev+current))
+                             ? profitSum - ((p.money * p.invs.length) - p.invs.reduce((prev, current, i, arr) => prev+current))
                              : "未確定"}
               profit={p.profits != null && p.profits.length != 0
-                     ? p.profits.reduce((prev, current, i, arr) => prev+current)
+                     ? profitSum
                      : "未確定"}
               group={p.group}
   　　　　　　round={group.round + 1}
@@ -89,7 +92,12 @@ const Groups = ({ groups, participants }) => (
   </table>
 )
 
-const mapStateToProps = ({ groups, participants }) => ({ groups, participants })
+const mapStateToProps = (state) => {
+  const { groups, participants } = state
+  return {
+    groups, participants
+  }
+}
 
 const mapDispatchToProps = (dispatch) => {
   const open = bindActionCreators(openParticipantPage, dispatch)

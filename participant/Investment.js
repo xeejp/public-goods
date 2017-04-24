@@ -8,6 +8,7 @@ import TextField from 'material-ui/TextField'
 import Chip from 'material-ui/Chip'
 import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card'
 
+import Point from '../components/Point.js'
 import NumericKeypad from './NumericKeypad'
 import { changeInvestment, submitInvestment } from './actions'
 import { profitsSelector } from './selectors.js'
@@ -71,7 +72,7 @@ const Investment = ({ round, rounds, money, value, invested, isValid, changeInve
             {`${round + 1}/${rounds}ラウンド`}
           </Chip>
           <Chip style={styles.chip}>
-            {profits + "ポイント"}
+            <Point>{profits}</Point>ポイント
           </Chip>
         </div>
         <p>{money}ポイントのうち、公共財に投資するポイントを入力して下さい。</p>

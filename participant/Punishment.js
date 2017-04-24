@@ -7,6 +7,7 @@ import TextField from 'material-ui/TextField'
 import Chip from 'material-ui/Chip'
 import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card'
 
+import Point from '../components/Point.js'
 import { profitsSelector } from './selectors.js'
 import { submitPunishment } from './actions.js'
 import styles from './styles.js'
@@ -115,7 +116,7 @@ class Punishment extends Component {
               {`${round + 1}/${rounds}ラウンド`}
             </Chip>
             <Chip style={styles.chip}>
-              {profits + "ポイント"}
+            <Point>{profits}</Point>ポイント
             </Chip>
           </div>
           <p>{profits}ポイントのうち、罰に利用するポイントを{maxPunishment}ポイント以内で入力して下さい。</p>

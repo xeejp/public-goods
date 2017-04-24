@@ -11,6 +11,7 @@ import Avatar from 'material-ui/Avatar'
 import List from 'material-ui/List/List'
 import ListItem from 'material-ui/List/ListItem'
 
+import Point from '../components/Point.js'
 import { profitsSelector } from './selectors.js'
 import { submitNext } from './actions'
 
@@ -43,7 +44,9 @@ const PunishmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {profits[0]}
+            <Point>
+              {profits[0]}
+            </Point>
           </Avatar>
         </ListItem>
         <ListItem>
@@ -53,7 +56,9 @@ const PunishmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {used[0]}
+            <Point>
+              {used[0]}
+            </Point>
           </Avatar>
         </ListItem>
         <ListItem>
@@ -63,7 +68,9 @@ const PunishmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {punishments[0] * 3}
+            <Point>
+              {punishments[0] * 3}
+            </Point>
           </Avatar>
         </ListItem>
         <Divider />
@@ -74,7 +81,9 @@ const PunishmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {profits[0]}
+            <Point>
+              {profits[0]}
+            </Point>
           </Avatar>
           −
           <Avatar
@@ -82,9 +91,10 @@ const PunishmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {used[0]}
+            <Point>
+              {used[0]}
+            </Point>
           </Avatar>
-          −
           <Avatar
             backgroundColor={pink400}
             size={50}
@@ -98,7 +108,9 @@ const PunishmentResult = ({
             size={50}
             style={{margin: 5}}
           >
-            {profits[0] - used[0] - punishments[0] * 3}
+            <Point>
+              {profits[0] - used[0] - punishments[0] * 3}
+            </Point>
           </Avatar>
         </ListItem>
       </List>

@@ -15,7 +15,7 @@ defmodule PublicGoods.Main do
       groups: %{},
       punishment: false,
       punishment_rate: 3,
-      max_punishment: 3,
+      max_punishment: 30,
       investment_log: [],
       punishment_log: [],
       money: 100,

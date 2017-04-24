@@ -22,9 +22,14 @@ defmodule PublicGoods.Host do
   def change_page(data, page) do
     if page in Main.pages do
       if page == "result" do
-        ranking = Enum.map(data.participants, fn {id, p} ->
-          {id, Enum.sum(p.profits) - Enum.sum(p.used) - Enum.sum(p.punishments) * data.punishment_rate}
-        end) |> Enum.into(%{})
+        ranking = data.participants
+                  |> Enum.filter(fn {id, p} ->
+                    length(get_in(data, [:groups, p.group, :members])) == data.group_size
+                  end)
+                  |> Enum.map(fn {id, p} ->
+                    {id, Enum.sum(p.profits) - Enum.sum(p.used) - Enum.sum(p.punishments) * data.punishment_rate}
+                  end)
+                  |> Enum.into(%{})
         data = %{data | ranking: ranking}
       end
       %{data | page: page}

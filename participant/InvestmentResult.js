@@ -11,6 +11,7 @@ import Avatar from 'material-ui/Avatar'
 import List from 'material-ui/List/List'
 import ListItem from 'material-ui/List/ListItem'
 
+import Point from '../components/Point.js'
 import { profitsSelector } from './selectors.js'
 import { submitNext } from './actions'
 
@@ -30,11 +31,6 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => ({
   submitNext: bindActionCreators(submitNext, dispatch)
 })
-
-const Point = ({ children }) => {
-  const point = children.toFixed(1).replace(/\.0$/, '')
-  return <span>{point}</span>
-}
 
 const InvestmentResult = ({
   money, memberID, investment, investments, roi, investmentsSum, profits,
@@ -124,7 +120,9 @@ const InvestmentResult = ({
               size={50}
               style={{margin: 5}}
             >
-              {investment}
+              <Point>
+                {investment}
+              </Point>
             </Avatar>
           ))
         }
