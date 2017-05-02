@@ -24,7 +24,10 @@ defmodule PublicGoods.Host do
       if page == "result" do
         ranking = data.participants
                   |> Enum.filter(fn {id, p} ->
-                    length(get_in(data, [:groups, p.group, :members])) == data.group_size
+                    cond do 
+                      get_in(data, [:groups, p.group, :members]) != nil -> length(get_in(data, [:groups, p.group, :members])) == data.group_size
+                      true -> [p.profits, p.used, p.punishments] == [0, 0, 0]
+                    end
                   end)
                   |> Enum.map(fn {id, p} ->
                     {id, Enum.sum(p.profits) - Enum.sum(p.used) - Enum.sum(p.punishments) * data.punishment_rate}

@@ -31,6 +31,7 @@ const UsersList = ({groups, participants, profitSum, openParticipantPage}) => (
     <tbody>
       {
         Object.keys(participants).sort((id1, id2) => {
+          if(participants[id1].group == null) return 1
           if(participants[id1].group > participants[id2].group) return  1
           if(participants[id1].group < participants[id2].group) return -1
           return 0
@@ -42,24 +43,30 @@ const UsersList = ({groups, participants, profitSum, openParticipantPage}) => (
             <User
               key={id}
               id={id}
-  　　　　　　investment_private={p.invs != null && p.invs.length != 0
+  　　　　　　investment_private={p.invs != null && p.invs.length != 0 && p.group != null
                                  ? (p.money * p.invs.length) - p.invs.reduce((prev, current) => prev+current)
-                                 : "未確定"}
-  　　　　　　investment_public={p.invs != null && p.invs.length != 0
+                                 : "-"}
+  　　　　　　investment_public={p.invs != null && p.invs.length != 0 && p.group != null
                                 ? p.invs.reduce((prev, current, i, arr) => prev+current)
-                                : "未確定"}
-              profit_private={p.profits != null && p.profits.length != 0 && p.invs != null && p.invs.length != 0
+                                : "-"}
+              profit_private={p.profits != null && p.profits.length != 0 && p.invs != null && p.invs.length != 0 && p.group != null
                              ? (p.money * p.invs.length) - p.invs.reduce((prev, current, i, arr) => prev+current)
-                             : "未確定"}
-              profit_public={p.profits != null && p.profits.length != 0 && p.invs != null && p.invs.length != 0
+                             : "-"}
+              profit_public={p.profits != null && p.profits.length != 0 && p.invs != null && p.invs.length != 0 && p.group != null
                              ? profitSum - ((p.money * p.invs.length) - p.invs.reduce((prev, current, i, arr) => prev+current))
-                             : "未確定"}
-              profit={p.profits != null && p.profits.length != 0
+                             : "-"}
+              profit={p.profits != null && p.profits.length != 0 && p.group != null
                      ? profitSum
-                     : "未確定"}
-              group={p.group}
-  　　　　　　round={group.round + 1}
-              state={group.state}
+                     : "-"}
+              group={p.group != null
+                     ? p.group
+                     : "見学"}
+              round={p.group != null
+                     ? group.round + 1
+                     : "-"}
+              state={p.group != null
+                     ? group.state
+                     : "-"}
               openParticipantPage={openParticipantPage}
             />
           )

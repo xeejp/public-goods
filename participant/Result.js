@@ -45,6 +45,7 @@ const Result = ({ranking, profits}) => (
         }
       </tbody>
     </table>
+    <br />
     <Chart />
   </div>
 )
