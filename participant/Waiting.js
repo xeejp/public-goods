@@ -1,31 +1,39 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { Card, CardText, CardTitle } from 'material-ui/Card'
+import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card'
 import CircularProgress from 'material-ui/CircularProgress'
 
-const mapStateToProps = ({ joined }) => ({ joined })
+import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
+const multi_text = ReadJSON().static_text
+
+const mapStateToProps = ({ participantsNumber }) => ({
+  participantsNumber
+})
 
 class Waiting extends Component {
-    render() {
-        const { joined } = this.props
-        return (
-            <div>
-                <Card>
-                    <CardTitle title="公共財実験" subtitle="待機中"/>
-                    <CardText>
-                        <p>参加者の登録を待っています。</p>
-                        <p>この画面のまましばらくお待ち下さい。</p>
-                        <p>現在の参加者は{ joined }人です。</p>
-                    </CardText>
-                    <div style={{textAlign: "center"}}>
-                        <CircularProgress size={2}/>
-                    </div>
-                </Card>
-            </div>
-        )
-    }
+  constructor(props, context) {
+    super(props, context)
+    this.state = {}
+  }
+
+  render() {
+    const { participantsNumber } = this.props
+    return (
+  <Card>
+    <CardTitle title={multi_text["waiting"][1]} subtitle={multi_text["waiting"][1]} />
+    <CardText>
+      <p>{multi_text["waiting"][2]}</p>
+      <p>{multi_text["waiting"][3]}</p>
+      <p>{multi_text["waiting"][4]}{participantsNumber}{multi_text["waiting"][5]} </p>
+    </CardText>
+    <div style={{textAlign: "center"}}>
+      <CircularProgress size={2}/>
+    </div>
+  </Card>
+    )
+  }
 }
 
 export default connect(mapStateToProps)(Waiting)

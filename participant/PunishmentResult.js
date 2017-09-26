@@ -11,121 +11,105 @@ import Avatar from 'material-ui/Avatar'
 import List from 'material-ui/List/List'
 import ListItem from 'material-ui/List/ListItem'
 
-import Point from '../components/Point.js'
+import Point from '../shared/Point.js'
 import { profitsSelector } from './selectors.js'
 import { submitNext } from './actions'
+import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
-const mapStateToProps = (state) => {
-  const {
-    profits, punishments, used, voted, votesNext, members
-  } = state
-  return {
-    profits, punishments, used,
-    voted, votesNext, members
-  }
-}
+const multi_text = ReadJSON().static_text
+
+const mapStateToProps = ({profits, punishments, used, voted, votesNext, members, punishmentRate }) => ({
+  profits,
+  punishments,
+  used,
+  voted,
+  members,
+  punishmentRate
+})
 
 const mapDispatchToProps = (dispatch) => ({
   submitNext: bindActionCreators(submitNext, dispatch)
 })
 
-const PunishmentResult = ({
-  profits, punishments, used,
-  voted, votesNext, submitNext, members
-}) => (
-  <Card>
-    <CardHeader title="公共財実験" subtitle="罰結果画面" />
-    <CardText>
-      <List>
-        <ListItem>
-          <p>利得</p>
-          <Avatar
-            backgroundColor={blue400}
-            size={50}
-            style={{margin: 5}}
-          >
-            <Point>
-              {profits[0]}
-            </Point>
-          </Avatar>
-        </ListItem>
-        <ListItem>
-          <p>罰に利用したポイント</p>
-          <Avatar
-            backgroundColor={orange400}
-            size={50}
-            style={{margin: 5}}
-          >
-            <Point>
-              {used[0]}
-            </Point>
-          </Avatar>
-        </ListItem>
-        <ListItem>
-          <p>受けた罰</p>
-          <Avatar
-            backgroundColor={pink400}
-            size={50}
-            style={{margin: 5}}
-          >
-            <Point>
-              {punishments[0] * 3}
-            </Point>
-          </Avatar>
-        </ListItem>
-        <Divider />
-        <ListItem>
-          <p>利得合計</p>
-          <Avatar
-            backgroundColor={blue400}
-            size={50}
-            style={{margin: 5}}
-          >
-            <Point>
-              {profits[0]}
-            </Point>
-          </Avatar>
-          −
-          <Avatar
-            backgroundColor={orange400}
-            size={50}
-            style={{margin: 5}}
-          >
-            <Point>
-              {used[0]}
-            </Point>
-          </Avatar>
-          <Avatar
-            backgroundColor={pink400}
-            size={50}
-            style={{margin: 5}}
-          >
-            {punishments[0] * 3}
-          </Avatar>
-          ＝
-          <Avatar
-            backgroundColor={blue400}
-            size={50}
-            style={{margin: 5}}
-          >
-            <Point>
-              {profits[0] - used[0] - punishments[0] * 3}
-            </Point>
-          </Avatar>
-        </ListItem>
-      </List>
+const PunishmentResult = ({ profits, punishments, used, voted, votesNext, submitNext, members, punishmentRate }) => (
+    <List>
+      <ListItem>
+        <p>利得</p>
+        <Avatar
+          backgroundColor={blue400}
+          size={50}
+          style={{margin: 5}}
+        >
+          <Point>
+            {profits[0]}
+          </Point>
+        </Avatar>
+      </ListItem>
+      <ListItem>
+        <p>罰に利用したポイント</p>
+        <Avatar
+          backgroundColor={orange400}
+          size={50}
+          style={{margin: 5}}
+        >
+          <Point>
+            {used[0]}
+          </Point>
+        </Avatar>
+      </ListItem>
+      <ListItem>
+        <p>受けた罰</p>
+        <Avatar
+          backgroundColor={pink400}
+          size={50}
+          style={{margin: 5}}
+        >
+          <Point>
+            {punishments[0] * punishmentRate}
+          </Point>
+        </Avatar>
+      </ListItem>
       <Divider />
-      <CardActions>
-        <RaisedButton
-          primary={true}
-          label={"次に進む "}
-          disabled={voted}
-          onClick={submitNext}
-        />
-        <p>(確認：{votesNext}人/{members}人中)</p>
-      </CardActions>
-    </CardText>
-  </Card>
+      <ListItem>
+        <p>利得合計</p>
+        <Avatar
+          backgroundColor={blue400}
+          size={50}
+          style={{margin: 5}}
+        >
+          <Point>
+            {profits[0]}
+          </Point>
+        </Avatar>
+        −
+         <Avatar
+          backgroundColor={orange400}
+          size={50}
+          style={{margin: 5}}
+        >
+          <Point>
+            {used[0]}
+          </Point>
+        </Avatar>
+        <Avatar
+          backgroundColor={pink400}
+          size={50}
+          style={{margin: 5}}
+        >
+          {punishments[0] * punishmentRate}
+        </Avatar>
+        ＝
+        <Avatar
+          backgroundColor={blue400}
+          size={50}
+          style={{margin: 5}}
+        >
+          <Point>
+             {profits[0] - used[0] - punishments[0] * punishmentRate}
+          </Point>
+        </Avatar>
+      </ListItem>
+    </List>
 )
 
 export default connect(mapStateToProps, mapDispatchToProps)(PunishmentResult)

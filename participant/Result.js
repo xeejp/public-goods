@@ -1,53 +1,40 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import Chart from '../components/Chart.js'
+import Divider from 'material-ui/Divider'
+import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card'
 
-import { fetchContents } from './actions'
-import { profitsSelector } from './selectors'
-import Point from '../components/Point.js'
+import { ReadJSON, LineBreak } from '../shared/ReadJSON'
+import Rank from '../shared/Rank'
 
-const mapStateToProps = (state) => {
-  const { ranking } = state
-  ranking.sort(({profit: p1}, {profit: p2}) => p2 - p1) // Desc
-  const filtered = ranking
-    .map((obj, index) => {
-      return Object.assign({rank: index + 1}, obj)
-    })
-    .filter(({ own }, index) => {
-      return own || index < 10
-    })
-  return { ranking: filtered, profits: profitsSelector(state) }
+const multi_text = ReadJSON().static_text
+
+const mapStateToProps = ({ askStudentId }) => ({
+  askStudentId,
+})
+
+class Result extends Component {
+  constructor(props, context) {
+    super(props, context)
+    this.state = {}
+  }
+
+  render() {
+    const { askStudentId } = this.props
+    return (
+      <Card>
+        <CardTitle title={multi_text["result"]["card"][0]} subtitle={multi_text["result"]["card"][1] + (askStudentId ? multi_text["result"]["card"][2] + (id ? id : "") + ")" : "")}/>
+        <CardText>
+          <p>{multi_text["result"]["card"][3]}</p>
+          <Rank
+            my_profit={null}
+          />
+          <br />
+          {/*<Chart />*/}
+        </CardText>
+      </Card>
+    )
+  }
 }
-
-const Result = ({ranking, profits}) => (
-  <div>
-    <p>あなたのポイント<Point>{profits}</Point></p>
-    <table>
-      <thead>
-        <tr><th>順位</th><th>利得</th></tr>
-      </thead>
-      <tbody>
-        {
-          ranking.map(({ profit, own, rank }, i) => (
-            <tr
-              key={i}
-              style={own
-                ? {
-                  backgroundColor: "#bbb"
-                }
-                : {}
-              }
-            >
-              <td>{rank}</td><td><Point>{profit}</Point></td>
-            </tr>
-          ))
-        }
-      </tbody>
-    </table>
-    <br />
-    <Chart />
-  </div>
-)
 
 export default connect(mapStateToProps)(Result)

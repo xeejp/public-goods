@@ -1,21 +1,32 @@
 import React, { Component } from 'react'
-import { bindActionCreators } from 'redux'
 import { connect } from 'react-redux'
 
-import Snackbar from 'material-ui/Snackbar'
-import {Card, CardText, CardTitle } from 'material-ui/Card'
-import CircularProgress from 'material-ui/CircularProgress'
-import Pages from './Pages'
+import { fetchContents } from 'shared/actions'
 
-import { fetchContents, closeInfo } from './actions'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card'
 
-const mapStateToProps = ({ loading, info, infoOpened }) => ({
-  loading, info, infoOpened
-})
+import Experiment from './Experiment'
+import Waiting from './Waiting'
+import Description from './Description'
+import Result from './Result'
 
-const mapDispatchToProps = (dispatch) => ({
-  closeInfo: bindActionCreators(closeInfo, dispatch),
-  fetchContents: bindActionCreators(fetchContents, dispatch)
+import { ReadJSON, LineBreak } from '../shared/ReadJSON'
+
+const multi_text = ReadJSON().static_text
+
+const actionCreators = {
+  fetchContents
+}
+
+const mapStateToProps = ({ page, joinable, group, state }) => ({
+  page,
+  joinable,
+  group,
+  state,
 })
 
 class App extends Component {
@@ -25,38 +36,38 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { fetchContents } = this.props
-    fetchContents()
+    this.props.fetchContents();
   }
 
   render() {
-    const { loading, closeInfo, info, infoOpened } = this.props
-    if (loading) {
-      return (
-        <Card style={{padding: '20px'}}>
-          <CardTitle title="接続中" style={{padding: '0px', marginTop: '7px', marginBottom: '14px'}}/>
-          <CardText style={{padding: '0px', margin: '0px'}}>
-            <div style={{textAlign: 'center'}}>
-              <CircularProgress style={{margin: '0px', padding: '0px' }} />
-            </div>
-            　　　		<p style={{margin: '0px', padding: '0px'}}>サーバーに接続しています。<br/>このまましばらくお待ちください。</p>
-          </CardText>
-        </Card>
-      )
-    } else {
-      return (
+    const { page, joinable, group, state } = this.props
+    return (
+      <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
         <div>
-          <Pages />
-          <Snackbar
-            open={infoOpened}
-            message={info}
-            autoHideDuration={3000}
-            onRequestClose={closeInfo}
-          />
+        { joinable || group != null
+          ? <div>
+              { (page == "waiting") ? <Waiting /> : null }
+              { (page == "description") ? <Description /> : null }
+              { (page == "experiment")
+                  ? (state == "investment" || state == "punishment" || state == "investment_result" || state == "punishment_result")
+                      ? <Experiment />
+                      : (state == "finished") ? <Result /> : null
+                  : null
+              }
+              { (page == "result") ? <Result /> : null }
+          </div>
+          : <Card>
+              <CardTitle title={multi_text["app"][0]} subtitle={multi_text["app"][1]}/>
+              <CardText>
+                <p>{multi_text["app"][2]}</p>
+                <p>{multi_text["app"][3]}</p>
+              </CardText>
+          </Card>
+        }
         </div>
-      )
-    }
+      </MuiThemeProvider>
+    )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App)
+export default connect(mapStateToProps, actionCreators)(App)

@@ -8,7 +8,7 @@ defmodule PublicGoods.Actions do
   end
 
   def update_participant_contents(data, id) do
-    participant = dispatch_to(id, get_action("update contents", Participant.format_contents(data, id)))
+    participant = dispatch_to(id, get_action("update contents", Participant.filter_data(data, id)))
     format(data, nil, participant)
   end
 
@@ -31,11 +31,15 @@ defmodule PublicGoods.Actions do
 
   defp format(data, host, participants \\ nil) do
     result = %{data: data}
-    unless is_nil(host) do
-      result = Map.put(result, :host, %{action: host})
+    result = unless is_nil(host) do
+      Map.put(result, :host, %{action: host})
+    else
+      result
     end
-    unless is_nil(participants) do
-      result = Map.put(result, :participant, participants)
+    result = unless is_nil(participants) do
+      Map.put(result, :participant, participants)
+    else
+      result
     end
     {:ok, result}
   end

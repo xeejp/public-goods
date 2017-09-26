@@ -7,10 +7,14 @@ import TextField from 'material-ui/TextField'
 import Chip from 'material-ui/Chip'
 import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card'
 
-import Point from '../components/Point.js'
+import Point from '../shared/Point.js'
 import { profitsSelector } from './selectors.js'
 import { submitPunishment } from './actions.js'
 import styles from './styles.js'
+
+import { ReadJSON, LineBreak } from '../shared/ReadJSON'
+
+const multi_text = ReadJSON().static_text
 
 class PunishmentForm extends Component {
   constructor(props) {
@@ -23,9 +27,8 @@ class PunishmentForm extends Component {
 
   handleChange(event) {
     const value = event.target.value
-    const parsed = parseInt(value, 10)
     this.setState({value})
-    this.props.onChange(parsed || 0)
+    this.props.onChange(value)
   }
 
   render() {
@@ -41,19 +44,21 @@ class PunishmentForm extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const {punished, punishmentRate, maxPunishment, memberID, investments, profits, round, rounds} = state
-  return {
-    punished,
-    round, rounds,
-    punishmentRate, maxPunishment,
-    investments,
-    memberID,
-    profits: profitsSelector(state)
-  }
-}
+const mapStateToProps = ({ punished, punishmentRate, maxPunishment, members, uid, investments, profits, round, maxRound, punishments, used}) => ({
+  punished,
+  punishmentRate,
+  maxPunishment,
+  members,
+  uid,
+  investments, 
+  profits, 
+  round,
+  maxRound,
+  punishments,
+  used  
+})
 
-const mapDispatchToProps = {
+const actionCreators = {
   submitPunishment
 }
 
@@ -62,7 +67,8 @@ class Punishment extends Component {
     super(props)
     this.submit = this.submit.bind(this)
     this.state = {
-      punishments: []
+      punishments: [],
+      disables: []
     }
   }
 
@@ -74,7 +80,7 @@ class Punishment extends Component {
 
   isValid() {
     const punishmentSum = this.punishmentSum()
-    return punishmentSum <= this.props.maxPunishment && punishmentSum <= this.props.profits
+    return punishmentSum <= this.props.maxPunishment && punishmentSum <= profitsSelector(this.props)
   }
 
   punishmentSum() {
@@ -82,12 +88,13 @@ class Punishment extends Component {
   }
 
   handleChange(i, value) {
-    console.log(value)
     const punishments = this.state.punishments.slice()
-    punishments[i] = value
-    console.log(punishments)
+    const disables = this.state.disables.slice()
+    punishments[i] = parseInt(value) || 0
+    disables[i] = value != "" && (isNaN(value) || value.indexOf('.') != -1)
     this.setState({
-      punishments
+      punishments,
+      disables
     })
   }
 
@@ -104,22 +111,20 @@ class Punishment extends Component {
   }
 
   render() {
-    const {punished, punishmentRate, maxPunishment, memberID, investments, profits, round, rounds} = this.props
+    const { punished, punishmentRate, maxPunishment, members , uid, investments, profits, round, maxRound } = this.props
+    const pProfits = Math.round(profitsSelector(this.props))
+    const memberID = members.findIndex(a => a == uid)
     const punishmentSum = this.punishmentSum()
     const valid = this.isValid()
+
     return (
       <Card>
         <CardHeader title="公共財実験" subtitle="罰" />
         <CardText>
-          <div style={styles.wrapper}>
-            <Chip style={styles.chip}>
-              {`${round + 1}/${rounds}ラウンド`}
-            </Chip>
-            <Chip style={styles.chip}>
-            <Point>{profits}</Point>ポイント
-            </Chip>
-          </div>
-          <p>{profits}ポイントのうち、罰に利用するポイントを{maxPunishment}ポイント以内で入力して下さい。</p>
+          <Chip style={{float: "left"}}>{multi_text["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
+					<Chip style={{float: "right"}}>{multi_text["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
+          <div style={{clear: "both"}}>
+          <p>{pProfits}ポイントのうち、罰に利用するポイントを{maxPunishment}ポイント以内で入力して下さい。</p>
           <table>
             <thead>
               <tr><th>他のメンバー</th><th>罰に利用するポイント</th><th>罰</th></tr>
@@ -152,20 +157,17 @@ class Punishment extends Component {
             </tbody>
           </table>
           {valid ? (
-            <p>罰に{punishmentSum}ポイント使うので、あなたのポイントは{profits - punishmentSum}ポイントになります。</p>
+            <p>罰に{punishmentSum}ポイント使うので、あなたのポイントは{pProfits - punishmentSum}ポイントになります。</p>
           ) : (
-            <p>罰則ポイントが超過しています。罰則ポイントの合計が{Math.min(maxPunishment, profits)}ポイント以下になるように入力して下さい。</p>
-          )}
+            <p>罰則ポイントが超過しています。罰則ポイントの合計が{Math.min(maxPunishment, pProfits)}ポイント以下になるように入力して下さい。</p>
+            )}
+          </div>  
         </CardText>
         <CardActions>
           <RaisedButton
-            label={
-              punished
-                ? "決定済み"
-                : "決定"
-            }
+            label={"決定"}
             onClick={this.submit}
-            disabled={punished || !valid}
+            disabled={punished || !valid || this.state.disables.some(a=>a)}
             primary={true}
           />
         </CardActions>
@@ -174,4 +176,4 @@ class Punishment extends Component {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Punishment)
+export default connect(mapStateToProps, actionCreators)(Punishment)

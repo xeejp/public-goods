@@ -1,21 +1,26 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import {Card, CardText, CardTitle } from 'material-ui/Card'
-import CircularProgress from 'material-ui/CircularProgress'
+import { fetchContents } from 'shared/actions'
+
 import Divider from 'material-ui/Divider'
+import getMuiTheme from 'material-ui/styles/getMuiTheme'
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme'
+import lightBaseTheme from 'material-ui/styles/baseThemes/lightBaseTheme'
+import { Card, CardActions, CardText, CardTitle } from 'material-ui/Card'
 
-import { fetchContents } from './actions'
-
+import PageStepper from './PageStepper'
 import Users from './Users'
-import PageButtons from './PageButtons'
-import Chart from 'components/Chart'
-import Config from './Config'
-import EditQuestion from './EditQuestion'
 import DownloadButton from './DownloadButton'
+import ConfigEditor from './ConfigEditor'
+import DescriptionEditor from './DescriptionEditor'
 
-const mapStateToProps = ({loading, page, participants}) => ({
-  loading, page, participants
+const actionCreators = {
+  fetchContents
+}
+const mapStateToProps = ({ page }) => ({
+  page
 })
 
 class App extends Component {
@@ -25,56 +30,29 @@ class App extends Component {
   }
 
   componentDidMount() {
-    const { dispatch } = this.props
-    dispatch(fetchContents())
+    this.props.fetchContents();
   }
 
   render() {
-    const { loading, page, participants } = this.props
-    if (loading) {
-      return (
-        <Card style={{padding: '20px'}}>
-          <CardTitle title="接続中" style={{padding: '0px', marginTop: '7px', marginBottom: '14px'}}/>
-          <CardText style={{padding: '0px', margin: '0px'}}>
-            <div style={{textAlign: 'center'}}>
-              <CircularProgress style={{margin: '0px', padding: '0px' }} />
-            </div>
-            　　　		<p style={{margin: '0px', padding: '0px'}}>サーバーに接続しています。<br/>このまましばらくお待ちください。</p>
-          </CardText>
-        </Card>
-      )
-    } else {
-      return (
+    const { page } = this.props
+    return (
+      <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
         <div>
-          <PageButtons />
+          <PageStepper />
           <Divider
             style={{
-              marginTop: "5%",
-              marginBottom: "5%"
+              marginTop: '5%',
+              marginBottom: '5%',
             }}
           />
           <Users /><br />
-          <Chart /><br />
-          <Config />
-          <EditQuestion style={{marginLeft: "2%"}}/>
-          <DownloadButton
-            fileName={"public_goods.csv"}
-            list={[
-              ["公共財供給メカニズム"],
-              ["実験日", new Date()],
-              ["登録者数", Object.keys(participants).length],
-              ["ID", "1回目の利益", "2回目の利益", "グループID"],
-            ].concat(
-              (participants ? Object.keys(participants).map(id => {
-                return [id, participants[id].profits[1], participants[id].profits[0], participants[id].group]}) : [])
-            )}
-            style={{marginLeft: "2%"}}
-            disabled={page != "result"}
-          />
+          <ConfigEditor />
+          <DescriptionEditor />
+          <DownloadButton />
         </div>
-      )
-    }
+      </MuiThemeProvider>
+    )
   }
 }
 
-export default connect(mapStateToProps)(App)
+export default connect(mapStateToProps, actionCreators)(App)
