@@ -26,6 +26,7 @@ defmodule PublicGoods.Host do
       data = data
             |> Map.put(:investment_log, [])
             |> Map.put(:punishment_log, [])
+            |> Map.put(:history, [])
             |> Map.put(:profits_data, [])
             |> match()
     end

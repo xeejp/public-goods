@@ -21,13 +21,14 @@ defmodule PublicGoods.Main do
 
       punishment_flag: false,
       punishment_rate: 3,
-      max_punishment: 3,
+      max_punishment: 30,
       investment_log: [],
       punishment_log: [],
       money: 100,
       roi: 0.4,
       max_round: 2,
       profits_data: [],
+      history: [],
     }
   end
 

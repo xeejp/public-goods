@@ -12,13 +12,16 @@ import PersonOutlineIcon from 'material-ui/svg-icons/social/person-outline'
 import { openParticipantPage } from './actions'
 import { profitsSelector } from '../participant/selectors'
 
+import Point from '../shared/Point.js'
 import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
 
-const mapStateToProps = ({ page, groups, participantsNumber, groupsNumber, participants, activeParticipantsNumber }) => ({
+const mapStateToProps = ({ page, groups, money, punishmentRate, participantsNumber, groupsNumber, participants, activeParticipantsNumber }) => ({
   page,
   groups,
+  money,
+  punishmentRate,
   participantsNumber,
   groupsNumber,
   participants,
@@ -28,11 +31,11 @@ const mapStateToProps = ({ page, groups, participantsNumber, groupsNumber, parti
 const User = ({ id , userid, investment_private, investment_public, profit_private, profit_public, profit, group, openParticipantPage, round, state }) => (
   <tr>
     <td><a onClick={openParticipantPage(id)}>{userid}</a></td>
-    <td>{investment_private}</td>
-    <td>{investment_public}</td>
-    <td>{profit_private}</td>
-    <td>{profit_public}</td>
-    <td>{profit}</td>
+    <td><Point>{investment_private}</Point></td>
+    <td><Point>{investment_public}</Point></td>
+    <td><Point>{profit_private}</Point></td>
+    <td><Point>{profit_public}</Point></td>
+    <td><Point>{profit}</Point></td>
     <td>{group}</td>
     <td>{round}</td>
     <td>{state}</td>
@@ -41,7 +44,7 @@ const User = ({ id , userid, investment_private, investment_public, profit_priva
 
 
 
-const UsersList = ({groups, participants, openParticipantPage}) => (
+const UsersList = ({groups, participants, openParticipantPage, page, money, punishmentRate}) => (
   <table>
     <thead>
       <tr><th>被験者ID</th><th>私的財投資</th><th>公共財投資</th><th>私的財利得</th><th>公共財利得</th><th>利得合計</th><th>グループ</th><th>ラウンド</th><th>状態</th></tr>
@@ -55,6 +58,7 @@ const UsersList = ({groups, participants, openParticipantPage}) => (
         }).map(id => {
           const group = groups[participants[id].group]
           const p = participants[id]
+          p["punishmentRate"] = punishmentRate
           const profitSum = profitsSelector(p)
           return (
             <User
@@ -62,30 +66,41 @@ const UsersList = ({groups, participants, openParticipantPage}) => (
               id={id}
               userid={participants[id].id != null ? participants[id].id : id}
 
-  　　　　　　investment_private={p.invs != null && p.invs.length != 0 && p.group != null
-                                 ? (p.money * p.invs.length) - p.invs.reduce((prev, current) => prev+current)
+  　　　　　   investment_private={p.invs != null && p.invs.length != 0 && p.group != null
+                                 ? (money * p.invs.length) - p.invs.reduce((prev, current) => prev+current)
                                  : "-"}
-  　　　　　　investment_public={p.invs != null && p.invs.length != 0 && p.group != null
+  　　　　　   investment_public={p.invs != null && p.invs.length != 0 && p.group != null
                                 ? p.invs.reduce((prev, current, i, arr) => prev+current)
                                 : "-"}
               profit_private={p.profits != null && p.profits.length != 0 && p.invs != null && p.invs.length != 0 && p.group != null
-                             ? (p.money * p.invs.length) - p.invs.reduce((prev, current, i, arr) => prev+current)
+                             ? (money * p.invs.length) - p.invs.reduce((prev, current, i, arr) => prev+current)
                              : "-"}
               profit_public={p.profits != null && p.profits.length != 0 && p.invs != null && p.invs.length != 0 && p.group != null
-                             ? profitSum - ((p.money * p.invs.length) - p.invs.reduce((prev, current, i, arr) => prev+current))
+                             ? profitSum - ((money * p.invs.length) - p.invs.reduce((prev, current, i, arr) => prev+current))
                              : "-"}
               profit={p.profits != null && p.profits.length != 0 && p.group != null
                      ? profitSum
                      : "-"}
               group={p.group != null
                      ? p.group
-                     : "見学"}
+                     : "-"}
               round={p.group != null
                      ? group.round + 1
                      : "-"}
-              state={p.group != null
-                     ? group.group_status
-                     : "-"}
+              state={(participants[id].group == null)
+                ? "Wait Matching"
+                : (page != "experiment")
+                  ? (page != "description")
+                    ? page
+                    : participants[id].is_finish_description
+                      ? "Read"
+                      : "Reading"
+                  : (participants[id].status == "finished")
+                    ? "Result"
+                    : (p.group != null)
+                      ? groups[p.group].group_status
+                      : "-"
+              }
               openParticipantPage={openParticipantPage}
             />
           )
@@ -109,7 +124,7 @@ class Users extends Component {
   }
 
   render() {
-    const { page, maxRound, participants, groups, participantsNumber, groupsNumber, openParticipantPage, activeParticipantsNumber } = this.props
+    const { page, maxRound, money, punishmentRate, participants, groups, participantsNumber, groupsNumber, openParticipantPage, activeParticipantsNumber } = this.props
     return (
       <div>
         <Card>
@@ -121,8 +136,11 @@ class Users extends Component {
           <CardText expandable={true}>          
           <UsersList
             groups={groups}
+            page={page}  
             participants={participants}
             openParticipantPage={openParticipantPage}
+            money={money}
+            punishmentRate={punishmentRate}  
           />
           </CardText>
         </Card>

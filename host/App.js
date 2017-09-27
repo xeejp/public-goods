@@ -15,6 +15,8 @@ import Users from './Users'
 import DownloadButton from './DownloadButton'
 import ConfigEditor from './ConfigEditor'
 import DescriptionEditor from './DescriptionEditor'
+import Rank from '../shared/Rank'
+import Graph from '../shared/Graph'
 
 const actionCreators = {
   fetchContents
@@ -46,6 +48,10 @@ class App extends Component {
             }}
           />
           <Users /><br />
+          <Rank
+            my_profit={null}
+          /><br/>
+          <Graph /><br/>
           <ConfigEditor />
           <DescriptionEditor />
           <DownloadButton />

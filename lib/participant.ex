@@ -21,6 +21,13 @@ defmodule PublicGoods.Participant do
 		# assert that the state of a group is not finished
 		true = get_in(data, [:groups, group_id, :group_status]) != "finished"
 		members = get_in(data, [:groups, group_id, :members])
+		history = %{
+			id: id,
+			investment: investment,
+			group_id: group_id,
+			round: group.round,
+		}
+		data = Map.put(data, :history, [history] ++ data.history)		
 	
 		if Enum.all?(members, fn id -> get_in(data, [:participants, id, :invested]) end) do
 		  investments_sum = Enum.reduce(members, 0, fn id, acc ->
@@ -220,11 +227,12 @@ defmodule PublicGoods.Participant do
 			},
 			ask_student_id: "askStudentId",
 			punishment_flag: false,
-			investment_log: false,
+			investment_log: (status == "finished" || status == "result"),
 			punishment_log: false,
 			is_first_visit: false,
 			_spread: [[:participants, id], [:groups, group_id]],			
-			profits_data: (status == "finished" || status == "result")
+			profits_data: (status == "finished" || status == "result"),
+			history: false
 		}
 	end
 
