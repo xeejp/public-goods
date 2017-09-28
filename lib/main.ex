@@ -29,6 +29,7 @@ defmodule PublicGoods.Main do
       max_round: 2,
       profits_data: [],
       history: [],
+      punish_history: [],
     }
   end
 

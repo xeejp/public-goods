@@ -9,7 +9,7 @@ import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
 
-const mapStateToProps = ({ page, participants, participantsNumber, maxRound, groupSize, groupsNumber, askStudentId, history, punishmentFlag, punishmentRate, maxPunishment, money, roi }) => ({
+const mapStateToProps = ({ page, participants, participantsNumber, maxRound, groupSize, groupsNumber, askStudentId, history, punish_history, punishmentFlag, punishmentRate, maxPunishment, money, roi }) => ({
     page,
     participants,
     participantsNumber,
@@ -18,6 +18,7 @@ const mapStateToProps = ({ page, participants, participantsNumber, maxRound, gro
     groupsNumber,
     askStudentId,
     history,
+    punish_history,
     punishmentFlag,
     punishmentRate,
     maxPunishment,
@@ -31,8 +32,13 @@ class DownloadButton extends Component {
         this.state = { open: false }
     }
 
+    id(uid) {
+        const { participants, askStudentId } = this.props
+        return  (askStudentId ? (',' + participants[uid].id) : '')
+    }
+
     handleClick() {
-        const { page, participants, participantsNumber, maxRound, groupSize, groupsNumber, askStudentId, history, punishmentFlag, punishmentRate, maxPunishment, money, roi } = this.props
+        const { page, participants, participantsNumber, maxRound, groupSize, groupsNumber, askStudentId, history, punish_history, punishmentFlag, punishmentRate, maxPunishment, money, roi } = this.props
         const fileName = 'PublicGoods.csv'
 
         const temp = Array(maxRound).join(',').split(',')
@@ -41,10 +47,11 @@ class DownloadButton extends Component {
             let inv_str = Array.concat(temp, user.invs).slice(-maxRound).reverse().join(',')
             let profit_str = Array.concat(temp, user.profits.map((a,i) => ((punishmentFlag)?(a - user.punishments[i]*punishmentRate - user.used[i]):a))).slice(-maxRound).reverse().join(',')
             let profits_sum = user.profits.reduce((acc, p) => acc + p, 0) - user.punishments.reduce((acc, p) => acc + p, 0) * punishmentRate - user.used.reduce((acc, p) => acc + p, 0)
-            if(!punishmentFlag) return [id + (askStudentId ? (',' + user.id) : ''),inv_str,profit_str,profits_sum].join(',')
+            if (!punishmentFlag) return [id + this.id(id), inv_str, profit_str, profits_sum].join(',')
+            
             let puni_str = Array.concat(temp, user.punishments.map(a=>a*punishmentRate)).slice(-maxRound).reverse().join(',')
             let use_str = Array.concat(temp, user.used).slice(-maxRound).reverse().join(',')
-            return [id + (askStudentId ? (',' + user.id) : ''),inv_str,puni_str,use_str,profit_str,profits_sum].join(',')
+            return [id + this.id(id), inv_str,puni_str,use_str,profit_str,profits_sum].join(',')
         })
 
         let colInv = temp.map((a, i) => "投資" + (i + 1) + "回目").join(',')
@@ -56,10 +63,15 @@ class DownloadButton extends Component {
             : "罰則なし"
 
         let historyData = history.reverse().map(a => {
-            let str = [a.investment, a.group_id, a.round + 1]
-            return  a.id + ',' + (askStudentId ? (participants[a.id] + ',') : '') + str            
+            let str = [a.investment, a.group_id, a.round + 1].join(',')
+            return  a.id + ',' + this.id(a.uid) + str            
         })
-        
+
+        let punishHistoryData = Array.prototype.concat.apply([],punish_history).reverse().map(a => {
+            let str = [(!a.punishment)?0:a.punishment*punishmentRate, a.group_id, a.round + 1].join(',')
+            return  a.id + ',' + this.id(a.uid) + a.to_id + ',' + str                        
+        })
+
         let date = new Date()
         let content = ["公共財", 
             "実験日" + ',' + date, 
@@ -70,8 +82,11 @@ class DownloadButton extends Component {
             "初期値" + ',' + money,
             "ROI" + ',' + roi,
             punis_col,
-            ["ID", "投資額", "グループID", "ラウンド"].join(','),
-            historyData.join('\n'),
+            ["ID" + (askStudentId ? ',' + "学籍番号": '') , "投資額", "グループID", "ラウンド"].join(','),
+            historyData.join('\n') + ((punishmentFlag) ? '\n'
+                + ["ID" + (askStudentId ? ',' + "学籍番号" : ''), "罰則先ID", "罰則ポイント", "グループID", "ラウンド"].join(',') + '\n'
+                + punishHistoryData.join('\n')
+            : ''),
             "ID" + ',' + (askStudentId ? "学籍番号" + ',' : '') + colInv + ',' + ((punishmentFlag) ? colPun + ',' + colUse + ',' : "") + colPro + "," + "総利益",
             users.join('\n')
         ].join('\n') + '\n'

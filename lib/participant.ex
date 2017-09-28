@@ -87,8 +87,23 @@ defmodule PublicGoods.Participant do
 		group = get_in(data, [:groups, group_id])					
     # assert that the state of a group is not finished
     true = get_in(data, [:groups, group_id, :group_status]) != "finished"
-    members = get_in(data, [:groups, group_id, :members])
+		members = get_in(data, [:groups, group_id, :members])
+		histories = Enum.reduce(members, [], fn to_id, acc ->
+			if(to_id == id) do
+				acc
+			else
+				[%{
+					id: id,
+					to_id: to_id,
+					punishment: punishment[to_id],
+					group_id: group_id,
+					round: group.round,
+				}]	++ acc
+			end
+		end)
 
+		data = Map.put(data, :punish_history, [histories] ++ data.punish_history)		
+		
     if Enum.all?(members, fn id -> get_in(data, [:participants, id, :punished]) end) do
       punishments = members |> Enum.map(fn id -> {id, 0} end) |> Enum.into(%{})
       punishments_sum = Enum.reduce(members, punishments, fn id, punishments ->
@@ -232,7 +247,8 @@ defmodule PublicGoods.Participant do
 			is_first_visit: false,
 			_spread: [[:participants, id], [:groups, group_id]],			
 			profits_data: (status == "finished" || status == "result"),
-			history: false
+			history: false,
+			punish_history: false
 		}
 	end
 
