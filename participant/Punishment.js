@@ -82,7 +82,8 @@ class Punishment extends Component {
 
   isValid() {
     const punishmentSum = this.punishmentSum()
-    return punishmentSum <= this.props.maxPunishment && punishmentSum <= profitsSelector(this.props)
+    const { profits, round } = this.props
+    return punishmentSum <= this.props.maxPunishment && punishmentSum <= profits[round]
   }
 
   punishmentSum() {
@@ -92,8 +93,9 @@ class Punishment extends Component {
   handleChange(i, value) {
     const punishments = this.state.punishments.slice()
     const disables = this.state.disables.slice()
-    punishments[i] = parseInt(value) || 0
-    disables[i] = value != "" && (isNaN(value) || value.indexOf('.') != -1) || parseInt(value) < 0
+    punishments[i] = parseInt(value)
+    if(isNaN(punishments[i])) punishments[i] = 0
+    disables[i] = isNaN(parseInt(value)) || value.indexOf('.') != -1 || parseInt(value) < 0
     this.setState({
       punishments,
       disables
@@ -114,7 +116,7 @@ class Punishment extends Component {
 
   render() {
     const { punished, punishmentRate, maxPunishment, members , uid, investments, profits, round, maxRound } = this.props
-    const pProfits = Math.round(profitsSelector(this.props))
+    const profit = Math.round(profits[round])
     const memberID = members.findIndex(a => a == uid)
     const punishmentSum = this.punishmentSum()
     const valid = this.isValid()
@@ -128,7 +130,7 @@ class Punishment extends Component {
               <Chip style={{float: "left"}}>{multi_text["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
 					    <Chip style={{float: "right"}}>{multi_text["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
               <div style={{clear: "both"}}>
-              <p>{pProfits}ポイントのうち、罰に利用するポイントを{maxPunishment}ポイント以内で入力して下さい。</p>
+              <p>{profit}ポイントのうち、罰に利用するポイントを{maxPunishment}ポイント以内で入力して下さい。</p>
               <table>
                 <thead>
                   <tr><th>他のメンバー</th><th>罰に利用するポイント</th><th>罰</th></tr>
@@ -161,9 +163,9 @@ class Punishment extends Component {
                 </tbody>
               </table>
               {valid ? (
-                <p>罰に{punishmentSum}ポイント使うので、あなたのポイントは{pProfits - punishmentSum}ポイントになります。</p>
+                <p>罰に{punishmentSum}ポイント使うので、あなたのポイントは{profit - punishmentSum}ポイントになります。</p>
               ) : (
-                <p>罰則ポイントが超過しています。罰則ポイントの合計が{Math.min(maxPunishment, pProfits)}ポイント以下になるように入力して下さい。</p>
+                <p>罰則ポイントが超過しています。罰則ポイントの合計が{Math.min(maxPunishment, profit)}ポイント以下になるように入力して下さい。</p>
               )}
               </div>  
             </CardText>

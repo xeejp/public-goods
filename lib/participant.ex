@@ -33,7 +33,7 @@ defmodule PublicGoods.Participant do
 		  investments_sum = Enum.reduce(members, 0, fn id, acc ->
 			acc + get_in(data, [:participants, id, :investment])
 			end)
-			data
+			data = data
       |> put_in([:groups, group_id, :not_voted], length(group.members))			
 		  |> put_in([:groups, group_id, :investments], Enum.map(data.groups[group_id].members, fn id ->
 			%{id: id, investment: get_in(data, [:participants, id, :investment])}
@@ -68,7 +68,18 @@ defmodule PublicGoods.Participant do
 				get_in(data, [:participants, id, :investment])
 			  end)
 			} | log]
-		  end)
+			end)
+			
+			if data.max_round == group.round + 1 && !data.punishment_flag do
+				data = Enum.reduce(group.members, data, fn id, acc ->
+					Map.put(acc,:profits_data, [%{
+						profits: data.participants[id].profits,
+						punishments: data.participants[id].punishments,
+						used: data.participants[id].used
+					}] ++ acc.profits_data)
+				end)
+			end
+			data
 		else
 			group = Map.update!(group, :not_voted, fn x -> x - 1 end)
       data
@@ -112,7 +123,7 @@ defmodule PublicGoods.Participant do
           Map.update!(punishments, id, &(&1 + point))
         end)
       end)
-			data
+			data = data
       |> put_in([:groups, group_id, :not_voted], length(group.members))			
 			|> put_in([:groups, group_id, :group_status], "punishment_result")
 			|> put_in([:groups, group_id, :voting], true)			
@@ -138,7 +149,18 @@ defmodule PublicGoods.Participant do
             get_in(data, [:participants, id, :punishment])
           end)
         } | log]
-      end)
+			end)
+			
+			if data.max_round == group.round + 1 do
+				data = Enum.reduce(group.members, data, fn id, acc ->
+					Map.put(acc,:profits_data, [%{
+						profits: data.participants[id].profits,
+						punishments: data.participants[id].punishments,
+						used: data.participants[id].used
+					}] ++ acc.profits_data)
+				end)
+			end
+			data
     else
       group = Map.update!(group, :not_voted, fn x -> x - 1 end)
       data
@@ -182,16 +204,6 @@ defmodule PublicGoods.Participant do
           end
 			end
 
-			if group.group_status == "finished" do
-				data = Enum.reduce(group.members, data, fn id, acc ->
-					Map.put(acc,:profits_data, [%{
-						profits: data.participants[id].profits,
-						punishments: data.participants[id].punishments,
-						used: data.participants[id].used
-					}] ++ acc.profits_data)
-				end)
-			end
-
 			group = Map.put(group, :voting, false)
       participants = Enum.reduce(group.members, data.participants, fn (id, acc) ->
         Map.update!(acc, id, fn participant ->
@@ -204,9 +216,15 @@ defmodule PublicGoods.Participant do
           }
         end)
       end)
-      data
+      data = data
       |> put_in([:groups, group_id], group)
-      |> Map.put(:participants, participants)
+			|> Map.put(:participants, participants)
+			
+			if Enum.all?(Map.keys(data.groups), fn g_id -> (data.groups[g_id].group_status == "finished") end) do
+				data = Map.put(data,:page,"result")
+			end
+
+			data
     else
       group = Map.update!(group, :not_voted, fn x -> x - 1 end)
       data
@@ -241,7 +259,7 @@ defmodule PublicGoods.Participant do
 				}
 			},
 			ask_student_id: "askStudentId",
-			punishment_flag: false,
+			punishment_flag: "punishmentFlag",
 			investment_log: (status == "finished" || status == "result"),
 			punishment_log: false,
 			is_first_visit: false,

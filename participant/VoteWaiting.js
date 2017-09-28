@@ -17,14 +17,17 @@ const actionCreators = {
 	submitNext
 }
 
-const mapStateToProps = ({ voted, members, notVoted, invested, voting, punished, state }) => ({
+const mapStateToProps = ({ voted, members, notVoted, invested, voting, punished, state, punishmentFlag, round, maxRound }) => ({
 	voted,
 	members,
 	notVoted,
 	invested,
 	voting,
   punished,
-  state
+  state,
+  punishmentFlag,
+  round,
+  maxRound,
 })
 
 class VoteWaiting extends Component{    
@@ -38,15 +41,17 @@ class VoteWaiting extends Component{
 	}
 
   render() {
-    const { voted, members, notVoted, invested, voting, punished, state } = this.props
+    const { voted, members, notVoted, invested, voting, punished, state, punishmentFlag, round, maxRound } = this.props
     console.log("voteWait"+ notVoted)
     
     //if ((state == "investment" || state == "investment_result") && !invested) return null
     //if ((state == "punishment" || state == "punishment_result") && !punished) return null
     //if (state != "punishment" && state != "punishment_result" && state != "investment" && state != "investment_result") return null
+    const label = ((round + 1) == maxRound && !(punishmentFlag && state != "punishment_result"))?"実験結果へ":"OK"
+    
     const actions = [
       <FlatButton
-        label="OK"
+        label={label}
         primary={true}
         onTouchTap={this.handleClose.bind(this)}
       />

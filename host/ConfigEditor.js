@@ -156,7 +156,9 @@ class ConfigEditor extends Component {
       }
     
       isValidNumber(value) {
-        if (isNaN(value) || value.indexOf('.') != -1 || parseInt(value) <= 0 || 100000 < parseInt(value)) {
+        if (value == "") return true
+        let num = parseInt(value)
+        if (isNaN(num) || value.indexOf('.') != -1 || num <= 0 || 100000 < num) {
           this.setState({ disabled: true })
           return false
         }
@@ -165,7 +167,9 @@ class ConfigEditor extends Component {
       }
 
       isValidFloat(value) {
-        if (isNaN(value) || parseFloat(value) <= 0 || 100000 < parseFloat(value)) {
+        if (value == "") return true
+        let num = parseFloat(value)
+        if (isNaN(num) || num <= 0 || 100000 < num) {
             this.setState({ disabled: true })
             return false
         }
@@ -189,6 +193,12 @@ class ConfigEditor extends Component {
           punishmentRate: this.state.punishmentRate,
           askStudentId: this.state.askStudentId
         }
+
+        Object.keys(config).forEach(
+          key => {
+            if(config[key] === null || config[key] === undefined || config[key] === "" || Number.isNaN(config[key])) config[key] = this.props[key]
+          }
+        )
         this.props.updateConfig(config)
       }
     

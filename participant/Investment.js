@@ -46,7 +46,8 @@ class Investment extends Component {
   }
 
   handleChangeMoney(e, value) {
-    const disabled = isNaN(value) || value.indexOf('.') != -1 || parseInt(value) < 0 || this.props.money < parseInt(value)
+    let num = parseInt(value)
+    const disabled = isNaN(num) || value.indexOf('.') != -1 || num < 0 || this.props.money < num
     this.setState({
       value: value,
       disabled:disabled
