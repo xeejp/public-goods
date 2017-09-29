@@ -27,7 +27,7 @@ class InputSnum extends Component {
 
   submit() {
     if(this.state.snum != "") {
-      this.props.updateSnum(this.state.snum.replace(multi_text["input_snum"][0], s => { return String.fromCharCode(s.charCodeAt(0) - 0xFEE0) }).replace(/[^\x01-\x7E]/g, "").trim())
+      this.props.updateSnum(this.state.snum.replace(multi_text["participant"]["input_snum"][0], s => { return String.fromCharCode(s.charCodeAt(0) - 0xFEE0) }).replace(/[^\x01-\x7E]/g, "").trim())
     }
   }
 
@@ -39,13 +39,13 @@ class InputSnum extends Component {
 
   render() {
     return (<div>
-    <p>{multi_text["input_snum"][1]}</p>
+    <p>{multi_text["participant"]["input_snum"][1]}</p>
     <TextField
-      hintText={multi_text["input_snum"][2]}
+      hintText={multi_text["participant"]["input_snum"][2]}
       onChange={this.handleUpdate.bind(this)}
       onKeyDown={this.handleKeyDown.bind(this)}
     />
-    <RaisedButton label={multi_text["input_snum"][3]} primary={true} disabled={this.state.snum == ""} onClick={this.submit.bind(this)} />
+    <RaisedButton label={multi_text["participant"]["input_snum"][3]} primary={true} disabled={this.state.snum == ""} onClick={this.submit.bind(this)} />
    </div>)
   }
 }

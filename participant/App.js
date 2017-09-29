@@ -57,10 +57,10 @@ class App extends Component {
               { (page == "result") ? <Result /> : null }
           </div>
           : <Card>
-              <CardTitle title={multi_text["app"][0]} subtitle={multi_text["app"][1]}/>
+              <CardTitle title={multi_text["participant"]["app"][0]} subtitle={multi_text["participant"]["app"][1]}/>
               <CardText>
-                <p>{multi_text["app"][2]}</p>
-                <p>{multi_text["app"][3]}</p>
+                <p>{multi_text["participant"]["app"][2]}</p>
+                <p>{multi_text["participant"]["app"][3]}</p>
               </CardText>
           </Card>
         }

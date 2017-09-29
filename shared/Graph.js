@@ -6,6 +6,12 @@ import HighchartsMore from 'highcharts-more'
 import { Card, CardHeader, CardText } from 'material-ui/Card'
 HighchartsMore(ReactHighcharts.Highcharts)
 
+import { ReadJSON, LineBreak } from '../shared/ReadJSON'
+
+const multi_text = ReadJSON().static_text
+const $s = multi_text["shared"]["graph"]
+
+
 function computeQuartile(array, length, n, d) {
   const pos = (length - 1.0) * n / d
 
@@ -42,7 +48,7 @@ const mapStateToProps = ({investment_log, maxRound}) => {
       type: 'boxplot'
     },
     title: {
-      text: '公共財投資額の推移'
+      text: $s["title"]
     },
     legend: {
       enabled: false
@@ -50,19 +56,19 @@ const mapStateToProps = ({investment_log, maxRound}) => {
     xAxis: {
       categories: Array.from(Array(maxRound).keys()).map(x => (x + 1).toString()),
         title: {
-          text: 'ラウンド数'
+          text: $s["x_axis"]
         }
     },
     yAxis: {
       title: {
-        text: '投資額'
+        text: $s["y_axis"]
       },
     },
     series: [{
-      name: '投資額',
+      name: $s["series"]["name"],
       data: finalData,
       tooltip: {
-        headerFormat: '<em>{point.key}回目</em><br/>'
+        headerFormat: $s["series"]["header_format"]
       }
     }, {
       type: "line",
@@ -79,14 +85,14 @@ const Graph = ({ config, display }) => (
   <div>
     <Card>
       <CardHeader
-        title="グラフ"
+        title={$s["card_title"]}
         actAsExpander={true}
         showExpandableButton={true}
       />
       <CardText expandable={true}> 
         {display
           ? <ReactHighcharts config={config} />
-          : <p>データがないためグラフは表示できません。</p>}
+          : <p>{$s["error"]}</p>}
       </CardText>
     </Card>
   </div>

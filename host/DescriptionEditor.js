@@ -90,7 +90,7 @@ class DescriptionEditor extends Component {
     this.setState({
       isOpenDialog: false,
       isOpenSnackbar: true,
-      snackbarMessage: multi_text["description_editor"]["submit"],
+      snackbarMessage: multi_text["host"]["description_editor"]["submit"],
     })
     let description = this.state.description.map((v, i, ary) => ({id: i, text: v.text}))
     this.setState({description: description})
@@ -101,7 +101,7 @@ class DescriptionEditor extends Component {
     this.setState({
       isOpenDialog: false,
       isOpenSnackbar: true,
-      snackbarMessage: multi_text["description_editor"]["reset"],
+      snackbarMessage: multi_text["host"]["description_editor"]["reset"],
     })
     this.props.updateDescription(this.state.defaultDescription)
   }
@@ -110,18 +110,18 @@ class DescriptionEditor extends Component {
     const { page, description } = this.props
     const actions = [
       <RaisedButton
-        label={multi_text["description_editor"]["button"][0]}
+        label={multi_text["host"]["description_editor"]["button"][0]}
         primary={true}
         keyboardFocused={true}
         onTouchTap={this.submit.bind(this)}
         disabled={this.state.disabled}
       />,
       <RaisedButton
-        label={multi_text["description_editor"]["button"][1]}
+        label={multi_text["host"]["description_editor"]["button"][1]}
         onTouchTap={this.handleClose.bind(this)}
       />,
       <RaisedButton
-        label={multi_text["description_editor"]["button"][2]}
+        label={multi_text["host"]["description_editor"]["button"][2]}
         onTouchTap={this.reset.bind(this)}
       />
     ]
@@ -135,7 +135,7 @@ class DescriptionEditor extends Component {
           <ImageEditIcon />
         </FloatingActionButton>
         <Dialog
-          title={multi_text["description_editor"]["dialog"]}
+          title={multi_text["host"]["description_editor"]["dialog"]}
           actions={actions}
           model={false}
           open={this.state.isOpenDialog}
@@ -148,8 +148,8 @@ class DescriptionEditor extends Component {
                   <tr key={message.id}>
                     <td>
                       <TextField
-                        hintText={multi_text["description_editor"]["text"][0]}
-                        floatingLabelText={(index + 1) + multi_text["description_editor"]["text"][1]}
+                        hintText={multi_text["host"]["description_editor"]["text"][0]}
+                        floatingLabelText={(index + 1) + multi_text["host"]["description_editor"]["text"][1]}
                         defaultValue={message.text}
                         onChange={this.handleChange.bind(this, index)}
                         multiLine={true}

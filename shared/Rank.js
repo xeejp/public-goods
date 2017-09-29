@@ -8,6 +8,7 @@ import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 import Point from './Point.js'
 
 const multi_text = ReadJSON().static_text
+const $s = multi_text["shared"]["rank"]
 
 const mapStateToProps = ({ profits_data, punishmentRate }) => ({
     profits_data,
@@ -18,8 +19,8 @@ const RankTable = ({ data, index, style, my_profit })=> (
     <table className="highlight">
         <thead>
             <tr>
-                <th style={style}>{"順位"}</th>
-                <th style={style}>{"総利益"}</th>
+                <th style={style}>{$s["table_header"][0]}</th>
+                <th style={style}>{$s["table_header"][1]}</th>
             </tr>
         </thead>
         <tbody>
@@ -86,7 +87,7 @@ class Rank extends Component {
     return (
         <div>
             <Card expanded={this.state.expanded} onExpandChange={this.handleExpandChange.bind(this)}>
-                <CardHeader title={"ランキング"} actAsExpander={true} showExpandableButton={true} />
+                <CardHeader title={$s["card_title"]} actAsExpander={true} showExpandableButton={true} />
                 <CardText expandable={true}>
                     <RankTable
                         data={data}

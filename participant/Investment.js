@@ -18,6 +18,7 @@ import styles from './styles.js'
 import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
+const $s = multi_text["participant"]["experiment"]["investment"]
 
 const actionCreators = {
   submitInvestment
@@ -64,7 +65,7 @@ class Investment extends Component {
     if (!this.state.disabled) this.props.submitInvestment(parseInt(this.state.value))
     this.setState({
       isOpenSnackbar: true,
-      snackbarMessage: ("公共財に" + this.state.value + "ポイント投資し、私的財に" + (this.props.money - this.state.value) + "ポイント残しました。"),
+      snackbarMessage: ($s["snack_bar"][0] + this.state.value + $s["snack_bar"][1] + (this.props.money - this.state.value) + $s["snack_bar"][2]),
       value: "",
     })
   }
@@ -74,14 +75,17 @@ class Investment extends Component {
     return (
       <div>
         <Card>
-			    <CardHeader title="公共財実験" subtitle="投資" />
+          <CardHeader
+            title   ={multi_text["participant"]["experiment"]["card"][0]}
+            subtitle={multi_text["participant"]["experiment"]["card"][3]}
+          />
           <SwipeableViews index={invested?1:0} disabled={true}>
             <div>
               <CardText>
-                <Chip style={{float: "left"}}>{multi_text["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
-  					    <Chip style={{float: "right"}}>{multi_text["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
+                <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
+  					    <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
                 <div style={{clear: "both"}}>
-                  <p>{money + "ポイントのうち、公共財に投資するポイントを入力して下さい。"}</p>
+                  <p>{money + $s["desc"]}</p>
                   <span>
                     <TextField
                       id='investment'
@@ -95,7 +99,7 @@ class Investment extends Component {
               </CardText>
               <CardActions>
                 <RaisedButton
-                  label={"公共財に投資"}
+                  label={$s["button_label"]}
                   disabled={invested || this.state.disabled}
                   primary={true}
                   onTouchTap={this.Investment.bind(this)}
@@ -105,8 +109,8 @@ class Investment extends Component {
 
             <div>
               <CardText>
-                <Chip style={{float: "left"}}>{multi_text["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
-    					  <Chip style={{float: "right"}}>{multi_text["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
+                <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
+    					  <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
                 <VoteWaiting />
               </CardText>
             </div>

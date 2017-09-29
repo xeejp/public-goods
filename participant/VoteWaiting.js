@@ -12,6 +12,7 @@ import { submitNext } from './actions'
 import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
+const $s = multi_text["participant"]["experiment"]["vote_waiting"]
 
 const actionCreators = {
 	submitNext
@@ -47,7 +48,7 @@ class VoteWaiting extends Component{
     //if ((state == "investment" || state == "investment_result") && !invested) return null
     //if ((state == "punishment" || state == "punishment_result") && !punished) return null
     //if (state != "punishment" && state != "punishment_result" && state != "investment" && state != "investment_result") return null
-    const label = ((round + 1) == maxRound && !(punishmentFlag && state != "punishment_result"))?"実験結果へ":"OK"
+    const label = ((round + 1) == maxRound && !(punishmentFlag && state != "punishment_result"))?$s["result_label"]:$s["next_label"]
     
     const actions = [
       <FlatButton
@@ -59,16 +60,16 @@ class VoteWaiting extends Component{
 
     return (
       <div style={{ clear: "both" }}>
-        <p>{multi_text["experiment"]["end"]}</p>
+        <p>{multi_text["participant"]["experiment"]["end"]}</p>
         {(voting) ?
-          <p>(確認：{members.length - notVoted}人/{members.length}人中)</p>
-          : <p>(解答済み：{members.length - notVoted}人/{members.length}人中)</p>
+          <p>({$s["confirm"] + (members.length - notVoted) + $s["unit"] +'/' + members.length + $s["sum"]})</p>
+          : <p>({$s["answer"] + (members.length - notVoted)+ $s["unit"] + '/' + members.length + $s["sum"]})</p>
         }
         <div style={{ textAlign: "center" }}>
           <CircularProgress />
         </div>
         <Dialog
-          title={multi_text["experiment"]["dialog"]}
+          title={multi_text["participant"]["experiment"]["dialog"]}
           actions={actions}
           modal={true}
           open={voting && !voted}

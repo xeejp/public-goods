@@ -18,6 +18,7 @@ import { updateConfig, visit } from './actions'
 import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
+const $s = multi_text["host"]["config_editor"]
 
 const actionCreators = {
     updateConfig,
@@ -181,7 +182,7 @@ class ConfigEditor extends Component {
         this.setState({
           isOpenDialog: false,
           isOpenSnackbar: true,
-          snackbarMessage: multi_text["snackbar"][0],
+          snackbarMessage: $s["snackbar"][0],
         })
         let config = {
           maxRound: this.state.maxRound,
@@ -206,7 +207,7 @@ class ConfigEditor extends Component {
         this.setState({
           isOpenDialog: false,
           isOpenSnackbar: true,
-          snackbarMessage: multi_text["snackbar"][1],
+          snackbarMessage: $s["snackbar"][1],
         })
         this.props.updateConfig(this.state.defaultConfig)
       }
@@ -215,18 +216,18 @@ class ConfigEditor extends Component {
       const { page, maxRound, askStudentId, roi, money, punishmentFlag, maxPunishment, punishmentRate, groupSize } = this.props
       const actions = [
         <RaisedButton
-            label={multi_text["config_button"][0]}
+            label={$s["config_button"][0]}
             primary={true}
             keyboardFocused={true}
             onTouchTap={this.submit.bind(this)}
             disabled={this.state.disabled}
         />,
         <RaisedButton
-            label={multi_text["config_button"][1]}
+            label={$s["config_button"][1]}
             onTouchTap={this.handleClose.bind(this)}
         />,
         <RaisedButton
-            label={multi_text["config_button"][2]}
+            label={$s["config_button"][2]}
             onTouchTap={this.reset.bind(this)}
         />
         ]
@@ -240,56 +241,56 @@ class ConfigEditor extends Component {
           <ActionSettingsIcon />
         </FloatingActionButton>
         <Dialog
-          title={multi_text["config_editor"]["dt"][0]}
+          title={$s["dt"][0]}
           actions={actions}
           model={false}
           open={this.state.isOpenDialog}
           autoScrollBodyContent={true}
               >
-            <p>{multi_text["config_editor"]["dt"][1]}</p>
+            <p>{$s["dt"][1]}</p>
             <Toggle
-                label={multi_text["config_editor"]["dt"][1]+ (this.state.askStudentId ? multi_text["config_editor"]["dt"][2] : multi_text["config_editor"]["dt"][3])}
+                label={$s["dt"][1]+ (this.state.askStudentId ? $s["dt"][2] : $s["dt"][3])}
                 toggled={this.state.askStudentId}
                 onToggle={this.handleChangeAskStudentId.bind(this)}
             />
             
-            <p>{multi_text["config_editor"]["dt"][4]}</p>
+            <p>{$s["dt"][4]}</p>
             <TextField
-                hintText={multi_text["config_editor"]["ddt"][0]}
+                hintText={$s["ddt"][0]}
                 multiLine={false}
                 fullWidth={true}
                 onChange={this.handleChangeMaxRound.bind(this)}
                 value={this.state.maxRound}
             />
                   
-            <p>{multi_text["config_editor"]["ddt"][1]}</p>
+            <p>{$s["ddt"][1]}</p>
             <TextField
-                hintText={multi_text["config_editor"]["ddt"][2]}
+                hintText={$s["ddt"][2]}
                 multiLine={false}
                 fullWidth={true}
                 onChange={this.handleChangeGroupSize.bind(this)}
                 value={this.state.groupSize}
             />
 
-            <p>{multi_text["config_editor"]["dddt"][0]}</p>
+            <p>{$s["dddt"][0]}</p>
             <Toggle
-                label={multi_text["config_editor"]["dddt"][1]+ (this.state.punishmentFlag ? multi_text["config_editor"]["dddt"][2] : multi_text["config_editor"]["dddt"][3])}                      
+                label={$s["dddt"][1]+ (this.state.punishmentFlag ? $s["dddt"][2] : $s["dddt"][3])}                      
                 toggled={this.state.punishmentFlag}
                 onToggle={this.handleChangePunishmentFlag.bind(this)}
             />
             {this.state.punishmentFlag ? (
                 <div>
-                    <p>{multi_text["config_editor"]["dddt"][4]}</p>
+                    <p>{$s["dddt"][4]}</p>
                     <TextField
-                        hintText={multi_text["config_editor"]["dddt"][5]}
+                        hintText={$s["dddt"][5]}
                         multiLine={false}
                         fullWidth={true}
                         onChange={this.handleChangeMaxPunishment.bind(this)}
                         value={this.state.maxPunishment}
                     />
-                    <p>{multi_text["config_editor"]["dddt"][6]}</p>
+                    <p>{$s["dddt"][6]}</p>
                     <TextField
-                        hintText={multi_text["config_editor"]["dddt"][7]}
+                        hintText={$s["dddt"][7]}
                         multiLine={false}
                         fullWidth={true}
                         onChange={this.handleChangePunishmentRate.bind(this)}
@@ -298,18 +299,18 @@ class ConfigEditor extends Component {
                 </div>
             ) : null}
 
-            <p>{multi_text["config_editor"]["ddddt"][0]}</p>
+            <p>{$s["ddddt"][0]}</p>
             <TextField
-                hintText={multi_text["config_editor"]["ddddt"][1]}
+                hintText={$s["ddddt"][1]}
                 multiLine={false}
                 fullWidth={true}
                 onChange={this.handleChangeRoi.bind(this)}
                 value={this.state.roiText}
             />
 
-            <p>{multi_text["config_editor"]["ddddt"][2]}</p>
+            <p>{$s["ddddt"][2]}</p>
             <TextField
-                hintText={multi_text["config_editor"]["ddddt"][3]}
+                hintText={$s["ddddt"][3]}
                 multiLine={false}
                 fullWidth={true}
                 onChange={this.handleChangeMoney.bind(this)}

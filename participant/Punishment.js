@@ -17,6 +17,7 @@ import styles from './styles.js'
 import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
+const $s = multi_text["participant"]["experiment"]["punishment"]
 
 class PunishmentForm extends Component {
   constructor(props) {
@@ -123,17 +124,24 @@ class Punishment extends Component {
 
     return (
       <Card>
-        <CardHeader title="公共財実験" subtitle="罰" />
+        <CardHeader
+          title   ={multi_text["participant"]["experiment"]["card"][0]}
+          subtitle={multi_text["participant"]["experiment"]["card"][4]}
+        />
         <SwipeableViews index={punished?1:0} disabled={true}>
           <div>
             <CardText>
-              <Chip style={{float: "left"}}>{multi_text["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
-					    <Chip style={{float: "right"}}>{multi_text["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
+              <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
+					    <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
               <div style={{clear: "both"}}>
-              <p>{profit}ポイントのうち、罰に利用するポイントを{maxPunishment}ポイント以内で入力して下さい。</p>
+              <p>{profit + $s["desc"][0] + maxPunishment + $s["desc"][1]}</p>
               <table>
                 <thead>
-                  <tr><th>他のメンバー</th><th>罰に利用するポイント</th><th>罰</th></tr>
+                    <tr>
+                      <th>{$s["table"]["header"][0]}</th>
+                      <th>{$s["table"]["header"][1]}</th>
+                      <th>{$s["table"]["header"][2]}</th>
+                    </tr>
                 </thead>
                 <tbody>
                   {
@@ -142,7 +150,7 @@ class Punishment extends Component {
                         const punishment = this.state.punishments[i] || 0
                         return (
                           <tr key={i}>
-                            <td>{investment}ポイントを投資したメンバー</td>
+                            <td>{investment + $s["table"]["body"]}</td>
                             <td>
                               <PunishmentForm
                                 id={`punishment-${i}`}
@@ -163,15 +171,15 @@ class Punishment extends Component {
                 </tbody>
               </table>
               {valid ? (
-                <p>罰に{punishmentSum}ポイント使うので、あなたのポイントは{profit - punishmentSum}ポイントになります。</p>
+                <p>{$s["desc2"][0] + punishmentSum + $s["desc2"][1] + (profit - punishmentSum) + $s["desc2"][2]}</p>
               ) : (
-                <p>罰則ポイントが超過しています。罰則ポイントの合計が{Math.min(maxPunishment, profit)}ポイント以下になるように入力して下さい。</p>
+                <p>{$s["valid"][0] + Math.min(maxPunishment, profit) + $s["valid"][1]}</p>
               )}
               </div>  
             </CardText>
             <CardActions>
               <RaisedButton
-                label={"決定"}
+                label={$s["button_label"]}
                 onClick={this.submit}
                 disabled={punished || !valid || this.state.disables.some(a=>a)}
                 primary={true}
@@ -180,8 +188,8 @@ class Punishment extends Component {
             </div>
             <div>
                 <CardText>
-                  <Chip style={{float: "left"}}>{multi_text["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
-  					      <Chip style={{float: "right"}}>{multi_text["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
+                  <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
+  					      <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
                   <VoteWaiting />
                 </CardText>
             </div>

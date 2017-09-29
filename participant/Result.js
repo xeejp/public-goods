@@ -12,6 +12,7 @@ import Graph from '../shared/Graph'
 import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
+const $s = multi_text["participant"]["result"]
 
 const mapStateToProps = ({ askStudentId, profits, punishments, used, punishmentRate }) => ({
   askStudentId,
@@ -32,10 +33,10 @@ class Result extends Component {
     const profit = profitsSelector(this.props)
     return (
       <Card>
-        <CardTitle title={multi_text["result"]["card"][0]} subtitle={multi_text["result"]["card"][1] + (askStudentId ? multi_text["result"]["card"][2] + (id ? id : "") + ")" : "")}/>
+        <CardTitle title={$s["card"][0]} subtitle={$s["card"][1] + (askStudentId ? $s["card"][2] + (id ? id : "") + ")" : "")}/>
         <CardText>
-          <p>{multi_text["result"]["card"][3]}</p>
-          <p>あなたのポイント:<Point>{profit}</Point></p>
+          <p>{$s["card"][3]}</p>
+          <p>{$s["card"][4]}:<Point>{profit}</Point></p>
           <Rank
             my_profit={profit}
           />

@@ -17,6 +17,7 @@ import { submitNext } from './actions'
 import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
+const $s = multi_text["participant"]["experiment"]["investment_result"]
 
 const actionCreators = {
   submitNext
@@ -46,7 +47,7 @@ class InvestmentResult extends Component {
       <span>
         <List>
           <ListItem>
-            <p>私的財からの利得</p>
+            <p>{$s["list_title"][0]}</p>
             <Avatar
               backgroundColor={blue400}
               size={50}
@@ -58,7 +59,7 @@ class InvestmentResult extends Component {
             </Avatar>
           </ListItem>
           <ListItem>
-            <p>公共財からの利得</p>
+            <p>{$s["list_title"][1]}</p>
             <Avatar
               backgroundColor={orange400}
               size={50}
@@ -68,7 +69,7 @@ class InvestmentResult extends Component {
                 {investmentsSum}
               </Point>
             </Avatar>
-            ×{roi}倍＝
+            {$s["operator"][0] + roi + $s["rate"]+ $s["operator"][2]}
           <Avatar
               backgroundColor={blue400}
               size={50}
@@ -81,7 +82,7 @@ class InvestmentResult extends Component {
           </ListItem>
           <Divider />
           <ListItem>
-            <p>利得合計</p>
+            <p>{$s["list_title"][2]}</p>
             <Avatar
               backgroundColor={blue400}
               size={50}
@@ -91,7 +92,7 @@ class InvestmentResult extends Component {
                 {money - investments[memberID].investment}
               </Point>
             </Avatar>
-            ＋
+            {$s["operator"][1]}
           <Avatar
               backgroundColor={blue400}
               size={50}
@@ -101,7 +102,7 @@ class InvestmentResult extends Component {
                 {investmentsSum * roi}
               </Point>
             </Avatar>
-            ＝
+            {$s["operator"][2]}
           <Avatar
               backgroundColor={blue400}
               size={50}
@@ -116,7 +117,7 @@ class InvestmentResult extends Component {
         <Divider />
         <List>
           <ListItem>
-            <p>メンバーの公共財投資</p>
+            <p>{$s["list_title"][3]}</p>
             {
               investments.map(({ id, investment }) => (
                 <Avatar

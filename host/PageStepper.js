@@ -12,7 +12,7 @@ import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 const multi_text = ReadJSON().static_text
 
 const pages = ["waiting", "description", "experiment", "result"]
-const page_name = {"waiting": multi_text["page_stepper"]["page"][0], "description": multi_text["page_stepper"]["page"][1], "experiment": multi_text["page_stepper"]["page"][2], "result": multi_text["page_stepper"]["page"][3]}
+const page_name = {"waiting": multi_text["host"]["page_stepper"]["page"][0], "description": multi_text["host"]["page_stepper"]["page"][1], "experiment": multi_text["host"]["page_stepper"]["page"][2], "result": multi_text["host"]["page_stepper"]["page"][3]}
 
 const actionCreators = {
   changePage,
@@ -86,13 +86,13 @@ class PageStepper extends Component {
         </Stepper>
         <div>
           <FlatButton
-            label={multi_text["page_stepper"]["button"][0]}
+            label={multi_text["host"]["page_stepper"]["button"][0]}
             style={{marginLeft: '3%'}}
             onClick={this.backPage.bind(this)}
             disabled={page == "waiting"}
           />
           <RaisedButton
-            label={multi_text["page_stepper"]["button"][1]}
+            label={multi_text["host"]["page_stepper"]["button"][1]}
             style={{marginLeft: '3%'}}
             primary={true}
             onClick={this.nextPage.bind(this)}

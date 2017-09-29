@@ -22,11 +22,11 @@ class Waiting extends Component {
     const { participantsNumber } = this.props
     return (
   <Card>
-    <CardTitle title={multi_text["waiting"][1]} subtitle={multi_text["waiting"][1]} />
+    <CardTitle title={multi_text["participant"]["waiting"][1]} subtitle={multi_text["participant"]["waiting"][1]} />
     <CardText>
-      <p>{multi_text["waiting"][2]}</p>
-      <p>{multi_text["waiting"][3]}</p>
-      <p>{multi_text["waiting"][4]}{participantsNumber}{multi_text["waiting"][5]} </p>
+      <p>{multi_text["participant"]["waiting"][2]}</p>
+      <p>{multi_text["participant"]["waiting"][3]}</p>
+      <p>{multi_text["participant"]["waiting"][4]}{participantsNumber}{multi_text["participant"]["waiting"][5]} </p>
     </CardText>
     <div style={{textAlign: "center"}}>
       <CircularProgress size={2}/>

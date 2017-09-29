@@ -54,11 +54,11 @@ class Description extends Component {
     let descList = [
       <div>
         <CardHeader
-          title={multi_text["description"]["card"][0]}
-          subtitle={multi_text["description"]["card"][1] + (description.length + 1) + "/" + (description.length + 1)}
+          title={multi_text["participant"]["description"]["card"][0]}
+          subtitle={multi_text["participant"]["description"]["card"][1] + (description.length + 1) + "/" + (description.length + 1)}
         />
         <CardText expandable={false}>
-          <p>{multi_text["description"]["card"][2]}</p>
+          <p>{multi_text["participant"]["description"]["card"][2]}</p>
           <div style={{textAlign: "center"}}>
             <CircularProgress />
           </div>
@@ -77,8 +77,8 @@ class Description extends Component {
                 <div key={"div-" + String(index)}>
                   <CardHeader
                     key={"header-" + String(index)}
-                    title={multi_text["description"]["card"][0]}
-                    subtitle={multi_text["description"]["card"][1] + (index+1) + "/" + (description.length + 1)}
+                    title={multi_text["participant"]["description"]["card"][0]}
+                    subtitle={multi_text["participant"]["description"]["card"][1] + (index+1) + "/" + (description.length + 1)}
                   />
                   <CardText key={"text-" + String(index)} expandable={false}>
                     {desc.text.split('\n').map(line => <p key={"text-lines-" + String(line)}>{line}</p>)}
@@ -89,13 +89,13 @@ class Description extends Component {
           </SwipeableViews>
         </Card>
         <RaisedButton
-          label={multi_text["description"]["button"][0]}
+          label={multi_text["participant"]["description"]["button"][0]}
           style={{float: "left"}}
           onTouchTap={this.handleBack.bind(this)}
           disabled={this.state.slideIndex == 0}
         />
         <RaisedButton
-          label={multi_text["description"]["button"][1]}
+          label={multi_text["participant"]["description"]["button"][1]}
           style={{float: "right"}}
           onTouchTap={this.handleNext.bind(this)}
           primary={true}

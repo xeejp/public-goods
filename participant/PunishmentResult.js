@@ -17,6 +17,7 @@ import { submitNext } from './actions'
 import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
+const $s = multi_text["participant"]["experiment"]["punishment_result"]
 
 const mapStateToProps = ({profits, punishments, used, voted, votesNext, members, punishmentRate }) => ({
   profits,
@@ -34,7 +35,7 @@ const mapDispatchToProps = (dispatch) => ({
 const PunishmentResult = ({ profits, punishments, used, voted, votesNext, submitNext, members, punishmentRate }) => (
     <List>
       <ListItem>
-        <p>利得</p>
+      <p>{$s["list_title"][0]}</p>
         <Avatar
           backgroundColor={blue400}
           size={50}
@@ -46,7 +47,7 @@ const PunishmentResult = ({ profits, punishments, used, voted, votesNext, submit
         </Avatar>
       </ListItem>
       <ListItem>
-        <p>罰に利用したポイント</p>
+        <p>{$s["list_title"][1]}</p>
         <Avatar
           backgroundColor={orange400}
           size={50}
@@ -58,7 +59,7 @@ const PunishmentResult = ({ profits, punishments, used, voted, votesNext, submit
         </Avatar>
       </ListItem>
       <ListItem>
-        <p>受けた罰</p>
+        <p>{$s["list_title"][2]}</p>
         <Avatar
           backgroundColor={pink400}
           size={50}
@@ -71,7 +72,7 @@ const PunishmentResult = ({ profits, punishments, used, voted, votesNext, submit
       </ListItem>
       <Divider />
       <ListItem>
-        <p>利得合計</p>
+        <p>{$s["list_title"][3]}</p>
         <Avatar
           backgroundColor={blue400}
           size={50}
@@ -81,7 +82,7 @@ const PunishmentResult = ({ profits, punishments, used, voted, votesNext, submit
             {profits[0]}
           </Point>
         </Avatar>
-        −
+        {$s["operator"][0]}
          <Avatar
           backgroundColor={orange400}
           size={50}
@@ -98,7 +99,7 @@ const PunishmentResult = ({ profits, punishments, used, voted, votesNext, submit
         >
           {punishments[0] * punishmentRate}
         </Avatar>
-        ＝
+        {$s["operator"][1]}
         <Avatar
           backgroundColor={blue400}
           size={50}

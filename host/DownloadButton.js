@@ -8,6 +8,7 @@ import Snackbar from 'material-ui/Snackbar'
 import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
+const $s = multi_text["host"]["download"]
 
 const mapStateToProps = ({ page, participants, participantsNumber, maxRound, groupSize, groupsNumber, askStudentId, history, punish_history, punishmentFlag, punishmentRate, maxPunishment, money, roi }) => ({
     page,
@@ -40,7 +41,7 @@ class DownloadButton extends Component {
     handleClick() {
         const { page, participants, participantsNumber, maxRound, groupSize, groupsNumber, askStudentId, history, punish_history, punishmentFlag, punishmentRate, maxPunishment, money, roi } = this.props
         const fileName = 'PublicGoods.csv'
-
+        
         const temp = Array(maxRound).join(',').split(',')
         let users = Object.keys(participants).map(id => {
             let user = participants[id]
@@ -54,13 +55,13 @@ class DownloadButton extends Component {
             return [id + this.id(id), inv_str,puni_str,use_str,profit_str,profits_sum].join(',')
         })
 
-        let colInv = temp.map((a, i) => "投資" + (i + 1) + "回目").join(',')
-        let colPro = temp.map((a, i) => "利益" + (i + 1) + "回目").join(',')        
-        let colPun = temp.map((a, i) => "受けた罰則" + (i + 1) + "回目").join(',')
-        let colUse = temp.map((a, i) => "与えた罰則" + (i + 1) + "回目").join(',')
+        let colInv = temp.map((a, i) => $s["cols"][0] + (i + 1) + $s["cols"][4]).join(',')
+        let colPro = temp.map((a, i) => $s["cols"][1] + (i + 1) + $s["cols"][4]).join(',')        
+        let colPun = temp.map((a, i) => $s["cols"][2] + (i + 1) + $s["cols"][4]).join(',')
+        let colUse = temp.map((a, i) => $s["cols"][3] + (i + 1) + $s["cols"][4]).join(',')
         let punis_col = (punishmentFlag)
-            ? ["罰則有り", "罰則の倍率" + ',' + punishmentRate, "罰則に使えるポイントの最大値" + ',' + maxPunishment].join('\n')
-            : "罰則なし"
+            ? [$s["puni_col"][0], $s["puni_col"][1] + ',' + punishmentRate, $s["puni_col"][2] + ',' + maxPunishment].join('\n')
+            : $s["puni_col"][4]
 
         let historyData = history.reverse().map(a => {
             let str = [a.investment, a.group_id, a.round + 1].join(',')
@@ -73,21 +74,21 @@ class DownloadButton extends Component {
         })
 
         let date = new Date()
-        let content = ["公共財", 
-            "実験日" + ',' + date, 
-            "登録者数" + ',' + participantsNumber,
-            "グループ数" + ',' + groupsNumber,
-            "1グループの人数" + ',' + groupSize,
-            "ラウンド" + ',' + maxRound,
-            "初期値" + ',' + money,
-            "ROI" + ',' + roi,
+        let content = [$s["dt"][0], 
+            $s["dt"][1] + ',' + date, 
+            $s["dt"][2] + ',' + participantsNumber,
+            $s["dt"][3] + ',' + groupsNumber,
+            $s["dt"][4] + ',' + groupSize,
+            $s["dt"][5] + ',' + maxRound,
+            $s["dt"][6] + ',' + money,
+            $s["dt"][7] + ',' + roi,
             punis_col,
-            ["ID" + (askStudentId ? ',' + "学籍番号": '') , "投資額", "グループID", "ラウンド"].join(','),
+            [$s["Ids"][0] + (askStudentId ? ',' + $s["Ids"][1]: '') , $s["inv_log"][0], $s["Ids"][2], $s["round"]].join(','),
             historyData.join('\n') + ((punishmentFlag) ? '\n'
-                + ["ID" + (askStudentId ? ',' + "学籍番号" : ''), "罰則先ID", "罰則ポイント", "グループID", "ラウンド"].join(',') + '\n'
+                + [$s["Ids"][0] + (askStudentId ? ',' + $s["Ids"][1] : ''), $s["puni_log"][0], $s["puni_log"][1], $s["Ids"][2], $s["round"]].join(',') + '\n'
                 + punishHistoryData.join('\n')
             : ''),
-            "ID" + ',' + (askStudentId ? "学籍番号" + ',' : '') + colInv + ',' + ((punishmentFlag) ? colPun + ',' + colUse + ',' : "") + colPro + "," + "総利益",
+            $s["Ids"][0] + ',' + (askStudentId ? $s["Ids"][1] + ',' : '') + colInv + ',' + ((punishmentFlag) ? colPun + ',' + colUse + ',' : "") + colPro + "," + $s["cols"][5],
             users.join('\n')
         ].join('\n') + '\n'
         let bom = new Uint8Array([0xEF, 0xBB, 0xBF]);
@@ -120,7 +121,7 @@ class DownloadButton extends Component {
             </FloatingActionButton>
             <Snackbar
                 open={this.state.open}
-                message = {""}
+                message = {$s["snackbar"]}
                 autoHideDuration = { 2000 }
                 onRequestClose = { this.handleRequestClose.bind(this) }
             />

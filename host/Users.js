@@ -16,6 +16,7 @@ import Point from '../shared/Point.js'
 import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
+const $s = multi_text["host"]["users"]
 
 const mapStateToProps = ({ page, groups, money, punishmentRate, participantsNumber, groupsNumber, participants, activeParticipantsNumber }) => ({
   page,
@@ -47,7 +48,17 @@ const User = ({ id , userid, investment_private, investment_public, profit_priva
 const UsersList = ({groups, participants, openParticipantPage, page, money, punishmentRate}) => (
   <table>
     <thead>
-      <tr><th>被験者ID</th><th>私的財投資</th><th>公共財投資</th><th>私的財利得</th><th>公共財利得</th><th>利得合計</th><th>グループ</th><th>ラウンド</th><th>状態</th></tr>
+      <tr>
+        <th>{$s["table_header"][0]}</th>
+        <th>{$s["table_header"][1]}</th>
+        <th>{$s["table_header"][2]}</th>
+        <th>{$s["table_header"][3]}</th>
+        <th>{$s["table_header"][4]}</th>
+        <th>{$s["table_header"][5]}</th>
+        <th>{$s["table_header"][6]}</th>
+        <th>{$s["table_header"][7]}</th>
+        <th>{$s["table_header"][8]}</th>
+      </tr>
     </thead>
     <tbody>
       {
@@ -66,10 +77,10 @@ const UsersList = ({groups, participants, openParticipantPage, page, money, puni
               id={id}
               userid={participants[id].id != null ? participants[id].id : id}
 
-  　　　　　   investment_private={p.invs != null && p.invs.length != 0 && p.group != null
+              investment_private={p.invs != null && p.invs.length != 0 && p.group != null
                                  ? (money * p.invs.length) - p.invs.reduce((prev, current) => prev+current)
                                  : "-"}
-  　　　　　   investment_public={p.invs != null && p.invs.length != 0 && p.group != null
+              investment_public={p.invs != null && p.invs.length != 0 && p.group != null
                                 ? p.invs.reduce((prev, current, i, arr) => prev+current)
                                 : "-"}
               profit_private={p.profits != null && p.profits.length != 0 && p.invs != null && p.invs.length != 0 && p.group != null
@@ -129,7 +140,7 @@ class Users extends Component {
       <div>
         <Card>
           <CardHeader
-            title={multi_text["users"][0] + ((participants)? Object.keys(participants).length : "0") + multi_text["users"][1]}
+            title={multi_text["host"]["users"]["card_header"][0] + ((participants)? Object.keys(participants).length : "0") + multi_text["host"]["users"]["card_header"][1]}
             actAsExpander={true}
             showExpandableButton={true}
           />
