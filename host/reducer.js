@@ -1,13 +1,7 @@
-import concatenateReducers from 'redux-concatenate-reducers'
-import { handleAction, handleActions } from 'redux-actions'
+import { createReducer } from 'redux-act'
 
-import { changePage } from './actions'
-
-const reducer = concatenateReducers([
-  handleActions({
-    'update contents': (_, { payload }) => payload,
-  }, {}),
-  handleAction('update contents', () => ({ loading: false }), { loading: true })
-])
+const reducer = createReducer({
+  'update contents': (state, payload) => payload
+}, {})
 
 export default reducer

@@ -1,11 +1,8 @@
-import { createAction } from 'redux-actions'
-
-export const fetchContents = createAction('fetch contents')
-export const match = createAction('match')
+import { createAction } from 'redux-act'
 
 export const changePage = createAction('change page', page => page)
-export const submitPage = createAction('submit page', page => page)
-export const backPage = createAction('back page')
-export const nextPage = createAction('next page')
-
+export const updateConfig = createAction('update config', config => config)
+export const updateDescription = createAction('update description', description => description)
+export const visit = createAction('visit')
+export const match = createAction('match')
 export const openParticipantPage = createAction('open participant page')

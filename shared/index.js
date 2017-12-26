@@ -9,7 +9,6 @@ import reduceReducers from 'reduce-reducers'
 import { create as createJsondiffpatch } from 'jsondiffpatch'
 import clone from 'clone'
 import { fork, take, call } from 'redux-saga/effects'
-import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider'
 
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
@@ -66,9 +65,7 @@ export default function startApp(component, reducer, saga, host=false) {
 
   render(
     <Provider store={store}>
-      <MuiThemeProvider>
-        {React.createElement(component)}
-      </MuiThemeProvider>
+      {React.createElement(component)}
     </Provider>,
     document.getElementById("content")
   )

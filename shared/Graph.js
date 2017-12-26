@@ -6,6 +6,12 @@ import HighchartsMore from 'highcharts-more'
 import { Card, CardHeader, CardText } from 'material-ui/Card'
 HighchartsMore(ReactHighcharts.Highcharts)
 
+import { ReadJSON, LineBreak } from '../shared/ReadJSON'
+
+const multi_text = ReadJSON().static_text
+const $s = multi_text["shared"]["graph"]
+
+
 function computeQuartile(array, length, n, d) {
   const pos = (length - 1.0) * n / d
 
@@ -20,9 +26,10 @@ function computeQuartile(array, length, n, d) {
   }
 }
 
-const mapStateToProps = ({investmentLog, rounds}) => {
-  const data = Array.from(Array(rounds).keys()).map(() => [])
-  investmentLog.forEach(({round, investments}) => {
+const mapStateToProps = ({investment_log, maxRound}) => {
+  const data = Array.from(Array(maxRound).keys()).map(() => [])
+  if(!investment_log) investment_log = []
+  investment_log.forEach(({round, investments}) => {
     Array.prototype.push.apply(data[round], investments)
   })
   const finalData = data.map(investments => {
@@ -41,27 +48,27 @@ const mapStateToProps = ({investmentLog, rounds}) => {
       type: 'boxplot'
     },
     title: {
-      text: '公共財投資額の推移'
+      text: $s["title"]
     },
     legend: {
       enabled: false
     },
     xAxis: {
-      categories: Array.from(Array(rounds).keys()).map(x => (x + 1).toString()),
+      categories: Array.from(Array(maxRound).keys()).map(x => (x + 1).toString()),
         title: {
-          text: 'ラウンド数'
+          text: $s["x_axis"]
         }
     },
     yAxis: {
       title: {
-        text: '投資額'
+        text: $s["y_axis"]
       },
     },
     series: [{
-      name: '投資額',
+      name: $s["series"]["name"],
       data: finalData,
       tooltip: {
-        headerFormat: '<em>{point.key}回目</em><br/>'
+        headerFormat: $s["series"]["header_format"]
       }
     }, {
       type: "line",
@@ -69,26 +76,26 @@ const mapStateToProps = ({investmentLog, rounds}) => {
     }]
   }
   return {
-    display: investmentLog.length > 0,
+    display: investment_log.length > 0,
     config
   }
 }
 
-const Chart = ({ config, display }) => (
+const Graph = ({ config, display }) => (
   <div>
     <Card>
       <CardHeader
-        title="グラフ"
+        title={$s["card_title"]}
         actAsExpander={true}
         showExpandableButton={true}
       />
-      <CardText expandable={true}>
+      <CardText expandable={true}> 
         {display
           ? <ReactHighcharts config={config} />
-          : <p>データがないためグラフは表示できません。</p>}
+          : <p>{$s["error"]}</p>}
       </CardText>
     </Card>
   </div>
 )
 
-export default connect(mapStateToProps)(throttle(Chart, 200))
+export default connect(mapStateToProps)(throttle(Graph, 200))

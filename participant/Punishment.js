@@ -1,16 +1,23 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
+import SwipeableViews from 'react-swipeable-views'
 import FlatButton from 'material-ui/FlatButton'
 import RaisedButton from 'material-ui/RaisedButton'
 import TextField from 'material-ui/TextField'
 import Chip from 'material-ui/Chip'
 import { Card, CardHeader, CardText, CardActions } from 'material-ui/Card'
 
-import Point from '../components/Point.js'
+import VoteWaiting from './VoteWaiting'
+import Point from '../shared/Point.js'
 import { profitsSelector } from './selectors.js'
 import { submitPunishment } from './actions.js'
 import styles from './styles.js'
+
+import { ReadJSON, LineBreak } from '../shared/ReadJSON'
+
+const multi_text = ReadJSON().static_text
+const $s = multi_text["participant"]["experiment"]["punishment"]
 
 class PunishmentForm extends Component {
   constructor(props) {
@@ -23,9 +30,8 @@ class PunishmentForm extends Component {
 
   handleChange(event) {
     const value = event.target.value
-    const parsed = parseInt(value, 10)
     this.setState({value})
-    this.props.onChange(parsed || 0)
+    this.props.onChange(value)
   }
 
   render() {
@@ -41,19 +47,21 @@ class PunishmentForm extends Component {
   }
 }
 
-const mapStateToProps = (state) => {
-  const {punished, punishmentRate, maxPunishment, memberID, investments, profits, round, rounds} = state
-  return {
-    punished,
-    round, rounds,
-    punishmentRate, maxPunishment,
-    investments,
-    memberID,
-    profits: profitsSelector(state)
-  }
-}
+const mapStateToProps = ({ punished, punishmentRate, maxPunishment, members, uid, investments, profits, round, maxRound, punishments, used}) => ({
+  punished,
+  punishmentRate,
+  maxPunishment,
+  members,
+  uid,
+  investments, 
+  profits, 
+  round,
+  maxRound,
+  punishments,
+  used  
+})
 
-const mapDispatchToProps = {
+const actionCreators = {
   submitPunishment
 }
 
@@ -62,7 +70,8 @@ class Punishment extends Component {
     super(props)
     this.submit = this.submit.bind(this)
     this.state = {
-      punishments: []
+      punishments: [],
+      disables: []
     }
   }
 
@@ -74,7 +83,8 @@ class Punishment extends Component {
 
   isValid() {
     const punishmentSum = this.punishmentSum()
-    return punishmentSum <= this.props.maxPunishment && punishmentSum <= this.props.profits
+    const { profits, round } = this.props
+    return punishmentSum <= this.props.maxPunishment && punishmentSum <= profits[round]
   }
 
   punishmentSum() {
@@ -82,12 +92,14 @@ class Punishment extends Component {
   }
 
   handleChange(i, value) {
-    console.log(value)
     const punishments = this.state.punishments.slice()
-    punishments[i] = value
-    console.log(punishments)
+    const disables = this.state.disables.slice()
+    punishments[i] = parseInt(value)
+    if(isNaN(punishments[i])) punishments[i] = 0
+    disables[i] = isNaN(parseInt(value)) || value.indexOf('.') != -1 || parseInt(value) < 0
     this.setState({
-      punishments
+      punishments,
+      disables
     })
   }
 
@@ -104,74 +116,87 @@ class Punishment extends Component {
   }
 
   render() {
-    const {punished, punishmentRate, maxPunishment, memberID, investments, profits, round, rounds} = this.props
+    const { punished, punishmentRate, maxPunishment, members , uid, investments, profits, round, maxRound } = this.props
+    const profit = Math.round(profits[round])
+    const memberID = members.findIndex(a => a == uid)
     const punishmentSum = this.punishmentSum()
     const valid = this.isValid()
+
     return (
       <Card>
-        <CardHeader title="公共財実験" subtitle="罰" />
-        <CardText>
-          <div style={styles.wrapper}>
-            <Chip style={styles.chip}>
-              {`${round + 1}/${rounds}ラウンド`}
-            </Chip>
-            <Chip style={styles.chip}>
-            <Point>{profits}</Point>ポイント
-            </Chip>
-          </div>
-          <p>{profits}ポイントのうち、罰に利用するポイントを{maxPunishment}ポイント以内で入力して下さい。</p>
-          <table>
-            <thead>
-              <tr><th>他のメンバー</th><th>罰に利用するポイント</th><th>罰</th></tr>
-            </thead>
-            <tbody>
-              {
-                investments.map(({ id, investment }, i) => {
-                  if (i != memberID) {
-                    const punishment = this.state.punishments[i] || 0
-                    return (
-                      <tr key={i}>
-                        <td>{investment}ポイントを投資したメンバー</td>
-                        <td>
-                          <PunishmentForm
-                            id={`punishment-${i}`}
-                            value={punishment}
-                            onChange={value => this.handleChange(i, value)}
-                          />
-                        </td>
-                        <td>
-                          {punishment * punishmentRate}
-                        </td>
-                      </tr>
-                    )
-                  } else {
-                    return null
+        <CardHeader
+          title   ={multi_text["participant"]["experiment"]["card"][0]}
+          subtitle={multi_text["participant"]["experiment"]["card"][4]}
+        />
+        <SwipeableViews index={punished?1:0} disabled={true}>
+          <div>
+            <CardText>
+              <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
+					    <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
+              <div style={{clear: "both"}}>
+              <p>{profit + $s["desc"][0] + maxPunishment + $s["desc"][1]}</p>
+              <table>
+                <thead>
+                    <tr>
+                      <th>{$s["table"]["header"][0]}</th>
+                      <th>{$s["table"]["header"][1]}</th>
+                      <th>{$s["table"]["header"][2]}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                  {
+                    investments.map(({ id, investment }, i) => {
+                      if (i != memberID) {
+                        const punishment = this.state.punishments[i] || 0
+                        return (
+                          <tr key={i}>
+                            <td>{investment + $s["table"]["body"]}</td>
+                            <td>
+                              <PunishmentForm
+                                id={`punishment-${i}`}
+                                value={punishment}
+                                onChange={value => this.handleChange(i, value)}
+                              />
+                            </td>
+                            <td>
+                              {punishment * punishmentRate}
+                            </td>
+                          </tr>
+                        )
+                      } else {
+                        return null
+                      }
+                    })
                   }
-                })
-              }
-            </tbody>
-          </table>
-          {valid ? (
-            <p>罰に{punishmentSum}ポイント使うので、あなたのポイントは{profits - punishmentSum}ポイントになります。</p>
-          ) : (
-            <p>罰則ポイントが超過しています。罰則ポイントの合計が{Math.min(maxPunishment, profits)}ポイント以下になるように入力して下さい。</p>
-          )}
-        </CardText>
-        <CardActions>
-          <RaisedButton
-            label={
-              punished
-                ? "決定済み"
-                : "決定"
-            }
-            onClick={this.submit}
-            disabled={punished || !valid}
-            primary={true}
-          />
-        </CardActions>
+                </tbody>
+              </table>
+              {valid ? (
+                <p>{$s["desc2"][0] + punishmentSum + $s["desc2"][1] + (profit - punishmentSum) + $s["desc2"][2]}</p>
+              ) : (
+                <p>{$s["valid"][0] + Math.min(maxPunishment, profit) + $s["valid"][1]}</p>
+              )}
+              </div>  
+            </CardText>
+            <CardActions>
+              <RaisedButton
+                label={$s["button_label"]}
+                onClick={this.submit}
+                disabled={punished || !valid || this.state.disables.some(a=>a)}
+                primary={true}
+              />
+            </CardActions>
+            </div>
+            <div>
+                <CardText>
+                  <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
+  					      <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
+                  <VoteWaiting />
+                </CardText>
+            </div>
+          </SwipeableViews>
       </Card>
     )
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Punishment)
+export default connect(mapStateToProps, actionCreators)(Punishment)

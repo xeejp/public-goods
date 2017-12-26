@@ -1,5 +1,5 @@
 module.exports = {
-  devtool: 'inline-source-map',
+  devtool: 'eval-source-map',
   entry: {
     host: ["babel-polyfill", "./host/index.js"],
     participant: ["babel-polyfill", "./participant/index.js"],
