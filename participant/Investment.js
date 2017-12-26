@@ -15,7 +15,7 @@ import Punishment from './Punishment'
 import { submitInvestment } from './actions'
 import { profitsSelector } from './selectors.js'
 import styles from './styles.js'
-import { ReadJSON, LineBreak } from '../shared/ReadJSON'
+import { ReadJSON, LineBreak , InsertVariable} from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
 const $s = multi_text["participant"]["experiment"]["investment"]
@@ -65,7 +65,7 @@ class Investment extends Component {
     if (!this.state.disabled) this.props.submitInvestment(parseInt(this.state.value))
     this.setState({
       isOpenSnackbar: true,
-      snackbarMessage: ($s["snack_bar"][0] + this.state.value + $s["snack_bar"][1] + (this.props.money - this.state.value) + $s["snack_bar"][2]),
+      snackbarMessage: InsertVariable($s["snack_bar"], {public:this.state.value, private:(this.props.money - this.state.value)},null),
       value: "",
     })
   }
@@ -75,10 +75,7 @@ class Investment extends Component {
     return (
       <div>
         <Card>
-          <CardHeader
-            title   ={multi_text["participant"]["experiment"]["card"][0]}
-            subtitle={multi_text["participant"]["experiment"]["card"][3]}
-          />
+			    <CardHeader title={multi_text["participant"]["experiment"]["card"][0]} subtitle={multi_text["participant"]["experiment"]["card"][3]} />
           <SwipeableViews index={invested?1:0} disabled={true}>
             <div>
               <CardText>

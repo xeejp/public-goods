@@ -188,11 +188,7 @@
                 "investment": {
                     "desc": "ポイントのうち、公共財に投資するポイントを入力して下さい。",
                     "button_label": "公共財に投資",
-                    "snack_bar":[
-                        "公共財に",
-                        "ポイント投資し、私的財に",
-                        "ポイント残しました。"
-                    ]
+                    "snack_bar":"公共財に<public>ポイント投資し、私的財に<private>ポイント残しました。"
                 },
                 "investment_result":{
                     "list_title":[
