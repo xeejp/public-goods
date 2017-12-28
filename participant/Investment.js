@@ -55,6 +55,14 @@ class Investment extends Component {
     })
   }
 
+  handleKeyDown(event) {
+    const { disabled } = this.state
+    const { invested } = this.props
+    if (!invested && !this.state.disabled && (event.key === "Enter" || event.keyCode === 13)) { // Enter
+        this.Investment()
+    }
+  }
+
   handleRequestClose() {
     this.setState({
       isOpenSnackbar: false,
@@ -88,6 +96,7 @@ class Investment extends Component {
                       id='investment'
                       value={this.state.value}
                       onChange={this.handleChangeMoney.bind(this)}
+                      onKeyDown={this.handleKeyDown.bind(this)}
                       multiLine={false}
                       style={{width: "100px"}}
                     />

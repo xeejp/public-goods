@@ -7,6 +7,7 @@ import Dialog from 'material-ui/Dialog'
 import TextField from 'material-ui/TextField'
 import {Card} from 'material-ui/Card'
 import Snackbar from 'material-ui/Snackbar'
+import Checkbox from 'material-ui/Checkbox';
 
 import ImageEditIcon from 'material-ui/svg-icons/image/edit'
 import ImageAddIcon from 'material-ui/svg-icons/content/add'
@@ -43,7 +44,7 @@ class DescriptionEditor extends Component {
       snackbarMessage: "",
       defaultDescription: default_text,
       description: [
-        {id: 0, text: ""},
+        {id: 0, text: "", punishment: false},
       ],
     }
   }
@@ -76,13 +77,19 @@ class DescriptionEditor extends Component {
   addDescription() {
     let description = Object.assign([], this.state.description)
     let maxId = description.reduce((prev, curr) => Math.max(prev, curr.id), 0)
-    description.push({id: maxId + 1, text: ""})
+    description.push({id: maxId + 1, text: "", punishment: false})
     this.setState({description: description})
   }
 
   handleChange(index, event, value) {
     let description = Object.assign([], this.state.description)
-    description[index] = {id: index, text: value}
+    description[index] = { id: index, text: value, punishment: description[index].punishment }
+    this.setState({description: description})
+  }
+
+  handleChangePunishment(index, event, value) {
+    let description = Object.assign([], this.state.description)
+    description[index] = { id: index, text: description[index].text, punishment: value }
     this.setState({description: description})
   }
 
@@ -92,7 +99,7 @@ class DescriptionEditor extends Component {
       isOpenSnackbar: true,
       snackbarMessage: multi_text["host"]["description_editor"]["submit"],
     })
-    let description = this.state.description.map((v, i, ary) => ({id: i, text: v.text}))
+    let description = this.state.description.map((v, i, ary) => ({id: i, text: v.text, punishment: v.punishment}))
     this.setState({description: description})
     this.props.updateDescription(description)
   }
@@ -155,7 +162,12 @@ class DescriptionEditor extends Component {
                         multiLine={true}
                         fullWidth={true}
                       />
-                    </td>
+                      <Checkbox 
+                        label="罰則ありの時のみ表示"
+                        checked={this.state.description[index].punishment}
+                        onCheck={this.handleChangePunishment.bind(this, index)}
+                      />
+                    </td> 
                     <td>
                       <FloatingActionButton
                         mini={true}

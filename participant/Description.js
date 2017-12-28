@@ -8,16 +8,23 @@ import SwipeableViews from 'react-swipeable-views'
 import CircularProgress from 'material-ui/CircularProgress'
 import {Card, CardHeader, CardText} from 'material-ui/Card'
 
-import { ReadJSON, LineBreak } from '../shared/ReadJSON'
+import { ReadJSON, LineBreak, InsertVariable } from '../shared/ReadJSON'
 
 const multi_text = ReadJSON().static_text
 
 const actionCreators = {
   finishDescription
 }
-const mapStateToProps = ({ description, is_finish_description }) => ({
+const mapStateToProps = ({ description, is_finish_description, groupSize, maxPunishment, maxRound, money, punishmentFlag, punishmentRate, roi, }) => ({
   description,
-  is_finish_description
+  is_finish_description,
+  groupSize,
+  maxPunishment,
+  maxRound,
+  money,
+  punishmentFlag,
+  punishmentRate,
+  roi
 })
 
 class Description extends Component {
@@ -47,15 +54,17 @@ class Description extends Component {
   }
 
   render() {
-    const { description, is_finish_description } = this.props
-    if (!is_finish_description && this.state.slideIndex == description.length) {
+    const { description, is_finish_description, punishmentFlag } = this.props
+    let _description = description.filter( desc => punishmentFlag || !desc.punishment)
+    console.log(this.props)
+    if (!is_finish_description && this.state.slideIndex == _description.length) {
       this.props.finishDescription()
     }
     let descList = [
       <div>
         <CardHeader
           title={multi_text["participant"]["description"]["card"][0]}
-          subtitle={multi_text["participant"]["description"]["card"][1] + (description.length + 1) + "/" + (description.length + 1)}
+          subtitle={multi_text["participant"]["description"]["card"][1] + (_description.length + 1) + "/" + (_description.length + 1)}
         />
         <CardText expandable={false}>
           <p>{multi_text["participant"]["description"]["card"][2]}</p>
@@ -73,15 +82,15 @@ class Description extends Component {
             onChangeIndex={this.handleSlideIndex.bind(this)}
           >
             {
-              description.map((desc, index) => (
+              _description.map((desc, index) => (
                 <div key={"div-" + String(index)}>
                   <CardHeader
                     key={"header-" + String(index)}
                     title={multi_text["participant"]["description"]["card"][0]}
-                    subtitle={multi_text["participant"]["description"]["card"][1] + (index+1) + "/" + (description.length + 1)}
+                    subtitle={multi_text["participant"]["description"]["card"][1] + (index+1) + "/" + (_description.length + 1)}
                   />
                   <CardText key={"text-" + String(index)} expandable={false}>
-                    {desc.text.split('\n').map(line => <p key={"text-lines-" + String(line)}>{line}</p>)}
+                    {InsertVariable(desc.text,this.props,null).split('\n').map(line => <p key={"text-lines-" + String(line)}>{line}</p>)}
                   </CardText>
                 </div>
               )).concat(descList)
@@ -99,7 +108,7 @@ class Description extends Component {
           style={{float: "right"}}
           onTouchTap={this.handleNext.bind(this)}
           primary={true}
-          disabled={this.state.slideIndex == description.length}
+          disabled={this.state.slideIndex == _description.length}
         />
       </div>
     )
