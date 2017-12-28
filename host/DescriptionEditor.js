@@ -163,7 +163,7 @@ class DescriptionEditor extends Component {
                         fullWidth={true}
                       />
                       <Checkbox 
-                        label="罰則ありの時のみ表示"
+                        label={multi_text["host"]["description_editor"]["punishment"]}
                         checked={this.state.description[index].punishment}
                         onCheck={this.handleChangePunishment.bind(this, index)}
                       />

@@ -59,7 +59,7 @@ class VoteWaiting extends Component{
     ]
 
     return (
-      <div style={{ clear: "both" }}>
+      <div>
         <p>{multi_text["participant"]["experiment"]["end"]}</p>
         {(voting) ?
           <p>({$s["confirm"] + (members.length - notVoted) + $s["unit"] +'/' + members.length + $s["sum"]})</p>

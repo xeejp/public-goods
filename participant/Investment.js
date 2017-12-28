@@ -75,6 +75,7 @@ class Investment extends Component {
       isOpenSnackbar: true,
       snackbarMessage: InsertVariable($s["snack_bar"], {public:this.state.value, private:(this.props.money - this.state.value)},null),
       value: "",
+      disabled: true
     })
   }
   
@@ -84,43 +85,39 @@ class Investment extends Component {
       <div>
         <Card>
 			    <CardHeader title={multi_text["participant"]["experiment"]["card"][0]} subtitle={multi_text["participant"]["experiment"]["card"][3]} />
-          <SwipeableViews index={invested?1:0} disabled={true}>
-            <div>
-              <CardText>
-                <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
-  					    <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
-                <div style={{clear: "both"}}>
-                  <p>{money + $s["desc"]}</p>
-                  <span>
-                    <TextField
-                      id='investment'
-                      value={this.state.value}
-                      onChange={this.handleChangeMoney.bind(this)}
-                      onKeyDown={this.handleKeyDown.bind(this)}
-                      multiLine={false}
-                      style={{width: "100px"}}
-                    />
-                  </span>
-                </div>
-              </CardText>
-              <CardActions>
-                <RaisedButton
-                  label={$s["button_label"]}
-                  disabled={invested || this.state.disabled}
-                  primary={true}
-                  onTouchTap={this.Investment.bind(this)}
-                />
-              </CardActions>
-            </div>
+          <CardText>
+            <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
+            <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
+              <div style={{clear: "both"}}>
+                <SwipeableViews index={invested ? 1 : 0} disabled={true}>
+                  <div  style={{overflowY: "hidden" }}>
+                      <div>
+                        <p>{money + $s["desc"]}</p>
+                        <span>
+                          <TextField
+                            id='investment'
+                            value={this.state.value}
+                            onChange={this.handleChangeMoney.bind(this)}
+                            onKeyDown={this.handleKeyDown.bind(this)}
+                            multiLine={false}
+                            style={{width: "100px"}}
+                          />
+                        </span>
+                      </div>
+                      <RaisedButton
+                        label={$s["button_label"]}
+                        disabled={invested || this.state.disabled}
+                        primary={true}
+                        onTouchTap={this.Investment.bind(this)}
+                      />
+                  </div>
 
-            <div>
-              <CardText>
-                <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
-    					  <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
-                <VoteWaiting />
-              </CardText>
-            </div>
-          </SwipeableViews>  
+                  <div style={{overflowY: "hidden" }}>
+                      <VoteWaiting />
+                  </div>
+                    </SwipeableViews>  
+              </div>    
+          </CardText>  
         </Card>
         <Snackbar
           open={this.state.isOpenSnackbar}

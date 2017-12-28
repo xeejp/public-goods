@@ -128,72 +128,70 @@ class Punishment extends Component {
           title   ={multi_text["participant"]["experiment"]["card"][0]}
           subtitle={multi_text["participant"]["experiment"]["card"][4]}
         />
-        <SwipeableViews index={punished?1:0} disabled={true}>
-          <div>
-            <CardText>
-              <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
-					    <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
-              <div style={{clear: "both"}}>
-              <p>{profit + $s["desc"][0] + maxPunishment + $s["desc"][1]}</p>
-              <table>
-                <thead>
-                    <tr>
-                      <th>{$s["table"]["header"][0]}</th>
-                      <th>{$s["table"]["header"][1]}</th>
-                      <th>{$s["table"]["header"][2]}</th>
-                    </tr>
-                </thead>
-                <tbody>
-                  {
-                    investments.map(({ id, investment }, i) => {
-                      if (i != memberID) {
-                        const punishment = this.state.punishments[i] || 0
-                        return (
-                          <tr key={i}>
-                            <td>{investment + $s["table"]["body"]}</td>
-                            <td>
-                              <PunishmentForm
-                                id={`punishment-${i}`}
-                                value={punishment}
-                                onChange={value => this.handleChange(i, value)}
-                              />
-                            </td>
-                            <td>
-                              {punishment * punishmentRate}
-                            </td>
-                          </tr>
-                        )
-                      } else {
-                        return null
+        <CardText>
+          <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
+          <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
+          <div style={{clear: "both"}}>
+            <SwipeableViews index={punished ? 1 : 0} disabled={true}>
+              <div style={{overflowY: "hidden" }}>
+                <div>
+                  <p>{profit + $s["desc"][0] + maxPunishment + $s["desc"][1]}</p>
+                  <table>
+                    <thead>
+                        <tr>
+                          <th>{$s["table"]["header"][0]}</th>
+                          <th>{$s["table"]["header"][1]}</th>
+                          <th>{$s["table"]["header"][2]}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {
+                        investments.map(({ id, investment }, i) => {
+                          if (i != memberID) {
+                            const punishment = this.state.punishments[i] || 0
+                            return (
+                              <tr key={i}>
+                                <td>{investment + $s["table"]["body"]}</td>
+                                <td>
+                                  <PunishmentForm
+                                    id={`punishment-${i}`}
+                                    value={punishment}
+                                    onChange={value => this.handleChange(i, value)}
+                                  />
+                                </td>
+                                <td>
+                                  {punishment * punishmentRate}
+                                </td>
+                              </tr>
+                            )
+                          } else {
+                            return null
+                          }
+                        })
                       }
-                    })
-                  }
-                </tbody>
-              </table>
-              {valid ? (
-                <p>{$s["desc2"][0] + punishmentSum + $s["desc2"][1] + (profit - punishmentSum) + $s["desc2"][2]}</p>
-              ) : (
-                <p>{$s["valid"][0] + Math.min(maxPunishment, profit) + $s["valid"][1]}</p>
-              )}
-              </div>  
-            </CardText>
-            <CardActions>
-              <RaisedButton
-                label={$s["button_label"]}
-                onClick={this.submit}
-                disabled={punished || !valid || this.state.disables.some(a=>a)}
-                primary={true}
-              />
-            </CardActions>
-            </div>
-            <div>
-                <CardText>
-                  <Chip style={{float: "left"}}>{multi_text["participant"]["experiment"]["round"] + " : " + ((round+1==maxRound)?multi_text["participant"]["experiment"]["roundend"]:((round + 1) + " / " + maxRound))}</Chip>
-  					      <Chip style={{float: "right"}}>{multi_text["participant"]["experiment"]["profit"] + ":" + Math.round(profitsSelector(this.props))}</Chip>	
-                  <VoteWaiting />
-                </CardText>
-            </div>
-          </SwipeableViews>
+                    </tbody>
+                  </table>
+                  {valid ? (
+                    <p>{$s["desc2"][0] + punishmentSum + $s["desc2"][1] + (profit - punishmentSum) + $s["desc2"][2]}</p>
+                  ) : (
+                    <p>{$s["valid"][0] + Math.min(maxPunishment, profit) + $s["valid"][1]}</p>
+                  )}
+                  </div>  
+                <CardActions>
+                  <RaisedButton
+                    label={$s["button_label"]}
+                    onClick={this.submit}
+                    disabled={punished || !valid || this.state.disables.some(a=>a)}
+                    primary={true}
+                  />
+                </CardActions>
+                </div>
+                <div style={{overflowY: "hidden" }}>
+                      <VoteWaiting />
+                </div>
+            </SwipeableViews>
+          </div>  
+        </CardText>          
       </Card>
     )
   }
