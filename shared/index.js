@@ -13,7 +13,7 @@ import { fork, take, call } from 'redux-saga/effects'
 import injectTapEventPlugin from 'react-tap-event-plugin'
 injectTapEventPlugin()
 
-import { openParticipantPage } from 'host/actions'
+import { openParticipantPage } from '../host/actions'
 
 export default function startApp(component, reducer, saga, host=false) {
   const logger = createLogger()

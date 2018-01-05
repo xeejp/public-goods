@@ -1,5 +1,7 @@
-var path = require('path');
-var webpack = require('webpack');
+const path = require('path');
+const webpack = require('webpack');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
+const MinifyPlugin = require("babel-minify-webpack-plugin");
 
 module.exports = {
   entry: {
@@ -7,38 +9,49 @@ module.exports = {
     participant: ["babel-polyfill", "./participant/index.js"],
   },
   output: {
-    path: "./",
+    path: `${__dirname}/`,
     filename: "[name].js"
   },
   module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      exclude: /node_modules/,
-      loader: "babel"
-    }]
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules|bower_components)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ["es2015", "react"]
+          },
+        }
+      }
+    ],
+    loaders: [
+      {
+        test: /\.json$/,
+        loader: 'json-loader'
+      }
+    ]
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
-    new webpack.optimize.DedupePlugin(),
-    new webpack.optimize.UglifyJsPlugin({
-      compress: {
-        warnings: false
-      }
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin(),
+    new MinifyPlugin(),
+    new webpack.ContextReplacementPlugin(/.*/, path.resolve(__dirname, 'node_modules', 'jsondiffpatch'), {
+      '../package.json': './package.json',
+      './formatters': './src/formatters/index.js',
+      './console': './src/formatters/console.js'
     }),
-    new webpack.optimize.OccurenceOrderPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin()
   ],
   resolve: {
-    root: [
-      path.resolve('./')
+    modules: [
+      path.resolve(__dirname, 'node_modules'), 'node_modules',
     ],
-    extensions: [
-      "", ".js"
-    ],
-    modulesDirectories: [
-      "node_modules",
-    ]
-  }
+    extensions: [".js", ".json", ".jsx", ".css"],
+    alias: {
+      root: path.resolve(__dirname, './'),
+    },
+  },
 };

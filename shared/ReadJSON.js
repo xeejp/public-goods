@@ -1,7 +1,7 @@
 import React from 'react'
 
 export function ReadJSON() {
-  if(typeof ReadJSON.text === 'undefined') ReadJSON.text = require('json!./language.json')
+  if(typeof ReadJSON.text === 'undefined') ReadJSON.text = require('json-loader!./language.json')
   return ReadJSON.text
 }
 

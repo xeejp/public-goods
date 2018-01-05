@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 
-import { fetchContents } from 'shared/actions'
+import { fetchContents } from '../shared/actions'
 
 import Divider from 'material-ui/Divider'
 import getMuiTheme from 'material-ui/styles/getMuiTheme'
