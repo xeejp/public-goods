@@ -1,7 +1,5 @@
-const path = require('path');
-const webpack = require('webpack');
-const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
-const MinifyPlugin = require("babel-minify-webpack-plugin");
+var path = require('path');
+var webpack = require('webpack');
 
 module.exports = {
   entry: {
@@ -9,49 +7,38 @@ module.exports = {
     participant: ["babel-polyfill", "./participant/index.js"],
   },
   output: {
-    path: `${__dirname}/`,
+    path: "./",
     filename: "[name].js"
   },
   module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ["es2015", "react"]
-          },
-        }
-      }
-    ],
-    loaders: [
-      {
-        test: /\.json$/,
-        loader: 'json-loader'
-      }
-    ]
+    loaders: [{
+      test: /\.jsx?$/,
+      exclude: /node_modules/,
+      loader: "babel"
+    }]
   },
   plugins: [
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': JSON.stringify('production')
     }),
-    new webpack.optimize.OccurrenceOrderPlugin(),
-    new webpack.optimize.AggressiveMergingPlugin(),
-    new MinifyPlugin(),
-    new webpack.ContextReplacementPlugin(/.*/, path.resolve(__dirname, 'node_modules', 'jsondiffpatch'), {
-      '../package.json': './package.json',
-      './formatters': './src/formatters/index.js',
-      './console': './src/formatters/console.js'
+    new webpack.optimize.DedupePlugin(),
+    new webpack.optimize.UglifyJsPlugin({
+      compress: {
+        warnings: false
+      }
     }),
+    new webpack.optimize.OccurenceOrderPlugin(),
+    new webpack.optimize.AggressiveMergingPlugin()
   ],
   resolve: {
-    modules: [
-      path.resolve(__dirname, 'node_modules'), 'node_modules',
+    root: [
+      path.resolve('./')
     ],
-    extensions: [".js", ".json", ".jsx", ".css"],
-    alias: {
-      root: path.resolve(__dirname, './'),
-    },
-  },
+    extensions: [
+      "", ".js"
+    ],
+    modulesDirectories: [
+      "node_modules",
+    ]
+  }
 };
