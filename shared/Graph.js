@@ -34,7 +34,7 @@ const mapStateToProps = ({investment_log, maxRound}) => {
   })
   const finalData = data.map(investments => {
     investments.sort((a, b) => a - b)
-    length = investments.length
+    const length = investments.length
     const low = investments[0]
     const q1 = computeQuartile(investments, length, 1, 4)
     const median = computeQuartile(investments, length, 1, 2)
