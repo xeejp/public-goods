@@ -6,7 +6,7 @@
     "clone": "^1.0.2",
     "highcharts": "^4.2.6",
     "json-loader": "^0.5.4",
-    "jsondiffpatch": "^0.2.3",
+    "jsondiffpatch": "0.3.11",
     "material-ui": "^0.15.4",
     "react": "~15.3.2",
     "react-dom": "~15.3.2",
