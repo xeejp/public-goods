@@ -7,6 +7,7 @@
     "highcharts": "^4.2.6",
     "json-loader": "^0.5.4",
     "jsondiffpatch": "0.3.11",
+    "lodash": "^4.17.10",
     "material-ui": "^0.15.4",
     "react": "~15.3.2",
     "react-dom": "~15.3.2",

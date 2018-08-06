@@ -39,7 +39,7 @@ defmodule PublicGoods.Host do
   end
 
   def visit(data) do
-    Map.put(data, :is_first_visit, false)    
+    Map.put(data, :is_first_visit, false)
   end
 
   def match(data) do
@@ -55,7 +55,7 @@ defmodule PublicGoods.Host do
     updater = fn participant, group ->
       %{ participant |
         group: group,
-        is_finish_description: false,  
+        is_finish_description: false,
         invs: [],
         profits: [],
         punishments: [],
@@ -71,8 +71,8 @@ defmodule PublicGoods.Host do
       participants = Enum.reduce(ids, participants, fn id, participants ->
         Map.update!(participants, id, &updater.(&1, group))
       end)
-    groups = Map.put(groups, group, Main.new_group(ids))
-    {participants, groups}
+      groups = Map.put(groups, group, Main.new_group(ids))
+      {participants, groups}
     end
     acc = {participants, %{}}
     {participants, groups} = Enum.reduce(groups, acc, reducer)
