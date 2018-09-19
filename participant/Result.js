@@ -14,12 +14,13 @@ import { ReadJSON, LineBreak } from '../shared/ReadJSON'
 const multi_text = ReadJSON().static_text
 const $s = multi_text["participant"]["result"]
 
-const mapStateToProps = ({ askStudentId, profits, punishments, used, punishmentRate }) => ({
+const mapStateToProps = ({ askStudentId, profits, punishments, used, punishmentRate, id }) => ({
   askStudentId,
   profits,
   punishments,
   used,
   punishmentRate,
+  id,
 })
 
 class Result extends Component {
@@ -29,7 +30,7 @@ class Result extends Component {
   }
 
   render() {
-    const { askStudentId } = this.props
+    const { askStudentId, id } = this.props
     const profit = profitsSelector(this.props)
     return (
       <Card>
