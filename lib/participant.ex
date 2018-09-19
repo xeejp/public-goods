@@ -71,15 +71,16 @@ defmodule PublicGoods.Participant do
 			end)
 			
 			if data.max_round == group.round + 1 && !data.punishment_flag do
-				data = Enum.reduce(group.members, data, fn id, acc ->
+				Enum.reduce(group.members, data, fn id, acc ->
 					Map.put(acc,:profits_data, [%{
 						profits: data.participants[id].profits,
 						punishments: data.participants[id].punishments,
 						used: data.participants[id].used
 					}] ++ acc.profits_data)
 				end)
+			else
+				data
 			end
-			data
 		else
 			group = Map.update!(group, :not_voted, fn x -> x - 1 end)
       data
@@ -152,15 +153,16 @@ defmodule PublicGoods.Participant do
 			end)
 			
 			if data.max_round == group.round + 1 do
-				data = Enum.reduce(group.members, data, fn id, acc ->
+				Enum.reduce(group.members, data, fn id, acc ->
 					Map.put(acc,:profits_data, [%{
 						profits: data.participants[id].profits,
 						punishments: data.participants[id].punishments,
 						used: data.participants[id].used
 					}] ++ acc.profits_data)
 				end)
+			else
+				data
 			end
-			data
     else
       group = Map.update!(group, :not_voted, fn x -> x - 1 end)
       data
@@ -174,8 +176,8 @@ defmodule PublicGoods.Participant do
     data = put_in(data, [:participants, id, :voted], true)
     group_id = participant.group
 		group = get_in(data, [:groups, group_id])
-		
-		if group.not_voted == 1 do
+
+		if Enum.all?(group.members, fn id -> get_in(data, [:participants, id, :voted]) end) do
       group = Map.update!(group, :not_voted, fn x ->
         length(group.members)
       end)
@@ -222,9 +224,9 @@ defmodule PublicGoods.Participant do
 			
 			if Enum.all?(Map.keys(data.groups), fn g_id -> (data.groups[g_id].group_status == "finished") end) do
 				data = Map.put(data,:page,"result")
+			else
+				data
 			end
-
-			data
     else
       group = Map.update!(group, :not_voted, fn x -> x - 1 end)
       data
