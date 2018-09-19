@@ -73,7 +73,7 @@ class PageStepper extends Component {
     for (let i = 0; i < pages.length; i++) {
       steps[i] = (
         <Step key={i}>
-          <StepButton onTouchTap={this.changePage.bind(this, pages[i])}>
+          <StepButton onClick={this.changePage.bind(this, pages[i])}>
             {page_name[pages[i]]}
           </StepButton>
         </Step>

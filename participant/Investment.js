@@ -108,7 +108,7 @@ class Investment extends Component {
                         label={$s["button_label"]}
                         disabled={invested || this.state.disabled}
                         primary={true}
-                        onTouchTap={this.Investment.bind(this)}
+                        onClick={this.Investment.bind(this)}
                       />
                   </div>
 

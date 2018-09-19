@@ -136,6 +136,7 @@ class Users extends Component {
 
   render() {
     const { page, maxRound, money, punishmentRate, participants, groups, participantsNumber, groupsNumber, openParticipantPage, activeParticipantsNumber } = this.props
+    
     return (
       <div>
         <Card>

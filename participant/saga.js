@@ -1,5 +1,4 @@
-import { fork, take, call, select } from 'redux-saga/effects'
-import { takeEvery } from 'redux-saga'
+import { fork, take, call, select, takeEvery } from 'redux-saga/effects'
 
 import { fetchContents } from '../shared/actions'
 import { finishDescription, updateSnum, submitInvestment, submitPunishment, submitNext } from './actions'

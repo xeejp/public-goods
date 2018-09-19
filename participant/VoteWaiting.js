@@ -54,7 +54,7 @@ class VoteWaiting extends Component{
       <FlatButton
         label={label}
         primary={true}
-        onTouchTap={this.handleClose.bind(this)}
+        onClick={this.handleClose.bind(this)}
       />
     ]
 

@@ -120,16 +120,16 @@ class DescriptionEditor extends Component {
         label={multi_text["host"]["description_editor"]["button"][0]}
         primary={true}
         keyboardFocused={true}
-        onTouchTap={this.submit.bind(this)}
+        onClick={this.submit.bind(this)}
         disabled={this.state.disabled}
       />,
       <RaisedButton
         label={multi_text["host"]["description_editor"]["button"][1]}
-        onTouchTap={this.handleClose.bind(this)}
+        onClick={this.handleClose.bind(this)}
       />,
       <RaisedButton
         label={multi_text["host"]["description_editor"]["button"][2]}
-        onTouchTap={this.reset.bind(this)}
+        onClick={this.reset.bind(this)}
       />
     ]
     return (
@@ -171,7 +171,7 @@ class DescriptionEditor extends Component {
                     <td>
                       <FloatingActionButton
                         mini={true}
-                        onTouchTap={this.deleteDescription.bind(this, index)}
+                        onClick={this.deleteDescription.bind(this, index)}
                         disabled={this.state.description.length <= 1}
                       >
                         <ImageDeleteIcon />
@@ -188,7 +188,7 @@ class DescriptionEditor extends Component {
                       <FloatingActionButton
                         mini={true}
                         secondary={true}
-                        onTouchTap={this.addDescription.bind(this)}
+                        onClick={this.addDescription.bind(this)}
                       >
                         <ImageAddIcon />
                       </FloatingActionButton>

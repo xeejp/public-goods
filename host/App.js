@@ -37,6 +37,7 @@ class App extends Component {
 
   render() {
     const { page } = this.props
+    
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(lightBaseTheme)}>
         <div>

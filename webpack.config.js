@@ -2,7 +2,8 @@ const path = require('path');
 require("@babel/polyfill");
 
 module.exports = {
-  mode: "production",
+  mode: "development",
+  cache: true,
   entry: {
     host: ["@babel/polyfill", "./host/index"],
     participant: ["@babel/polyfill", "./participant/index"],
@@ -28,5 +29,9 @@ module.exports = {
   },
   resolve: {
      extensions: ['.js', '.jsx'],
-   },
+  },
+  performance: {
+    maxAssetSize: 2000000,
+    maxEntrypointSize: 2000000
+  }
 }

@@ -100,13 +100,13 @@ class Description extends Component {
         <RaisedButton
           label={multi_text["participant"]["description"]["button"][0]}
           style={{float: "left"}}
-          onTouchTap={this.handleBack.bind(this)}
+          onClick={this.handleBack.bind(this)}
           disabled={this.state.slideIndex == 0}
         />
         <RaisedButton
           label={multi_text["participant"]["description"]["button"][1]}
           style={{float: "right"}}
-          onTouchTap={this.handleNext.bind(this)}
+          onClick={this.handleNext.bind(this)}
           primary={true}
           disabled={this.state.slideIndex == _description.length}
         />

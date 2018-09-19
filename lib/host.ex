@@ -22,13 +22,15 @@ defmodule PublicGoods.Host do
   end
 
   def change_page(data, page) do
-    if data.page == "waiting" && page == "description" do
-      data = data
+    data = if data.page == "waiting" && page == "description" do
+      data
             |> Map.put(:investment_log, [])
             |> Map.put(:punishment_log, [])
             |> Map.put(:history, [])
             |> Map.put(:profits_data, [])
             |> match()
+    else
+      data
     end
     data = Map.update!(data, :page, fn _ -> page end)
     case page do
