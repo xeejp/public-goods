@@ -38,23 +38,31 @@ class DownloadButton extends Component {
         return  (askStudentId ? (',' + participants[uid].id) : '')
     }
 
+    makeCsvRowData(arr) {
+        const { maxRound } = this.props
+        let temp = Array(maxRound).join(',').split(',')
+
+        temp.push(...arr)
+        return temp.slice(-maxRound).reverse().join(',')
+    }
+
     handleClick() {
         const { page, participants, participantsNumber, maxRound, groupSize, groupsNumber, askStudentId, history, punish_history, punishmentFlag, punishmentRate, maxPunishment, money, roi } = this.props
         const fileName = 'PublicGoods.csv'
-        
+
         const temp = Array(maxRound).join(',').split(',')
         let users = Object.keys(participants).map(id => {
             let user = participants[id]
-            let inv_str = Array.concat(temp, user.invs).slice(-maxRound).reverse().join(',')
-            let profit_str = Array.concat(temp, user.profits.map((a,i) => ((punishmentFlag)?(a - user.punishments[i]*punishmentRate - user.used[i]):a))).slice(-maxRound).reverse().join(',')
+            let inv_str = this.makeCsvRowData(user.invs)
+            let profit_str = this.makeCsvRowData(user.profits.map((a,i) => ((punishmentFlag)?(a - user.punishments[i]*punishmentRate - user.used[i]):a)))
             let profits_sum = user.profits.reduce((acc, p) => acc + p, 0) - user.punishments.reduce((acc, p) => acc + p, 0) * punishmentRate - user.used.reduce((acc, p) => acc + p, 0)
             if (!punishmentFlag) return [id + this.id(id), inv_str, profit_str, profits_sum].join(',')
             
-            let puni_str = Array.concat(temp, user.punishments.map(a=>a*punishmentRate)).slice(-maxRound).reverse().join(',')
-            let use_str = Array.concat(temp, user.used).slice(-maxRound).reverse().join(',')
+            let puni_str = this.makeCsvRowData(user.punishments.map(a=>a*punishmentRate))
+            let use_str = this.makeCsvRowData(user.used)
             return [id + this.id(id), inv_str,puni_str,use_str,profit_str,profits_sum].join(',')
         })
-
+        
         let colInv = temp.map((a, i) => $s["cols"][0] + (i + 1) + $s["cols"][4]).join(',')
         let colPro = temp.map((a, i) => $s["cols"][1] + (i + 1) + $s["cols"][4]).join(',')        
         let colPun = temp.map((a, i) => $s["cols"][2] + (i + 1) + $s["cols"][4]).join(',')
