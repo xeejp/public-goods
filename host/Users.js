@@ -70,6 +70,42 @@ const UsersList = ({groups, participants, openParticipantPage, page, money, puni
           const group = groups[participants[id].group]
           const p = participants[id]
           p["punishmentRate"] = punishmentRate
+          let state
+          if (p.group == null) state = "Wait Matching"
+          else {
+            switch (page) {
+              case "experiment":
+                if (!groups[p.group]) {
+                  state = "-"
+                  break;
+                }
+                switch (groups[p.group].group_status) {
+                  case "investment":
+                    state = (p.invested) ? "invested" : "investment"
+                    break;
+                  case "investment_result":
+                    state = (p.voted) ? "investment confirmed" : "investment confirm"
+                    break;
+                  case "punishment":
+                    state = (p.punished) ? "punished" : "punishment"
+                    break;
+                  case "punishment_result":
+                    state = (p.voted) ? "punishment confirmed" : "punishment confirm"
+                    break;
+                  default:
+                    state = "-"
+                    break;
+                }
+                break;
+              case "description":
+                state = ((p.is_finish_description) ? "Read" : "Reading")
+                break;
+              default:
+                state = page
+                break;
+            }
+          }
+
           const profitSum = profitsSelector(p)
           return (
             <User
@@ -98,20 +134,7 @@ const UsersList = ({groups, participants, openParticipantPage, page, money, puni
               round={p.group != null
                      ? group.round + 1
                      : "-"}
-              state={(participants[id].group == null)
-                ? "Wait Matching"
-                : (page != "experiment")
-                  ? (page != "description")
-                    ? page
-                    : participants[id].is_finish_description
-                      ? "Read"
-                      : "Reading"
-                  : (participants[id].status == "finished")
-                    ? "Result"
-                    : (p.group != null)
-                      ? groups[p.group].group_status
-                      : "-"
-              }
+              state={state}
               openParticipantPage={openParticipantPage}
             />
           )

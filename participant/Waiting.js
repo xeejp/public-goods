@@ -29,7 +29,7 @@ class Waiting extends Component {
       <p>{multi_text["participant"]["waiting"][4]}{participantsNumber}{multi_text["participant"]["waiting"][5]} </p>
     </CardText>
     <div style={{textAlign: "center"}}>
-      <CircularProgress size={2}/>
+      <CircularProgress size={140} thickness={5.0}/>
     </div>
   </Card>
     )
